@@ -1,6 +1,5 @@
 package edu.byu.cs.tweeter.client.model.service;
 
-import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -13,15 +12,16 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import edu.byu.cs.tweeter.client.cache.Cache;
+import edu.byu.cs.tweeter.client.model.backgroundTask.GetFollowersTask;
 import edu.byu.cs.tweeter.client.model.backgroundTask.GetFollowingTask;
-import edu.byu.cs.tweeter.client.model.backgroundTask.GetUserTask;
-import edu.byu.cs.tweeter.client.view.main.MainActivity;
-import edu.byu.cs.tweeter.client.view.main.following.FollowingFragment;
+import edu.byu.cs.tweeter.client.presenter.FollowersPresenter;
 import edu.byu.cs.tweeter.model.domain.User;
 
 public class FollowService {
 
-    public interface Observer {
+
+
+    public interface FollowingObserver {
 
         void displayError(String message);
 
@@ -30,24 +30,45 @@ public class FollowService {
         void passFollowees(List<User> followees, boolean hasMorePages);
     }
 
-    public void loadMoreItems(User user, int pageSize, User lastFollowee, Observer observer) {
+    public interface FollowersObserver {
+
+        void displayError(String message);
+
+        void displayException(Exception ex);
+
+        void passFollowers(List<User> followers, boolean hasMorePages);
+    }
+
+    public void loadMoreItemsFollowing(User user, int pageSize, User lastFollowee, FollowingObserver observer) {
         GetFollowingTask getFollowingTask = new GetFollowingTask(Cache.getInstance().getCurrUserAuthToken(),
                 user, pageSize, lastFollowee, new GetFollowingHandler(observer));
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(getFollowingTask);
     }
 
+    public void loadMoreItemsFollowers(User user, int pageSize, User lastFollower, FollowersObserver observer) {
+
+        GetFollowersTask getFollowersTask = new GetFollowersTask(Cache.getInstance().getCurrUserAuthToken(),
+                user, pageSize, lastFollower, new GetFollowersHandler(observer));
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(getFollowersTask);
+
+    }
+
+
     /**
      * Message handler (i.e., observer) for GetFollowingTask.
      */
     private class GetFollowingHandler extends Handler {
 
-        public GetFollowingHandler(Observer observer) {
+        private FollowingObserver presenterObserver;
+
+        public GetFollowingHandler(FollowingObserver observer) {
             super(Looper.getMainLooper());
 
             this.presenterObserver = observer;
         }
-        private Observer presenterObserver;
+
 
         @Override
         public void handleMessage(@NonNull Message msg) {
@@ -75,6 +96,40 @@ public class FollowService {
         }
     }
 
+    /**
+     * Message handler (i.e., observer) for GetFollowersTask.
+     */
+    private class GetFollowersHandler extends Handler {
 
+        private FollowersObserver presenterObserver;
+
+        public GetFollowersHandler(FollowersObserver observer) {
+            super(Looper.getMainLooper());
+
+            this.presenterObserver = observer;
+        }
+
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+
+            boolean success = msg.getData().getBoolean(GetFollowersTask.SUCCESS_KEY);
+            if (success) {
+
+                List<User> followers = (List<User>) msg.getData().getSerializable(GetFollowersTask.FOLLOWERS_KEY);
+                boolean hasMorePages = msg.getData().getBoolean(GetFollowersTask.MORE_PAGES_KEY);
+
+                presenterObserver.passFollowers(followers, hasMorePages);
+
+            } else if (msg.getData().containsKey(GetFollowersTask.MESSAGE_KEY)) {
+                String message = msg.getData().getString(GetFollowersTask.MESSAGE_KEY);
+                presenterObserver.displayError("Failed to get followers: " + message);
+
+            } else if (msg.getData().containsKey(GetFollowersTask.EXCEPTION_KEY)) {
+                Exception ex = (Exception) msg.getData().getSerializable(GetFollowersTask.EXCEPTION_KEY);
+                presenterObserver.displayError("Failed to get followers because of exception: " + ex.getMessage());
+
+            }
+        }
+    }
 
 }

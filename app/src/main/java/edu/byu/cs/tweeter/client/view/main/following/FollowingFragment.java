@@ -39,8 +39,6 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
     private static final int LOADING_DATA_VIEW = 0;
     private static final int ITEM_VIEW = 1;
 
-
-
     private User user;
 
     private FollowingPresenter presenter;
@@ -70,7 +68,6 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
         View view = inflater.inflate(R.layout.fragment_following, container, false);
 
         user = (User) getArguments().getSerializable(USER_KEY);
-
 
         RecyclerView followingRecyclerView = view.findViewById(R.id.followingRecyclerView);
 
