@@ -1,7 +1,5 @@
 package edu.byu.cs.tweeter.client.presenter;
 
-import android.widget.Toast;
-
 import java.util.List;
 
 import edu.byu.cs.tweeter.client.model.service.FollowService;
