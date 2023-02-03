@@ -46,6 +46,8 @@ import edu.byu.cs.tweeter.model.domain.User;
  * Implements the "Feed" tab.
  */
 public class FeedFragment extends Fragment implements FeedPresenter.View {
+
+    //TODO move has more pages and isloading
     private static final String LOG_TAG = "FeedFragment";
     private static final String USER_KEY = "UserKey";
 
@@ -91,11 +93,15 @@ public class FeedFragment extends Fragment implements FeedPresenter.View {
         feedRecyclerView.setLayoutManager(layoutManager);
 
         feedRecyclerViewAdapter = new FeedRecyclerViewAdapter();
+
+
         feedRecyclerView.setAdapter(feedRecyclerViewAdapter);
 
         feedRecyclerView.addOnScrollListener(new FeedRecyclerViewPaginationScrollListener(layoutManager));
 
         this.presenter = new FeedPresenter(this);
+
+        feedRecyclerViewAdapter.loadMoreItems();
         return view;
     }
 
@@ -106,10 +112,30 @@ public class FeedFragment extends Fragment implements FeedPresenter.View {
 
     @Override
     public void displayUser(User user) {
-
         Intent intent = new Intent(getContext(), MainActivity.class);
         intent.putExtra(MainActivity.CURRENT_USER_KEY, user);
         startActivity(intent);
+    }
+
+    @Override
+    public void setLoadingFooter(boolean b) {
+        if (b)
+        {
+            feedRecyclerViewAdapter.addLoadingFooter();
+            feedRecyclerViewAdapter.setIsLoading(true);
+        }
+        else
+        {
+            feedRecyclerViewAdapter.removeLoadingFooter();
+            feedRecyclerViewAdapter.setIsLoading(false);
+        }
+    }
+
+    @Override
+    public void addItems(List<Status> statuses, boolean hasMorePages, Status lastStatus) {
+        feedRecyclerViewAdapter.addItems(statuses);
+        feedRecyclerViewAdapter.setLastStatus(lastStatus);
+        feedRecyclerViewAdapter.setHasMorePages(hasMorePages);
 
     }
 
@@ -141,7 +167,6 @@ public class FeedFragment extends Fragment implements FeedPresenter.View {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
                     presenter.getUser(userAlias.getText().toString());
 
                 }
@@ -174,13 +199,7 @@ public class FeedFragment extends Fragment implements FeedPresenter.View {
 
                         String clickable = s.subSequence(start, end).toString();
 
-                        //TODO Move to services
-
                         presenter.getUser(clickable);
-//                        GetUserTask getUserTask = new GetUserTask(Cache.getInstance().getCurrUserAuthToken(),
-//                                clickable, new GetUserHandler());
-//                        ExecutorService executor = Executors.newSingleThreadExecutor();
-//                        executor.execute(getUserTask);
                     }
 
                     @Override
@@ -212,17 +231,30 @@ public class FeedFragment extends Fragment implements FeedPresenter.View {
     private class FeedRecyclerViewAdapter extends RecyclerView.Adapter<FeedHolder> {
 
         private final List<Status> feed = new ArrayList<>();
+
+
+
         private Status lastStatus;
 
         private boolean hasMorePages;
         private boolean isLoading = false;
 
+        public void setLastStatus(Status lastStatus)
+        {
+            this.lastStatus = lastStatus;
+        }
+        void setHasMorePages(boolean val)
+        {
+            this.hasMorePages = val;
+        }
+        void setIsLoading(boolean val)
+        {
+            this.isLoading = val;
+        }
+
         /**
          * Creates an instance and loads the first page of feed data.
          */
-        FeedRecyclerViewAdapter() {
-            loadMoreItems();
-        }
 
         /**
          * Adds new statuses to the list from which the RecyclerView retrieves the statuses it displays
@@ -325,15 +357,8 @@ public class FeedFragment extends Fragment implements FeedPresenter.View {
          * data.
          */
         void loadMoreItems() {
-            if (!isLoading) {   // This guard is important for avoiding a race condition in the scrolling code.
-                isLoading = true;
-                addLoadingFooter();
-                //TODO Move to services
-                GetFeedTask getFeedTask = new GetFeedTask(Cache.getInstance().getCurrUserAuthToken(),
-                        user, PAGE_SIZE, lastStatus, new GetFeedHandler());
-                ExecutorService executor = Executors.newSingleThreadExecutor();
-                executor.execute(getFeedTask);
-            }
+
+            presenter.loadMoreItems(user, isLoading, lastStatus);
         }
 
         /**
@@ -357,38 +382,7 @@ public class FeedFragment extends Fragment implements FeedPresenter.View {
         }
 
 
-        //TODO Move to services
-        /**
-         * Message handler (i.e., observer) for GetFeedTask.
-         */
-        private class GetFeedHandler extends Handler {
 
-            public GetFeedHandler() {
-                super(Looper.getMainLooper());
-            }
-
-            @Override
-            public void handleMessage(@NonNull Message msg) {
-                isLoading = false;
-                removeLoadingFooter();
-
-                boolean success = msg.getData().getBoolean(GetFeedTask.SUCCESS_KEY);
-                if (success) {
-                    List<Status> statuses = (List<Status>) msg.getData().getSerializable(GetFeedTask.STATUSES_KEY);
-                    hasMorePages = msg.getData().getBoolean(GetFeedTask.MORE_PAGES_KEY);
-
-                    lastStatus = (statuses.size() > 0) ? statuses.get(statuses.size() - 1) : null;
-
-                    feedRecyclerViewAdapter.addItems(statuses);
-                } else if (msg.getData().containsKey(GetFeedTask.MESSAGE_KEY)) {
-                    String message = msg.getData().getString(GetFeedTask.MESSAGE_KEY);
-                    Toast.makeText(getContext(), "Failed to get feed: " + message, Toast.LENGTH_LONG).show();
-                } else if (msg.getData().containsKey(GetFeedTask.EXCEPTION_KEY)) {
-                    Exception ex = (Exception) msg.getData().getSerializable(GetFeedTask.EXCEPTION_KEY);
-                    Toast.makeText(getContext(), "Failed to get feed because of exception: " + ex.getMessage(), Toast.LENGTH_LONG).show();
-                }
-            }
-        }
     }
 
     /**

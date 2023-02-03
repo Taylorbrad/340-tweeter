@@ -4,6 +4,7 @@ import java.util.List;
 
 import edu.byu.cs.tweeter.client.model.service.FollowService;
 import edu.byu.cs.tweeter.client.model.service.UserService;
+import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
 
 public class FollowingPresenter {
@@ -110,6 +111,16 @@ public class FollowingPresenter {
         @Override
         public void displayMessage(String s) {
             view.displayMessage(s);
+        }
+
+        @Override
+        public void setLoadingFooter(boolean b) {
+
+        }
+
+        @Override
+        public void addItems(List<Status> statuses, boolean hasMorePages, Status lastStatus) {
+
         }
     }
 
