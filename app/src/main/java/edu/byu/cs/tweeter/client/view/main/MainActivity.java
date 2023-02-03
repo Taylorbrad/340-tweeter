@@ -112,6 +112,7 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
             followButton.setVisibility(View.GONE);
         } else {
             followButton.setVisibility(View.VISIBLE);
+            //TODO Move to services
             IsFollowerTask isFollowerTask = new IsFollowerTask(Cache.getInstance().getCurrUserAuthToken(),
                     Cache.getInstance().getCurrUser(), selectedUser, new IsFollowerHandler());
             ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -122,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
             @Override
             public void onClick(View v) {
                 followButton.setEnabled(false);
-
+                //TODO Move to services
                 if (followButton.getText().toString().equals(v.getContext().getString(R.string.following))) {
                     UnfollowTask unfollowTask = new UnfollowTask(Cache.getInstance().getCurrUserAuthToken(),
                             selectedUser, new UnfollowHandler());
@@ -154,7 +155,7 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
         if (item.getItemId() == R.id.logoutMenu) {
             logOutToast = Toast.makeText(this, "Logging Out...", Toast.LENGTH_LONG);
             logOutToast.show();
-
+            //TODO Move to services
             LogoutTask logoutTask = new LogoutTask(Cache.getInstance().getCurrUserAuthToken(), new LogoutHandler());
             ExecutorService executor = Executors.newSingleThreadExecutor();
             executor.execute(logoutTask);
@@ -181,6 +182,7 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
         postingToast.show();
 
         try {
+            //TODO Move to services
             Status newStatus = new Status(post, Cache.getInstance().getCurrUser(), getFormattedDateTime(), parseURLs(post), parseMentions(post));
             PostStatusTask statusTask = new PostStatusTask(Cache.getInstance().getCurrUserAuthToken(),
                     newStatus, new PostStatusHandler());
@@ -192,6 +194,7 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
         }
     }
 
+    //TODO Move to presenter?
     public String getFormattedDateTime() throws ParseException {
         SimpleDateFormat userFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         SimpleDateFormat statusFormat = new SimpleDateFormat("MMM d yyyy h:mm aaa");
@@ -199,6 +202,7 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
         return statusFormat.format(userFormat.parse(LocalDate.now().toString() + " " + LocalTime.now().toString().substring(0, 8)));
     }
 
+    //TODO Move to presenter?
     public List<String> parseURLs(String post) {
         List<String> containedUrls = new ArrayList<>();
         for (String word : post.split("\\s")) {
@@ -215,6 +219,7 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
         return containedUrls;
     }
 
+    //TODO Move to presenter?
     public List<String> parseMentions(String post) {
         List<String> containedMentions = new ArrayList<>();
 
@@ -230,6 +235,7 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
         return containedMentions;
     }
 
+    //TODO Move to presenter?
     public int findUrlEndIndex(String word) {
         if (word.contains(".com")) {
             int index = word.indexOf(".com");
@@ -256,6 +262,7 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
         }
     }
 
+    //TODO Move to presenter / Services
     public void updateSelectedUserFollowingAndFollowers() {
         ExecutorService executor = Executors.newFixedThreadPool(2);
 
@@ -282,8 +289,9 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
         }
     }
 
-    // LogoutHandler
+    //TODO Move all handlers below to services
 
+    // LogoutHandler
     private class LogoutHandler extends Handler {
 
         public LogoutHandler() {

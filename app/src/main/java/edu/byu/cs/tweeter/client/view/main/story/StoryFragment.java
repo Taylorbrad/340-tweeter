@@ -123,6 +123,9 @@ public class StoryFragment extends Fragment {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+
+                    //TODO Move to services
+
                     GetUserTask getUserTask = new GetUserTask(Cache.getInstance().getCurrUserAuthToken(),
                             userAlias.getText().toString(), new GetUserHandler());
                     ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -156,6 +159,8 @@ public class StoryFragment extends Fragment {
                         int start = s.getSpanStart(this);
                         int end = s.getSpanEnd(this);
 
+                        //TODO Move to services
+
                         String clickable = s.subSequence(start, end).toString();
 
                         GetUserTask getUserTask = new GetUserTask(Cache.getInstance().getCurrUserAuthToken(),
@@ -186,6 +191,8 @@ public class StoryFragment extends Fragment {
             post.setClickable(true);
             post.setMovementMethod(LinkMovementMethod.getInstance());
         }
+
+        //TODO Move to services
 
         /**
          * Message handler (i.e., observer) for GetUserTask.
@@ -339,6 +346,8 @@ public class StoryFragment extends Fragment {
                 isLoading = true;
                 addLoadingFooter();
 
+                //TODO Move to services
+
                 GetStoryTask getStoryTask = new GetStoryTask(Cache.getInstance().getCurrUserAuthToken(),
                         user, PAGE_SIZE, lastStatus, new GetStoryHandler());
                 ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -367,6 +376,7 @@ public class StoryFragment extends Fragment {
         }
 
 
+        //TODO move to services
         /**
          * Message handler (i.e., observer) for GetStoryTask.
          */

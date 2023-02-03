@@ -72,7 +72,7 @@ public class FollowersPresenter {
         userService.getUserFollowers(userAlias, new UserObserver());
     }
 
-    public class UserObserver implements UserService.Observer {
+    public class UserObserver implements UserService.UserObserver {
 
         @Override
         public void displayUser(User user) {
