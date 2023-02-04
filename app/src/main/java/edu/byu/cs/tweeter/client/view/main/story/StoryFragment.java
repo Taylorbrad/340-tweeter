@@ -98,6 +98,8 @@ public class StoryFragment extends Fragment implements StoryPresenter.View {
 
         this.presenter = new StoryPresenter(this);
 
+        storyRecyclerViewAdapter.loadMoreItems();
+
         return view;
     }
 
@@ -249,12 +251,6 @@ public class StoryFragment extends Fragment implements StoryPresenter.View {
             isLoading = loading;
         }
 
-        /**
-         * Creates an instance and loads the first page of story data.
-         */
-        StoryRecyclerViewAdapter() {
-            loadMoreItems();
-        }
 
         /**
          * Adds new statuses to the list from which the RecyclerView retrieves the statuses it displays
@@ -357,7 +353,6 @@ public class StoryFragment extends Fragment implements StoryPresenter.View {
          * data.
          */
         void loadMoreItems() {
-
             presenter.loadMoreItems(user, isLoading, lastStatus);
 
         }

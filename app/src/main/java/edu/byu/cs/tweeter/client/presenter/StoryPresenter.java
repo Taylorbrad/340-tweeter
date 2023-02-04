@@ -34,7 +34,7 @@ public class StoryPresenter {
     public void loadMoreItems(User user, boolean isLoading, Status lastStatus) {
         if (!isLoading) {   // This guard is important for avoiding a race condition in the scrolling code.
 
-            view.setLoadingFooter(false);
+            view.setLoadingFooter(true);
 
             userService.loadMoreItems(user, PAGE_SIZE, lastStatus, new UserObserver());
         }
@@ -57,6 +57,7 @@ public class StoryPresenter {
     {
         this.view = view;
 
+        this.userService = new UserService();
     }
 
     private class UserObserver implements UserService.UserObserver {
