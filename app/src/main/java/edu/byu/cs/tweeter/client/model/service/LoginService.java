@@ -12,16 +12,32 @@ import java.util.concurrent.Executors;
 
 import edu.byu.cs.tweeter.client.cache.Cache;
 import edu.byu.cs.tweeter.client.model.backgroundTask.LoginTask;
+import edu.byu.cs.tweeter.client.model.backgroundTask.LogoutTask;
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
 
 public class LoginService {
 
-    public interface LoginObserver {
+    public interface LoginObserver
+    {
 
         void logInUser(User loggedInUser);
 
         void displayMessage(String s);
+    }
+
+    public interface MainActivityObserver
+    {
+
+        void logOut();
+
+        void displayMessage(String s);
+    }
+
+    public void logout(MainActivityObserver observer) {
+        LogoutTask logoutTask = new LogoutTask(Cache.getInstance().getCurrUserAuthToken(), new LogoutHandler(observer));
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(logoutTask);
     }
 
     public void loginRequest(EditText alias, EditText password, LoginObserver observer) {
@@ -31,6 +47,36 @@ public class LoginService {
                 new LoginHandler(observer));
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(loginTask);
+    }
+
+    // LogoutHandler
+    private class LogoutHandler extends Handler {
+
+        private MainActivityObserver presenterObserver;
+
+        public LogoutHandler(MainActivityObserver observer) {
+            super(Looper.getMainLooper());
+
+            this.presenterObserver = observer;
+        }
+
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            boolean success = msg.getData().getBoolean(LogoutTask.SUCCESS_KEY);
+            if (success) {
+
+                presenterObserver.logOut();
+
+            } else if (msg.getData().containsKey(LogoutTask.MESSAGE_KEY)) {
+                String message = msg.getData().getString(LogoutTask.MESSAGE_KEY);
+                presenterObserver.displayMessage("Failed to logout: " + message);
+
+            } else if (msg.getData().containsKey(LogoutTask.EXCEPTION_KEY)) {
+                Exception ex = (Exception) msg.getData().getSerializable(LogoutTask.EXCEPTION_KEY);
+                presenterObserver.displayMessage("Failed to logout because of exception: " + ex.getMessage());
+//
+            }
+        }
     }
 
     /**
