@@ -66,14 +66,14 @@ public class MainActivityPresenter {
     {
         this.view = view;
 
-        this.followService = new FollowService(new MainActivitysObserver());
+        this.followService = new FollowService();
         this.loginService = new LoginService();
         this.statusService = new StatusService();
     }
 
     //TODO Move to presenter / Services
     public void updateSelectedUserFollowingAndFollowers() {
-        followService.updateUserFollows(selectedUser);
+        followService.updateUserFollows(selectedUser, new MainActivitysObserver());
     }
 
     public String getFormattedDateTime() throws ParseException {
@@ -146,10 +146,10 @@ public class MainActivityPresenter {
 
     public void toggleFollowing(boolean isFollowing) {
         if (isFollowing) {
-            followService.unfollow(this.selectedUser);
+            followService.unfollow(this.selectedUser, new MainActivitysObserver());
             view.displayMessage("Removing " + this.selectedUser.getName() + "...");
         } else {
-            followService.follow(this.selectedUser);
+            followService.follow(this.selectedUser, new MainActivitysObserver());
             view.displayMessage("Adding " +this. selectedUser.getName() + "...");
         }
     }
@@ -227,7 +227,6 @@ public class MainActivityPresenter {
             view.displayMessage(message);
         }
     }
-
     public class StatusServiceObserver implements StatusService.MainActivityObserver
     {
 

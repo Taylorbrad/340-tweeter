@@ -46,8 +46,6 @@ public class StoryFragment extends Fragment implements StoryPresenter.View {
     private static final int LOADING_DATA_VIEW = 0;
     private static final int ITEM_VIEW = 1;
 
-
-
     private User user;
 
     private StoryRecyclerViewAdapter storyRecyclerViewAdapter;
