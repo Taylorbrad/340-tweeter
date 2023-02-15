@@ -15,20 +15,9 @@ public class UnfollowTask extends AuthenticatedTask {
     private static final String LOG_TAG = "UnfollowTask";
 
 
-//    /**
-//     * The user that is being followed.
-//     */
-//    private User followee;
-//    /**
-//     * Message handler that will receive task results.
-//     */
-//    private Handler messageHandler;
-
     public UnfollowTask(AuthToken authToken, User followee, Handler messageHandler) {
         super(messageHandler, authToken);
         this.authToken = authToken;
-//        this.followee = followee;
-//        this.messageHandler = messageHandler;
     }
 
 

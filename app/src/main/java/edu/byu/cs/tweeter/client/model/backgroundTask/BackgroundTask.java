@@ -28,10 +28,6 @@ public abstract class BackgroundTask implements Runnable{
         this.messageHandler = messageHandler;
     }
 
-
-
-
-
     @Override
     public void run() {
         try {
@@ -40,7 +36,7 @@ public abstract class BackgroundTask implements Runnable{
             sendSuccessMessage();
 
         } catch (Exception ex) {
-            Log.e(LOG_TAG, "Failed to get followees", ex);
+            Log.e(LOG_TAG, ex.getMessage(), ex);
             sendExceptionMessage(ex);
         }
     }

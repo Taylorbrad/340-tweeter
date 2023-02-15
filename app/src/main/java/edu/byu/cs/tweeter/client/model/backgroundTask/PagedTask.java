@@ -59,17 +59,17 @@ public abstract class PagedTask<T> extends AuthenticatedTask {
     }
 
     @Override
-    protected void loadSuccessBundle(Bundle msgBundle) {
-        msgBundle.putSerializable(ITEMS_KEY, (Serializable) items);//(Serializable) statuses);
-        msgBundle.putBoolean(MORE_PAGES_KEY, hasMorePages);
-    }
-
-    @Override
     protected void processTask() {
         Pair<List<T>, Boolean> pageOfStatus = getItems();
         this.items = pageOfStatus.getFirst();
         this.hasMorePages = pageOfStatus.getSecond();
     }
 
+    @Override
+    protected void loadSuccessBundle(Bundle msgBundle) {
+        msgBundle.putSerializable(ITEMS_KEY, (Serializable) items);//(Serializable) statuses);
+        msgBundle.putBoolean(MORE_PAGES_KEY, hasMorePages);
+    }
+    
     protected abstract Pair<List<T>, Boolean> getItems();
 }
