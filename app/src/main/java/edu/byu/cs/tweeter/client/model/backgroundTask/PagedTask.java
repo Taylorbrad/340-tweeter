@@ -13,8 +13,6 @@ import edu.byu.cs.tweeter.util.Pair;
 
 public abstract class PagedTask<T> extends AuthenticatedTask {
 
-
-
     private List<T> items;
     private Boolean hasMorePages;
     /**
@@ -31,8 +29,6 @@ public abstract class PagedTask<T> extends AuthenticatedTask {
      * This allows the new page to begin where the previous page ended.
      */
     private T lastItem;
-
-
 
 
     public static final String ITEMS_KEY = "items";
@@ -70,6 +66,6 @@ public abstract class PagedTask<T> extends AuthenticatedTask {
         msgBundle.putSerializable(ITEMS_KEY, (Serializable) items);//(Serializable) statuses);
         msgBundle.putBoolean(MORE_PAGES_KEY, hasMorePages);
     }
-    
+
     protected abstract Pair<List<T>, Boolean> getItems();
 }

@@ -11,7 +11,6 @@ import edu.byu.cs.tweeter.util.Pair;
  */
 public class RegisterTask extends AuthenticationTask {
 
-
     private static final String LOG_TAG = "RegisterTask";
 
     /**

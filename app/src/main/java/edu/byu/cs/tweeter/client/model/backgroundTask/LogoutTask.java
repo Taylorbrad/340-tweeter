@@ -11,6 +11,7 @@ import edu.byu.cs.tweeter.model.domain.AuthToken;
  * Background task that logs out a user (i.e., ends a session).
  */
 public class LogoutTask implements Runnable {
+
     private static final String LOG_TAG = "LogoutTask";
 
     public static final String SUCCESS_KEY = "success";
