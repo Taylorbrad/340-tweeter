@@ -12,13 +12,13 @@ import edu.byu.cs.tweeter.client.model.backgroundTask.GetFollowingCountTask;
 import edu.byu.cs.tweeter.client.model.backgroundTask.GetFollowingTask;
 import edu.byu.cs.tweeter.client.model.backgroundTask.IsFollowerTask;
 import edu.byu.cs.tweeter.client.model.backgroundTask.UnfollowTask;
-import edu.byu.cs.tweeter.client.model.backgroundTask.handler.FollowHandler;
 import edu.byu.cs.tweeter.client.model.backgroundTask.handler.GetFollowersCountHandler;
 import edu.byu.cs.tweeter.client.model.backgroundTask.handler.GetFollowersHandler;
 import edu.byu.cs.tweeter.client.model.backgroundTask.handler.GetFollowingCountHandler;
 import edu.byu.cs.tweeter.client.model.backgroundTask.handler.GetFollowingHandler;
 import edu.byu.cs.tweeter.client.model.backgroundTask.handler.IsFollowerHandler;
-import edu.byu.cs.tweeter.client.model.backgroundTask.handler.UnfollowHandler;
+import edu.byu.cs.tweeter.client.model.backgroundTask.handler.SimpleNotificationHandler;
+import edu.byu.cs.tweeter.client.model.backgroundTask.observer.SimpleNotificationObserver;
 import edu.byu.cs.tweeter.model.domain.User;
 
 public class FollowService {
@@ -37,7 +37,7 @@ public class FollowService {
     public void unfollow(User selectedUser, MainActivityObserver observer) {
 
         UnfollowTask unfollowTask = new UnfollowTask(Cache.getInstance().getCurrUserAuthToken(),
-                selectedUser, new UnfollowHandler(observer));
+                selectedUser, new SimpleNotificationHandler(observer));
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(unfollowTask);
 
@@ -45,7 +45,7 @@ public class FollowService {
 
     public void follow(User selectedUser, MainActivityObserver observer) {
         FollowTask followTask = new FollowTask(Cache.getInstance().getCurrUserAuthToken(),
-                selectedUser, new FollowHandler(observer));
+                selectedUser, new SimpleNotificationHandler(observer));
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(followTask);
     }
@@ -99,15 +99,13 @@ public class FollowService {
         void passFollowers(List<User> followers, boolean hasMorePages);
     }
 
-    public interface MainActivityObserver {
+    public interface MainActivityObserver extends SimpleNotificationObserver {
 
         void setFollowing(boolean isFollower);
 
         void displayMessage(String s);
 
-        void updateUserFollows(boolean b);
-
-        void setFollowButton(boolean b);
+        void handleSuccess();
 
         void setFolloweeCountText(int count);
 

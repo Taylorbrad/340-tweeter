@@ -154,10 +154,12 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
 
 
     public void updateFollowButton(boolean removed) {
+
         // If follow relationship was removed.
         if (removed) {
             followButton.setText(R.string.follow);
             followButton.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+            followButton.setTextColor(getResources().getColor(R.color.white));
         } else {
             followButton.setText(R.string.following);
             followButton.setBackgroundColor(getResources().getColor(R.color.white));
@@ -176,6 +178,7 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
     public void unfollow() {
         followButton.setText(R.string.follow);
         followButton.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+        followButton.setTextColor(getResources().getColor(R.color.white));
     }
 
     @Override
@@ -184,20 +187,9 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
     }
 
     @Override
-    public void refreshFollowButton(boolean b) {
-        updateFollowButton(b);
-    }
-
-    @Override
-    public void setFollowButton(boolean b) {
-        if (b)
-        {
-            followButton.setEnabled(true);
-        }
-        else {
-            followButton.setEnabled(false);
-        }
-
+    public void setFollowButton() {
+        followButton.setEnabled(true);
+        updateFollowButton(followButton.getText().equals("Following"));
     }
 
     @Override

@@ -48,9 +48,9 @@ public class MainActivityPresenter {
 
         void displayMessage(String message);
 
-        void refreshFollowButton(boolean b);
+//        void refreshFollowButton(boolean b);
 
-        void setFollowButton(boolean b);
+        void setFollowButton();
 
         void setFolloweeCount(int count);
 
@@ -191,15 +191,10 @@ public class MainActivityPresenter {
         }
 
         @Override
-        public void updateUserFollows(boolean b) {
+        public void handleSuccess() {
             updateSelectedUserFollowingAndFollowers();
-            view.refreshFollowButton(b);
-        }
-
-        @Override
-        public void setFollowButton(boolean b)
-        {
-            view.setFollowButton(true);
+//            view.refreshFollowButton(false);
+            view.setFollowButton();
         }
 
         @Override
