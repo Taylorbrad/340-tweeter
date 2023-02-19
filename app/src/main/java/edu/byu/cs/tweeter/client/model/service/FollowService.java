@@ -13,10 +13,9 @@ import edu.byu.cs.tweeter.client.model.backgroundTask.GetFollowingTask;
 import edu.byu.cs.tweeter.client.model.backgroundTask.IsFollowerTask;
 import edu.byu.cs.tweeter.client.model.backgroundTask.UnfollowTask;
 import edu.byu.cs.tweeter.client.model.backgroundTask.handler.GetFollowersCountHandler;
-import edu.byu.cs.tweeter.client.model.backgroundTask.handler.GetFollowersHandler;
 import edu.byu.cs.tweeter.client.model.backgroundTask.handler.GetFollowingCountHandler;
-import edu.byu.cs.tweeter.client.model.backgroundTask.handler.GetFollowingHandler;
 import edu.byu.cs.tweeter.client.model.backgroundTask.handler.IsFollowerHandler;
+import edu.byu.cs.tweeter.client.model.backgroundTask.handler.PagedHandler;
 import edu.byu.cs.tweeter.client.model.backgroundTask.handler.SimpleNotificationHandler;
 import edu.byu.cs.tweeter.client.model.backgroundTask.observer.PagedObserver;
 import edu.byu.cs.tweeter.client.model.backgroundTask.observer.SimpleNotificationObserver;
@@ -67,7 +66,7 @@ public class FollowService {
 
     public void loadMoreItemsFollowing(User user, int pageSize, User lastFollowee, FollowingObserver observer) {
         GetFollowingTask getFollowingTask = new GetFollowingTask(Cache.getInstance().getCurrUserAuthToken(),
-                user, pageSize, lastFollowee, new GetFollowingHandler(observer));
+                user, pageSize, lastFollowee, new PagedHandler<User>(observer));
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(getFollowingTask);
     }
@@ -75,7 +74,7 @@ public class FollowService {
     public void loadMoreItemsFollowers(User user, int pageSize, User lastFollower, FollowersObserver observer) {
 
         GetFollowersTask getFollowersTask = new GetFollowersTask(Cache.getInstance().getCurrUserAuthToken(),
-                user, pageSize, lastFollower, new GetFollowersHandler(observer));
+                user, pageSize, lastFollower, new PagedHandler<User>(observer));
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(getFollowersTask);
 
