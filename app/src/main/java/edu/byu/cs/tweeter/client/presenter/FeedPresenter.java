@@ -1,5 +1,7 @@
 package edu.byu.cs.tweeter.client.presenter;
 
+import android.os.Bundle;
+
 import java.util.List;
 
 import edu.byu.cs.tweeter.client.model.service.UserService;
@@ -73,6 +75,21 @@ public class FeedPresenter {
         @Override
         public void addItems(List<Status> statuses, boolean hasMorePages, Status lastStatus) {
             view.addItems(statuses, hasMorePages, lastStatus);
+
+        }
+
+        @Override
+        public void displayError(String message) {
+
+        }
+
+        @Override
+        public void displayException(Exception ex) {
+
+        }
+
+        @Override
+        public void handleSuccess(Bundle data) {
 
         }
     }

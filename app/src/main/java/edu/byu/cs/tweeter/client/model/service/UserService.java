@@ -14,12 +14,13 @@ import edu.byu.cs.tweeter.client.model.backgroundTask.handler.GetUserHandlerFeed
 import edu.byu.cs.tweeter.client.model.backgroundTask.handler.GetUserHandlerFollowers;
 import edu.byu.cs.tweeter.client.model.backgroundTask.handler.GetUserHandlerFollowing;
 import edu.byu.cs.tweeter.client.model.backgroundTask.handler.GetUserHandlerStory;
+import edu.byu.cs.tweeter.client.model.backgroundTask.observer.PagedObserver;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
 
 public class UserService {
 
-    public interface UserObserver {
+    public interface UserObserver extends PagedObserver {
 
         void displayUser(User user);
 

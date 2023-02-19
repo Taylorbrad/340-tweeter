@@ -1,6 +1,7 @@
 package edu.byu.cs.tweeter.client.presenter;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.widget.Toast;
 
 import java.util.List;
@@ -84,6 +85,21 @@ public class StoryPresenter {
         @Override
         public void addItems(List<Status> statuses, boolean hasMorePages, Status lastStatus) {
             view.addItems(statuses, hasMorePages, lastStatus);
+
+        }
+
+        @Override
+        public void displayError(String message) {
+
+        }
+
+        @Override
+        public void displayException(Exception ex) {
+
+        }
+
+        @Override
+        public void handleSuccess(Bundle data) {
 
         }
     }

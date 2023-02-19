@@ -1,7 +1,10 @@
 package edu.byu.cs.tweeter.client.presenter;
 
+import android.os.Bundle;
+
 import java.util.List;
 
+import edu.byu.cs.tweeter.client.model.backgroundTask.GetFollowersTask;
 import edu.byu.cs.tweeter.client.model.service.FollowService;
 import edu.byu.cs.tweeter.client.model.service.UserService;
 import edu.byu.cs.tweeter.model.domain.Status;
@@ -94,6 +97,21 @@ public class FollowersPresenter {
         public void addItems(List<Status> statuses, boolean hasMorePages, Status lastStatus) {
 
         }
+
+        @Override
+        public void displayError(String message) {
+
+        }
+
+        @Override
+        public void displayException(Exception ex) {
+
+        }
+
+        @Override
+        public void handleSuccess(Bundle data) {
+
+        }
     }
 
     public class FollowersObserver implements FollowService.FollowersObserver {
@@ -113,7 +131,11 @@ public class FollowersPresenter {
         }
 
         @Override
-        public void passFollowers(List<User> followers, boolean hasMorePages) {
+        public void handleSuccess(Bundle data) {
+
+            List<User> followers = (List<User>) data.getSerializable(GetFollowersTask.FOLLOWERS_KEY);
+            boolean hasMorePages = data.getBoolean(GetFollowersTask.MORE_PAGES_KEY);
+
             isLoading = false;
 
             view.setLoadingFooter(false);
@@ -123,6 +145,11 @@ public class FollowersPresenter {
             lastFollower = (followers.size() > 0) ? followers.get(followers.size() - 1) : null;
 
             view.addMoreItems(followers);
+        }
+
+        @Override
+        public void displayMessage(String message) {
+
         }
     }
 }

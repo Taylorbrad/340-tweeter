@@ -18,6 +18,7 @@ import edu.byu.cs.tweeter.client.model.backgroundTask.handler.GetFollowingCountH
 import edu.byu.cs.tweeter.client.model.backgroundTask.handler.GetFollowingHandler;
 import edu.byu.cs.tweeter.client.model.backgroundTask.handler.IsFollowerHandler;
 import edu.byu.cs.tweeter.client.model.backgroundTask.handler.SimpleNotificationHandler;
+import edu.byu.cs.tweeter.client.model.backgroundTask.observer.PagedObserver;
 import edu.byu.cs.tweeter.client.model.backgroundTask.observer.SimpleNotificationObserver;
 import edu.byu.cs.tweeter.model.domain.User;
 
@@ -81,22 +82,15 @@ public class FollowService {
     }
 
 
-    public interface FollowingObserver {
+    public interface FollowingObserver extends PagedObserver<User> { }
+
+    public interface FollowersObserver extends PagedObserver {
 
         void displayError(String message);
 
         void displayException(Exception ex);
 
-        void passFollowees(List<User> followees, boolean hasMorePages);
-    }
-
-    public interface FollowersObserver {
-
-        void displayError(String message);
-
-        void displayException(Exception ex);
-
-        void passFollowers(List<User> followers, boolean hasMorePages);
+//        void handleSuccess(List<User> followers, boolean hasMorePages);
     }
 
     public interface MainActivityObserver extends SimpleNotificationObserver {

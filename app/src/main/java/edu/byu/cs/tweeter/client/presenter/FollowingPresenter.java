@@ -1,7 +1,10 @@
 package edu.byu.cs.tweeter.client.presenter;
 
+import android.os.Bundle;
+
 import java.util.List;
 
+import edu.byu.cs.tweeter.client.model.backgroundTask.PagedTask;
 import edu.byu.cs.tweeter.client.model.service.FollowService;
 import edu.byu.cs.tweeter.client.model.service.UserService;
 import edu.byu.cs.tweeter.model.domain.Status;
@@ -86,17 +89,58 @@ public class FollowingPresenter {
         }
 
         @Override
-        public void passFollowees(List<User> followees, boolean hasMorePages) {
+        public void handleSuccess(Bundle data) {
+            List<User> followees = (List<User>) data.getSerializable(PagedTask.ITEMS_KEY);
+            boolean hasMorePages = data.getBoolean(PagedTask.MORE_PAGES_KEY);
+
             isLoading = false;
             view.setLoadingFooter(false);
 
             lastFollowee = (followees.size() > 0) ? followees.get(followees.size() - 1) : null;
 
 
-//            setHasMorePages(hasMorePages); would do the same as the below statement
-            FollowingPresenter.this.hasMorePages = hasMorePages;
+            setHasMorePages(hasMorePages);// would do the same as the below statement
+//            FollowingPresenter.this.hasMorePages = hasMorePages;
 
             view.addMoreItems(followees);
+        }
+
+
+        //        @Override
+//        public void passFollowees(List<User> followees, boolean hasMorePages) {
+//            isLoading = false;
+//            view.setLoadingFooter(false);
+//
+//            lastFollowee = (followees.size() > 0) ? followees.get(followees.size() - 1) : null;
+//
+//
+////            setHasMorePages(hasMorePages); would do the same as the below statement
+//            FollowingPresenter.this.hasMorePages = hasMorePages;
+//
+//            view.addMoreItems(followees);
+//
+//        }
+//        @Override
+//        public void displayMessage(String message) {
+//
+//        }
+
+//        @Override
+//        public void handleSuccess(List<User> items, Boolean hasMoreItems) {
+//            isLoading = false;
+//            view.setLoadingFooter(false);
+//
+//            lastFollowee = (items.size() > 0) ? items.get(items.size() - 1) : null;
+//
+//
+//            setHasMorePages(hasMoreItems);// would do the same as the below statement
+////            FollowingPresenter.this.hasMorePages = hasMorePages;
+//
+//            view.addMoreItems(items);
+//        }
+
+        @Override
+        public void displayMessage(String message) {
 
         }
     }
@@ -120,6 +164,21 @@ public class FollowingPresenter {
 
         @Override
         public void addItems(List<Status> statuses, boolean hasMorePages, Status lastStatus) {
+
+        }
+
+        @Override
+        public void displayError(String message) {
+
+        }
+
+        @Override
+        public void displayException(Exception ex) {
+
+        }
+
+        @Override
+        public void handleSuccess(Bundle data) {
 
         }
     }
