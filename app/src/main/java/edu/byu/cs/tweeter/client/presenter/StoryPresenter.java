@@ -36,7 +36,7 @@ public class StoryPresenter {
 
             view.setLoadingFooter(true);
 
-            userService.loadMoreItems(user, PAGE_SIZE, lastStatus, new UserObserver());
+            userService.loadMoreItems(user, PAGE_SIZE, lastStatus, new GetItemsObserver());
         }
     }
 
@@ -59,6 +59,26 @@ public class StoryPresenter {
         this.userService = new UserService();
     }
 
+    private class GetItemsObserver implements UserService.GetItemsObserver {
+
+        @Override
+        public void displayMessage(String message) {
+            view.displayMessage(message);
+        }
+
+        @Override
+        public void handleSuccess(Bundle data) {
+            view.setLoadingFooter(false);
+
+            List<Status> statuses = (List<Status>) data.getSerializable(GetStoryTask.STATUSES_KEY);
+
+            boolean hasMorePages = data.getBoolean(GetStoryTask.MORE_PAGES_KEY);
+
+            Status lastStatus = (statuses.size() > 0) ? statuses.get(statuses.size() - 1) : null;
+
+            view.addItems(statuses, hasMorePages, lastStatus);
+        }
+    }
     private class GetUserObserver implements UserService.GetUserObserver {
 
         @Override
@@ -75,49 +95,6 @@ public class StoryPresenter {
         @Override
         public void handleSuccess(User user) {
             view.displayUser(user);
-        }
-    }
-
-    private class UserObserver implements UserService.UserObserver {
-
-        @Override
-        public void handleSuccess(User user) {
-            view.displayUser(user);
-
-        }
-
-        @Override
-        public void displayMessage(String message) {
-            view.displayMessage(message);
-
-
-        }
-
-        @Override
-        public void setLoadingFooter(boolean b) {
-            view.setLoadingFooter(b);
-
-        }
-
-        @Override
-        public void addItems(List<Status> statuses, boolean hasMorePages, Status lastStatus) {
-            view.addItems(statuses, hasMorePages, lastStatus);
-
-        }
-
-        @Override
-        public void displayError(String message) {
-
-        }
-
-        @Override
-        public void displayException(Exception ex) {
-
-        }
-
-        @Override
-        public void handleSuccess(Bundle data) {
-
         }
     }
 }

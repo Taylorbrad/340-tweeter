@@ -114,7 +114,7 @@ public class FollowersPresenter {
         }
 
         @Override
-        public void addItems(List<Status> statuses, boolean hasMorePages, Status lastStatus) {
+        public void handleSuccess(List<Status> statuses, boolean hasMorePages, Status lastStatus) {
 
         }
 
