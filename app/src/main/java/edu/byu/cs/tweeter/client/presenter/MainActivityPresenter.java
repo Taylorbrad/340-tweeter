@@ -14,6 +14,8 @@ import java.util.List;
 import edu.byu.cs.tweeter.client.cache.Cache;
 import edu.byu.cs.tweeter.client.model.backgroundTask.GetFollowersCountTask;
 import edu.byu.cs.tweeter.client.model.backgroundTask.GetFollowingCountTask;
+import edu.byu.cs.tweeter.client.model.backgroundTask.IsFollowerTask;
+import edu.byu.cs.tweeter.client.model.backgroundTask.observer.GetItemsObserver;
 import edu.byu.cs.tweeter.client.model.service.FollowService;
 import edu.byu.cs.tweeter.client.model.service.LoginService;
 import edu.byu.cs.tweeter.client.model.service.StatusService;
@@ -142,7 +144,7 @@ public class MainActivityPresenter {
     }
 
     public void isFollower() {
-        followService.isFollower(this.selectedUser, new MainActivitysObserver());
+        followService.isFollower(this.selectedUser, new IsFollowerObserver());
     }
 
     public void toggleFollowing(boolean isFollowing) {
@@ -172,6 +174,28 @@ public class MainActivityPresenter {
         }
 
 
+    }
+
+    public class IsFollowerObserver implements GetItemsObserver {
+
+        @Override
+        public void handleSuccess(Bundle data) {
+            boolean isFollower = data.getBoolean(IsFollowerTask.IS_FOLLOWER_KEY);
+
+            if (isFollower)
+            {
+                view.follow();
+            }
+            else {
+                view.unfollow();
+            }
+
+        }
+
+        @Override
+        public void displayMessage(String message) {
+            view.displayMessage(message);
+        }
     }
 
     public class GetItemsCountObserver implements edu.byu.cs.tweeter.client.model.backgroundTask.observer.GetItemsCountObserver {

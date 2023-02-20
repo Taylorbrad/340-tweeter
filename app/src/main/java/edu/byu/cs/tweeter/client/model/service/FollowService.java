@@ -19,6 +19,7 @@ import edu.byu.cs.tweeter.client.model.backgroundTask.handler.IsFollowerHandler;
 import edu.byu.cs.tweeter.client.model.backgroundTask.handler.PagedHandler;
 import edu.byu.cs.tweeter.client.model.backgroundTask.handler.SimpleNotificationHandler;
 import edu.byu.cs.tweeter.client.model.backgroundTask.observer.GetItemsCountObserver;
+import edu.byu.cs.tweeter.client.model.backgroundTask.observer.GetItemsObserver;
 import edu.byu.cs.tweeter.client.model.backgroundTask.observer.PagedObserver;
 import edu.byu.cs.tweeter.client.model.backgroundTask.observer.SimpleNotificationObserver;
 import edu.byu.cs.tweeter.model.domain.User;
@@ -29,7 +30,7 @@ public class FollowService {
     public FollowService() {}
 
 
-    public void isFollower(User selectedUser, MainActivityObserver observer) {
+    public void isFollower(User selectedUser, GetItemsObserver observer) {
         IsFollowerTask isFollowerTask = new IsFollowerTask(Cache.getInstance().getCurrUserAuthToken(),
                 Cache.getInstance().getCurrUser(), selectedUser, new IsFollowerHandler(observer));
         ExecutorService executor = Executors.newSingleThreadExecutor();
