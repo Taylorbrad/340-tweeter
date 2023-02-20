@@ -1,5 +1,7 @@
 package edu.byu.cs.tweeter.client.model.service;
 
+import android.os.Bundle;
+
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -12,11 +14,11 @@ import edu.byu.cs.tweeter.client.model.backgroundTask.GetFollowingCountTask;
 import edu.byu.cs.tweeter.client.model.backgroundTask.GetFollowingTask;
 import edu.byu.cs.tweeter.client.model.backgroundTask.IsFollowerTask;
 import edu.byu.cs.tweeter.client.model.backgroundTask.UnfollowTask;
-import edu.byu.cs.tweeter.client.model.backgroundTask.handler.GetFollowersCountHandler;
-import edu.byu.cs.tweeter.client.model.backgroundTask.handler.GetFollowingCountHandler;
+import edu.byu.cs.tweeter.client.model.backgroundTask.handler.GetItemsCountHandler;
 import edu.byu.cs.tweeter.client.model.backgroundTask.handler.IsFollowerHandler;
 import edu.byu.cs.tweeter.client.model.backgroundTask.handler.PagedHandler;
 import edu.byu.cs.tweeter.client.model.backgroundTask.handler.SimpleNotificationHandler;
+import edu.byu.cs.tweeter.client.model.backgroundTask.observer.GetItemsCountObserver;
 import edu.byu.cs.tweeter.client.model.backgroundTask.observer.PagedObserver;
 import edu.byu.cs.tweeter.client.model.backgroundTask.observer.SimpleNotificationObserver;
 import edu.byu.cs.tweeter.model.domain.User;
@@ -50,17 +52,17 @@ public class FollowService {
         executor.execute(followTask);
     }
 
-    public void updateUserFollows(User selectedUser, MainActivityObserver observer) {
+    public void updateUserFollows(User selectedUser, GetItemsCountObserver observer) {
         ExecutorService executor = Executors.newFixedThreadPool(2);
 
         // Get count of most recently selected user's followers.
         GetFollowersCountTask followersCountTask = new GetFollowersCountTask(Cache.getInstance().getCurrUserAuthToken(),
-                selectedUser, new GetFollowersCountHandler(observer));
+                selectedUser, new GetItemsCountHandler(observer));
         executor.execute(followersCountTask);
 
         // Get count of most recently selected user's followees (who they are following)
         GetFollowingCountTask followingCountTask = new GetFollowingCountTask(Cache.getInstance().getCurrUserAuthToken(),
-                selectedUser, new GetFollowingCountHandler(observer));
+                selectedUser, new GetItemsCountHandler(observer));
         executor.execute(followingCountTask);
     }
 

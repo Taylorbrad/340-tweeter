@@ -1,5 +1,6 @@
 package edu.byu.cs.tweeter.client.presenter;
 
+import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -11,10 +12,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.byu.cs.tweeter.client.cache.Cache;
+import edu.byu.cs.tweeter.client.model.backgroundTask.GetFollowersCountTask;
+import edu.byu.cs.tweeter.client.model.backgroundTask.GetFollowingCountTask;
 import edu.byu.cs.tweeter.client.model.service.FollowService;
 import edu.byu.cs.tweeter.client.model.service.LoginService;
 import edu.byu.cs.tweeter.client.model.service.StatusService;
-import edu.byu.cs.tweeter.client.view.main.MainActivity;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
 
@@ -71,9 +73,8 @@ public class MainActivityPresenter {
         this.statusService = new StatusService();
     }
 
-    //TODO Move to presenter / Services
     public void updateSelectedUserFollowingAndFollowers() {
-        followService.updateUserFollows(selectedUser, new MainActivitysObserver());
+        followService.updateUserFollows(selectedUser, new GetItemsCountObserver());
     }
 
     public String getFormattedDateTime() throws ParseException {
@@ -171,6 +172,23 @@ public class MainActivityPresenter {
         }
 
 
+    }
+
+    public class GetItemsCountObserver implements edu.byu.cs.tweeter.client.model.backgroundTask.observer.GetItemsCountObserver {
+
+        @Override
+        public void handleSuccess(Bundle data) {
+            int followeeCount = data.getInt(GetFollowersCountTask.COUNT_KEY);
+            view.setFollowerCount(followeeCount);
+
+            int followingCount = data.getInt(GetFollowingCountTask.COUNT_KEY);
+            view.setFolloweeCount(followingCount);
+        }
+
+        @Override
+        public void displayMessage(String message) {
+            view.displayMessage(message);
+        }
     }
 
     public class MainActivitysObserver implements FollowService.MainActivityObserver
