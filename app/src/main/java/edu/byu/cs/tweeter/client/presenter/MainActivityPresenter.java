@@ -213,7 +213,7 @@ public class MainActivityPresenter {
     {
 
         @Override
-        public void logOut() {
+        public void handleSuccess() {
             view.logOut();
         }
 
@@ -226,7 +226,7 @@ public class MainActivityPresenter {
     {
 
         @Override
-        public void postStatus() {
+        public void handleSuccess() {
             view.postStatusMessage();
         }
 

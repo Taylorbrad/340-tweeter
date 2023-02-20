@@ -22,8 +22,8 @@ public abstract class BackgroundTaskHandler<T extends ServiceObserver> extends H
     public void handleMessage(@NonNull Message msg) {
         boolean success = msg.getData().getBoolean(BackgroundTask.SUCCESS_KEY);
         if (success) {
-            handleSuccess(msg.getData(), observer);
 
+            handleSuccess(msg.getData(), observer);
 //            observer.updateUserFollows(false);
 //            observer.setFollowButton(true);
 
