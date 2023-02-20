@@ -5,6 +5,7 @@ import android.os.Bundle;
 import java.util.List;
 
 import edu.byu.cs.tweeter.client.model.backgroundTask.GetFollowersTask;
+import edu.byu.cs.tweeter.client.model.backgroundTask.GetUserTask;
 import edu.byu.cs.tweeter.client.model.service.FollowService;
 import edu.byu.cs.tweeter.client.model.service.UserService;
 import edu.byu.cs.tweeter.model.domain.Status;
@@ -73,13 +74,32 @@ public class FollowersPresenter {
 
     public void getUser(String userAlias) {
 
-        userService.getUserFollowers(userAlias, new UserObserver());
+        userService.getUserFollowers(userAlias, new GetUserObserver());
+    }
+
+    public class GetUserObserver implements UserService.GetUserObserver {
+
+        @Override
+        public void displayMessage(String message) {
+            view.displayMessage(message);
+        }
+
+        @Override
+        public User getUser(Bundle data) {
+            User user = (User) data.getSerializable(GetUserTask.USER_KEY);
+            return user;
+        }
+
+        @Override
+        public void handleSuccess(User user) {
+            view.displayUser(user);
+        }
     }
 
     public class UserObserver implements UserService.UserObserver {
 
         @Override
-        public void displayUser(User user) {
+        public void handleSuccess(User user) {
             view.displayUser(user);
         }
 

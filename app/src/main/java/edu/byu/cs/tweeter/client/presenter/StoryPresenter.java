@@ -27,8 +27,7 @@ public class StoryPresenter {
     private static final int PAGE_SIZE = 10;
 
     public void getUser(String userAlias) {
-
-        userService.getUserStory(userAlias, new UserObserver());
+        userService.getUserStory(userAlias, new GetUserObserver());
 
     }
 
@@ -42,7 +41,6 @@ public class StoryPresenter {
     }
 
     public interface View {
-
 
         void displayUser(User user);
 
@@ -61,10 +59,29 @@ public class StoryPresenter {
         this.userService = new UserService();
     }
 
+    private class GetUserObserver implements UserService.GetUserObserver {
+
+        @Override
+        public void displayMessage(String message) {
+            view.displayMessage(message);
+        }
+
+        @Override
+        public User getUser(Bundle data) {
+            User user = (User) data.getSerializable(GetUserTask.USER_KEY);
+            return user;
+        }
+
+        @Override
+        public void handleSuccess(User user) {
+            view.displayUser(user);
+        }
+    }
+
     private class UserObserver implements UserService.UserObserver {
 
         @Override
-        public void displayUser(User user) {
+        public void handleSuccess(User user) {
             view.displayUser(user);
 
         }

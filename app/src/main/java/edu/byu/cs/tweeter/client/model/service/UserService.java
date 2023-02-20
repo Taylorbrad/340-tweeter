@@ -10,10 +10,7 @@ import edu.byu.cs.tweeter.client.model.backgroundTask.GetStoryTask;
 import edu.byu.cs.tweeter.client.model.backgroundTask.GetUserTask;
 import edu.byu.cs.tweeter.client.model.backgroundTask.handler.GetFeedHandler;
 import edu.byu.cs.tweeter.client.model.backgroundTask.handler.GetStoryHandler;
-import edu.byu.cs.tweeter.client.model.backgroundTask.handler.GetUserHandlerFeed;
-import edu.byu.cs.tweeter.client.model.backgroundTask.handler.GetUserHandlerFollowers;
-import edu.byu.cs.tweeter.client.model.backgroundTask.handler.GetUserHandlerFollowing;
-import edu.byu.cs.tweeter.client.model.backgroundTask.handler.GetUserHandlerStory;
+import edu.byu.cs.tweeter.client.model.backgroundTask.handler.UserHandler;
 import edu.byu.cs.tweeter.client.model.backgroundTask.observer.PagedObserver;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
@@ -22,13 +19,17 @@ public class UserService {
 
     public interface UserObserver extends PagedObserver {
 
-        void displayUser(User user);
+        void handleSuccess(User user);
 
         void displayMessage(String message);
 
         void setLoadingFooter(boolean b);
 
         void addItems(List<Status> statuses, boolean hasMorePages, Status lastStatus);
+    }
+
+    public interface GetUserObserver extends edu.byu.cs.tweeter.client.model.backgroundTask.observer.UserObserver {
+        void handleSuccess(User user);
     }
 
 
@@ -46,30 +47,30 @@ public class UserService {
         executor.execute(getFeedTask);
     }
 
-    public void getUserStory(String userAlias, UserObserver observer) {
+    public void getUserStory(String userAlias, GetUserObserver observer) {
         GetUserTask getUserTask = new GetUserTask(Cache.getInstance().getCurrUserAuthToken(),
-                userAlias, new GetUserHandlerStory(observer));
+                userAlias, new UserHandler(observer));
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(getUserTask);
     }
 
-    public void getUserFeed(String userAlias, UserObserver observer) {
+    public void getUserFeed(String userAlias, GetUserObserver observer) {
         GetUserTask getUserTask = new GetUserTask(Cache.getInstance().getCurrUserAuthToken(),
-                userAlias, new GetUserHandlerFeed(observer));
+                userAlias, new UserHandler(observer));
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(getUserTask);
     }
 
-    public void getUserFollowers(String userAlias, UserObserver observer) {
+    public void getUserFollowers(String userAlias, GetUserObserver observer) {
         GetUserTask getUserTask = new GetUserTask(Cache.getInstance().getCurrUserAuthToken(),
-                userAlias, new GetUserHandlerFollowers(observer));
+                userAlias, new UserHandler(observer));
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(getUserTask);
     }
 
-    public void getUserFollowing(String userAlias, UserObserver observer) {
+    public void getUserFollowing(String userAlias, GetUserObserver observer) {
         GetUserTask getUserTask = new GetUserTask(Cache.getInstance().getCurrUserAuthToken(),
-                userAlias, new GetUserHandlerFollowing(observer));
+                userAlias, new UserHandler(observer));
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(getUserTask);
     }

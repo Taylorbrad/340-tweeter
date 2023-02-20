@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import java.util.List;
 
+import edu.byu.cs.tweeter.client.model.backgroundTask.GetUserTask;
 import edu.byu.cs.tweeter.client.model.service.UserService;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
@@ -48,16 +49,35 @@ public class FeedPresenter {
 
     public void getUser(String userAlias) {
 
-        userService.getUserFeed(userAlias, new UserObserver());
+        userService.getUserFeed(userAlias, new GetUserObserver());
 
         view.displayMessage("Getting user's profile...");
+    }
+
+    public class GetUserObserver implements UserService.GetUserObserver {
+
+        @Override
+        public void displayMessage(String message) {
+            view.displayMessage(message);
+        }
+
+        @Override
+        public User getUser(Bundle data) {
+            User user = (User) data.getSerializable(GetUserTask.USER_KEY);
+            return user;
+        }
+
+        @Override
+        public void handleSuccess(User user) {
+            view.displayUser(user);
+        }
     }
 
     public class UserObserver implements UserService.UserObserver
     {
 
         @Override
-        public void displayUser(User user) {
+        public void handleSuccess(User user) {
             view.displayUser(user);
 
         }
