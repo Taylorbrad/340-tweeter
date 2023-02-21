@@ -11,6 +11,7 @@ import java.util.concurrent.Executors;
 import edu.byu.cs.tweeter.client.cache.Cache;
 import edu.byu.cs.tweeter.client.model.backgroundTask.GetStoryTask;
 import edu.byu.cs.tweeter.client.model.backgroundTask.GetUserTask;
+import edu.byu.cs.tweeter.client.model.backgroundTask.PagedTask;
 import edu.byu.cs.tweeter.client.model.service.FollowService;
 import edu.byu.cs.tweeter.client.model.service.UserService;
 import edu.byu.cs.tweeter.client.view.main.MainActivity;
@@ -70,7 +71,7 @@ public class StoryPresenter {
         public void handleSuccess(Bundle data) {
             view.setLoadingFooter(false);
 
-            List<Status> statuses = (List<Status>) data.getSerializable(GetStoryTask.STATUSES_KEY);
+            List<Status> statuses = (List<Status>) data.getSerializable(PagedTask.ITEMS_KEY);
 
             boolean hasMorePages = data.getBoolean(GetStoryTask.MORE_PAGES_KEY);
 

@@ -1,11 +1,13 @@
 package edu.byu.cs.tweeter.client.presenter;
 
+import android.graphics.pdf.PdfDocument;
 import android.os.Bundle;
 
 import java.util.List;
 
 import edu.byu.cs.tweeter.client.model.backgroundTask.GetFollowersTask;
 import edu.byu.cs.tweeter.client.model.backgroundTask.GetUserTask;
+import edu.byu.cs.tweeter.client.model.backgroundTask.PagedTask;
 import edu.byu.cs.tweeter.client.model.service.FollowService;
 import edu.byu.cs.tweeter.client.model.service.UserService;
 import edu.byu.cs.tweeter.model.domain.Status;
@@ -153,8 +155,8 @@ public class FollowersPresenter {
         @Override
         public void handleSuccess(Bundle data) {
 
-            List<User> followers = (List<User>) data.getSerializable(GetFollowersTask.FOLLOWERS_KEY);
-            boolean hasMorePages = data.getBoolean(GetFollowersTask.MORE_PAGES_KEY);
+            List<User> followers = (List<User>) data.getSerializable(PagedTask.ITEMS_KEY);
+            boolean hasMorePages = data.getBoolean(PagedTask.MORE_PAGES_KEY);
 
             isLoading = false;
 

@@ -13,6 +13,9 @@ import edu.byu.cs.tweeter.util.Pair;
 
 public abstract class PagedTask<T> extends AuthenticatedTask {
 
+    public static final String ITEMS_KEY = "items";
+    public static final String MORE_PAGES_KEY = "more-pages";
+
     private List<T> items;
     private Boolean hasMorePages;
     /**
@@ -31,9 +34,9 @@ public abstract class PagedTask<T> extends AuthenticatedTask {
     private T lastItem;
 
 
-    public static final String ITEMS_KEY = "items";
 
-    public static final String MORE_PAGES_KEY = "more-pages";
+
+
 
     public PagedTask(Handler messageHandler, AuthToken authToken, User targetUser, int limit, T lastItem) {
         super(messageHandler, authToken);
@@ -56,6 +59,7 @@ public abstract class PagedTask<T> extends AuthenticatedTask {
 
     @Override
     protected void processTask() {
+
         Pair<List<T>, Boolean> pageOfStatus = getItems();
         this.items = pageOfStatus.getFirst();
         this.hasMorePages = pageOfStatus.getSecond();
@@ -63,6 +67,7 @@ public abstract class PagedTask<T> extends AuthenticatedTask {
 
     @Override
     protected void loadSuccessBundle(Bundle msgBundle) {
+        msgBundle.putBoolean(SUCCESS_KEY, true);
         msgBundle.putSerializable(ITEMS_KEY, (Serializable) items);//(Serializable) statuses);
         msgBundle.putBoolean(MORE_PAGES_KEY, hasMorePages);
     }
