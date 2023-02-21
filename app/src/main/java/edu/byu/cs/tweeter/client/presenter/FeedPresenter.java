@@ -14,7 +14,7 @@ public class FeedPresenter extends PagedPresenter<Status>{
 
     private static final int PAGE_SIZE = 10;
 
-    public FeedPresenter (PagedPresenter.MorePagesView<Status> view)
+    public FeedPresenter (MorePagesView<Status> view)
     {
         super(view, new UserService());
     }
@@ -25,9 +25,7 @@ public class FeedPresenter extends PagedPresenter<Status>{
     }
 
     public void getUser(String userAlias) {
-
         getUserService().getUserFeed(userAlias, new GetUserObserver());
-
         getMorePagesView().displayMessage("Getting user's profile...");
     }
 

@@ -28,6 +28,7 @@ public abstract class PagedPresenter<T> extends Presenter {
     }
 
     public interface PagedView extends View {
+        void displayMessage(String message);
         void displayUser(User user);
         void setLoadingFooter(boolean value);
     }
@@ -36,18 +37,18 @@ public abstract class PagedPresenter<T> extends Presenter {
     }
 
 
-    public void loadMoreItems(User user, boolean isLoading, Status lastStatus) {
+    public void loadMoreItems(User user, boolean isLoading, T lastItem) {
         if (!isLoading) {   // This guard is important for avoiding a race condition in the scrolling code.
             isLoading = true;
 
             morePagesView.setLoadingFooter(true);
 
 
-            loadItems(user, lastStatus, new GetItemsObserver());
+            loadItems(user, lastItem, new GetItemsObserver());
 
         }
     }
-    public abstract void loadItems(User user, Status lastStatus, GetItemsObserver observer);
+    public abstract void loadItems(User user, T lastItem, GetItemsObserver observer);
 
     public class GetItemsObserver implements UserService.GetItemsObserver {
 

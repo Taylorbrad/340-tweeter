@@ -19,83 +19,23 @@ import edu.byu.cs.tweeter.client.view.main.story.StoryFragment;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
 
-public class StoryPresenter {
-
-    private View view;
-
-    private UserService userService;
+public class StoryPresenter extends PagedPresenter<Status> {
 
     private static final int PAGE_SIZE = 10;
 
-    public void getUser(String userAlias) {
-        userService.getUserStory(userAlias, new GetUserObserver());
-
-    }
-
-    public void loadMoreItems(User user, boolean isLoading, Status lastStatus) {
-        if (!isLoading) {   // This guard is important for avoiding a race condition in the scrolling code.
-
-            view.setLoadingFooter(true);
-
-            userService.loadMoreItems(user, PAGE_SIZE, lastStatus, new GetItemsObserver());
-        }
-    }
-
-    public interface View {
-
-        void displayUser(User user);
-
-        void displayMessage(String message);
-
-        void setLoadingFooter(boolean b);
-
-        void addItems(List<Status> statuses, boolean hasMorePages, Status lastStatus);
-
-    }
-
-    public StoryPresenter(View view)
+    public StoryPresenter(MorePagesView<Status> view)
     {
-        this.view = view;
-
-        this.userService = new UserService();
+        super(view, new UserService());
     }
 
-    private class GetItemsObserver implements UserService.GetItemsObserver {
-
-        @Override
-        public void displayMessage(String message) {
-            view.displayMessage(message);
-        }
-
-        @Override
-        public void handleSuccess(Bundle data) {
-            view.setLoadingFooter(false);
-
-            List<Status> statuses = (List<Status>) data.getSerializable(PagedTask.ITEMS_KEY);
-
-            boolean hasMorePages = data.getBoolean(GetStoryTask.MORE_PAGES_KEY);
-
-            Status lastStatus = (statuses.size() > 0) ? statuses.get(statuses.size() - 1) : null;
-
-            view.addItems(statuses, hasMorePages, lastStatus);
-        }
+    public void getUser(String userAlias) {
+        getUserService().getUserStory(userAlias, new GetUserObserver());
     }
-    private class GetUserObserver implements UserService.GetUserObserver {
 
-        @Override
-        public void displayMessage(String message) {
-            view.displayMessage(message);
-        }
-
-        @Override
-        public User getUser(Bundle data) {
-            User user = (User) data.getSerializable(GetUserTask.USER_KEY);
-            return user;
-        }
-
-        @Override
-        public void handleSuccess(User user) {
-            view.displayUser(user);
-        }
+    @Override
+    public void loadItems(User user, Status lastStatus, PagedPresenter<Status>.GetItemsObserver observer) {
+        getUserService().loadMoreItems(user, PAGE_SIZE, lastStatus, new GetItemsObserver());
     }
+
+
 }
