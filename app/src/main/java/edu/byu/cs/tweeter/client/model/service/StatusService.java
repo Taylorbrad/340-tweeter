@@ -11,13 +11,18 @@ import edu.byu.cs.tweeter.model.domain.Status;
 
 public class StatusService {
 
+    private ExecutorService executor;
+
+    public StatusService() {
+        executor = Executors.newSingleThreadExecutor();
+    }
+
     public interface MainActivityObserver extends SimpleNotificationObserver { }
 
 
     public void postStatus(Status newStatus, MainActivityObserver observer) {
         PostStatusTask statusTask = new PostStatusTask(Cache.getInstance().getCurrUserAuthToken(),
                 newStatus, new SimpleNotificationHandler(observer));
-        ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(statusTask);
     }
 

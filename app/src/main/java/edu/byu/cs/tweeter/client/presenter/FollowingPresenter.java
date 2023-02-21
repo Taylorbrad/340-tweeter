@@ -8,7 +8,6 @@ import edu.byu.cs.tweeter.client.model.backgroundTask.GetUserTask;
 import edu.byu.cs.tweeter.client.model.backgroundTask.PagedTask;
 import edu.byu.cs.tweeter.client.model.service.FollowService;
 import edu.byu.cs.tweeter.client.model.service.UserService;
-import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
 
 public class FollowingPresenter {
@@ -21,6 +20,7 @@ public class FollowingPresenter {
     private UserService userService;
 
     private User lastFollowee;
+
     private boolean hasMorePages;
     private boolean isLoading = false;
 
@@ -32,6 +32,7 @@ public class FollowingPresenter {
     }
 
     public interface View {
+
         void setLoadingFooter(boolean value);
 
         void displayMessage(String message);

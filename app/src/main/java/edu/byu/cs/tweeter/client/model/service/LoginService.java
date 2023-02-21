@@ -16,6 +16,12 @@ import edu.byu.cs.tweeter.model.domain.User;
 
 public class LoginService {
 
+    private ExecutorService executor;
+
+    public LoginService() {
+        executor = Executors.newSingleThreadExecutor();
+    }
+
     public interface LoginObserver extends UserObserver {
         void handleSuccess(User loggedInUser);
 
@@ -27,7 +33,6 @@ public class LoginService {
 
     public void logout(MainActivityObserver observer) {
         LogoutTask logoutTask = new LogoutTask(Cache.getInstance().getCurrUserAuthToken(), new SimpleNotificationHandler(observer));
-        ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(logoutTask);
     }
 
@@ -36,7 +41,6 @@ public class LoginService {
         LoginTask loginTask = new LoginTask(alias.getText().toString(),
                 password.getText().toString(),
                 new UserHandler(observer));
-        ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(loginTask);
     }
 

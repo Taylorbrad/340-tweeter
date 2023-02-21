@@ -12,6 +12,12 @@ import edu.byu.cs.tweeter.model.domain.User;
 
 public class RegisterService {
 
+    private ExecutorService executor;
+
+    public RegisterService() {
+        executor = Executors.newSingleThreadExecutor();
+    }
+
     public interface RegisterObserver extends UserObserver {
 
         void handleSuccess(User registeredUser);
@@ -25,7 +31,6 @@ public class RegisterService {
         RegisterTask registerTask = new RegisterTask(firstName.getText().toString(), lastName.getText().toString(),
                 alias.getText().toString(), password.getText().toString(), imageBytesBase64, new UserHandler(observer));
 
-        ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(registerTask);
     }
 

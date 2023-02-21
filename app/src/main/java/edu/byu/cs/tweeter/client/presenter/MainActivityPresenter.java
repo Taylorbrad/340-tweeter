@@ -12,8 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.byu.cs.tweeter.client.cache.Cache;
-import edu.byu.cs.tweeter.client.model.backgroundTask.GetFollowersCountTask;
-import edu.byu.cs.tweeter.client.model.backgroundTask.GetFollowingCountTask;
+import edu.byu.cs.tweeter.client.model.backgroundTask.CountTask;
 import edu.byu.cs.tweeter.client.model.backgroundTask.IsFollowerTask;
 import edu.byu.cs.tweeter.client.model.backgroundTask.observer.GetItemsObserver;
 import edu.byu.cs.tweeter.client.model.service.FollowService;
@@ -51,8 +50,6 @@ public class MainActivityPresenter {
         void unfollow();
 
         void displayMessage(String message);
-
-//        void refreshFollowButton(boolean b);
 
         void setFollowButton();
 
@@ -202,10 +199,10 @@ public class MainActivityPresenter {
 
         @Override
         public void handleSuccess(Bundle data) {
-            int followeeCount = data.getInt(GetFollowersCountTask.COUNT_KEY);
+            int followeeCount = data.getInt(CountTask.COUNT_KEY);
             view.setFollowerCount(followeeCount);
 
-            int followingCount = data.getInt(GetFollowingCountTask.COUNT_KEY);
+            int followingCount = data.getInt(CountTask.COUNT_KEY);
             view.setFolloweeCount(followingCount);
         }
 
