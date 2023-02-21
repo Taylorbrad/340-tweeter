@@ -98,44 +98,6 @@ public class FollowersPresenter {
         }
     }
 
-    public class UserObserver implements UserService.UserObserver {
-
-        @Override
-        public void handleSuccess(User user) {
-            view.displayUser(user);
-        }
-
-        @Override
-        public void displayMessage(String s) {
-            view.displayMessage(s);
-        }
-
-        @Override
-        public void setLoadingFooter(boolean b) {
-
-        }
-
-        @Override
-        public void handleSuccess(List<Status> statuses, boolean hasMorePages, Status lastStatus) {
-
-        }
-
-        @Override
-        public void displayError(String message) {
-
-        }
-
-        @Override
-        public void displayException(Exception ex) {
-
-        }
-
-        @Override
-        public void handleSuccess(Bundle data) {
-
-        }
-    }
-
     public class FollowersObserver implements FollowService.FollowersObserver {
 
         @Override
@@ -143,13 +105,12 @@ public class FollowersPresenter {
             isLoading = false;
             view.setLoadingFooter(false);
 
-            view.displayMessage(message);
-//            Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+            view.displayMessage("Failed because of error: " + message);
         }
 
         @Override
         public void displayException(Exception ex) {
-
+            view.displayMessage("Failed because of exception: " + ex.getMessage());
         }
 
         @Override
@@ -171,7 +132,7 @@ public class FollowersPresenter {
 
         @Override
         public void displayMessage(String message) {
-
+            view.displayMessage(message);
         }
     }
 }

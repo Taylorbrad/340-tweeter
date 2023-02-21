@@ -33,13 +33,13 @@ public class FollowingPresenter {
 
     public interface View {
 
-        void setLoadingFooter(boolean value);
+        void displayUser(User user);
 
         void displayMessage(String message);
 
-        void addMoreItems(List<User> followees);
+        void setLoadingFooter(boolean value);
 
-        void displayUser(User user);
+        void addMoreItems(List<User> followees);
     }
 
     public boolean hasMorePages() {
@@ -55,10 +55,7 @@ public class FollowingPresenter {
     }
 
 
-
-
     public void loadMoreItems(User user) {
-
 
         if (!isLoading) {   // This guard is important for avoiding a race condition in the scrolling code.
             isLoading = true;
