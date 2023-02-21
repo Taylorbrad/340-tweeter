@@ -49,6 +49,19 @@ public abstract class BackgroundTask implements Runnable {
 
         sendMessage(msgBundle);
     }
+    private void sendMessage(Bundle msgBundle) {
+        Message msg = Message.obtain();
+        msg.setData(msgBundle);
+
+        messageHandler.sendMessage(msg);
+    }
+
+    @NonNull
+    private Bundle createBundle(boolean value) {
+        Bundle msgBundle = new Bundle();
+        msgBundle.putBoolean(SUCCESS_KEY, value);
+        return msgBundle;
+    }
 
     protected abstract void processTask();
 
@@ -70,19 +83,7 @@ public abstract class BackgroundTask implements Runnable {
         sendMessage(msgBundle);
     }
 
-    private void sendMessage(Bundle msgBundle) {
-        Message msg = Message.obtain();
-        msg.setData(msgBundle);
 
-        messageHandler.sendMessage(msg);
-    }
-
-    @NonNull
-    private Bundle createBundle(boolean value) {
-        Bundle msgBundle = new Bundle();
-        msgBundle.putBoolean(SUCCESS_KEY, value);
-        return msgBundle;
-    }
 
     protected FakeData getFakeData() {
         return FakeData.getInstance();

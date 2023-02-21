@@ -23,7 +23,4 @@ public class IsFollowerHandler extends BackgroundTaskHandler<GetItemsObserver> {
     protected void handleSuccess(Bundle data, GetItemsObserver observer) {
         observer.handleSuccess(data);
     }
-
-
-
 }
