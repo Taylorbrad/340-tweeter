@@ -31,7 +31,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.byu.cs.tweeter.R;
-import edu.byu.cs.tweeter.client.model.service.UserService;
 import edu.byu.cs.tweeter.client.presenter.FeedPresenter;
 import edu.byu.cs.tweeter.client.presenter.PagedPresenter;
 import edu.byu.cs.tweeter.client.view.main.MainActivity;
@@ -41,7 +40,7 @@ import edu.byu.cs.tweeter.model.domain.User;
 /**
  * Implements the "Feed" tab.
  */
-public class FeedFragment extends Fragment implements PagedPresenter.MorePagesView<Status> {
+public class FeedFragment extends Fragment implements PagedPresenter.PagedView<Status> {
 
     //TODO move has more pages and isloading
     private static final String LOG_TAG = "FeedFragment";
@@ -126,12 +125,17 @@ public class FeedFragment extends Fragment implements PagedPresenter.MorePagesVi
         }
     }
 
-    @Override
-    public void addItems(List<Status> statuses, boolean hasMorePages, Status lastStatus) {
-        feedRecyclerViewAdapter.addItems(statuses);
-        feedRecyclerViewAdapter.setLastStatus(lastStatus);
-        feedRecyclerViewAdapter.setHasMorePages(hasMorePages);
+//    @Override
+//    public void addItems(List<Status> statuses, boolean hasMorePages, Status lastStatus) {
+//        feedRecyclerViewAdapter.addItems(statuses);
+//        feedRecyclerViewAdapter.setLastStatus(lastStatus);
+//        feedRecyclerViewAdapter.setHasMorePages(hasMorePages);
+//
+//    }
 
+    @Override
+    public void addItems(List<Status> items) {
+        feedRecyclerViewAdapter.addItems(items);
     }
 
     /**
@@ -348,7 +352,7 @@ public class FeedFragment extends Fragment implements PagedPresenter.MorePagesVi
          */
         void loadMoreItems() {
 
-            presenter.loadMoreItems(user, isLoading, lastStatus);
+            presenter.loadMoreItems(user);
         }
 
         /**

@@ -1,26 +1,18 @@
 package edu.byu.cs.tweeter.client.model.backgroundTask.handler;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 
-import androidx.annotation.NonNull;
-
-import edu.byu.cs.tweeter.client.model.backgroundTask.IsFollowerTask;
-import edu.byu.cs.tweeter.client.model.backgroundTask.observer.GetItemsObserver;
-import edu.byu.cs.tweeter.client.model.service.FollowService;
-import edu.byu.cs.tweeter.client.model.service.UserService;
+import edu.byu.cs.tweeter.client.model.backgroundTask.observer.GetItemsHandlerObserver;
 
 // IsFollowerHandler
-public class IsFollowerHandler extends BackgroundTaskHandler<GetItemsObserver> {
+public class IsFollowerHandler extends BackgroundTaskHandler<GetItemsHandlerObserver> {
 
-    public IsFollowerHandler(GetItemsObserver observer) {
+    public IsFollowerHandler(GetItemsHandlerObserver observer) {
         super(observer);
     }
 
     @Override
-    protected void handleSuccess(Bundle data, GetItemsObserver observer) {
+    protected void handleSuccess(Bundle data, GetItemsHandlerObserver observer) {
         observer.handleSuccess(data);
     }
 }

@@ -40,7 +40,7 @@ import edu.byu.cs.tweeter.model.domain.User;
 /**
  * Implements the "Story" tab.
  */
-public class StoryFragment extends Fragment implements PagedPresenter.MorePagesView<Status> {
+public class StoryFragment extends Fragment implements PagedPresenter.PagedView<Status> {
     private static final String LOG_TAG = "StoryFragment";
     private static final String USER_KEY = "UserKey";
 
@@ -122,11 +122,16 @@ public class StoryFragment extends Fragment implements PagedPresenter.MorePagesV
         }
     }
 
+//    @Override
+//    public void addItems(List<Status> statuses, boolean hasMorePages, Status lastStatus) {
+//        storyRecyclerViewAdapter.addItems(statuses);
+//        storyRecyclerViewAdapter.setLastStatus(lastStatus);
+//        storyRecyclerViewAdapter.setHasMorePages(hasMorePages);
+//    }
+
     @Override
-    public void addItems(List<Status> statuses, boolean hasMorePages, Status lastStatus) {
-        storyRecyclerViewAdapter.addItems(statuses);
-        storyRecyclerViewAdapter.setLastStatus(lastStatus);
-        storyRecyclerViewAdapter.setHasMorePages(hasMorePages);
+    public void addItems(List<Status> items) {
+        storyRecyclerViewAdapter.addItems(items);
     }
 
     /**
@@ -346,7 +351,7 @@ public class StoryFragment extends Fragment implements PagedPresenter.MorePagesV
          * data.
          */
         void loadMoreItems() {
-            presenter.loadMoreItems(user, isLoading, lastStatus);
+            presenter.loadMoreItems(user);
 
         }
 

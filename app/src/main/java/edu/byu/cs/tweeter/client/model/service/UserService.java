@@ -35,7 +35,7 @@ public class UserService {
         void handleSuccess(List<Status> statuses, boolean hasMorePages, Status lastStatus);
     }
 
-    public interface GetItemsObserver extends edu.byu.cs.tweeter.client.model.backgroundTask.observer.GetItemsObserver {
+    public interface GetItemsHandlerObserver extends edu.byu.cs.tweeter.client.model.backgroundTask.observer.GetItemsHandlerObserver {
         @Override
         void handleSuccess(Bundle data);
     }
@@ -45,13 +45,13 @@ public class UserService {
     }
 
 
-    public void loadMoreItems(User user, int pageSize, Status lastStatus, GetItemsObserver observer) {
+    public void loadMoreItems(User user, int pageSize, Status lastStatus, GetItemsHandlerObserver observer) {
         GetStoryTask getStoryTask = new GetStoryTask(Cache.getInstance().getCurrUserAuthToken(),
                 user, pageSize, lastStatus, new GetItemsHandler<Status>(observer));
         executor.execute(getStoryTask);
     }
 
-    public void getFeed(User user, int pageSize, Status lastStatus, GetItemsObserver observer) {
+    public void getFeed(User user, int pageSize, Status lastStatus, GetItemsHandlerObserver observer) {
         GetFeedTask getFeedTask = new GetFeedTask(Cache.getInstance().getCurrUserAuthToken(),
                 user, pageSize, lastStatus, new GetItemsHandler<Status>(observer));
         executor.execute(getFeedTask);

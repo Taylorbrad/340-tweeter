@@ -2,7 +2,6 @@ package edu.byu.cs.tweeter.client.presenter;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -14,7 +13,7 @@ import java.util.List;
 import edu.byu.cs.tweeter.client.cache.Cache;
 import edu.byu.cs.tweeter.client.model.backgroundTask.CountTask;
 import edu.byu.cs.tweeter.client.model.backgroundTask.IsFollowerTask;
-import edu.byu.cs.tweeter.client.model.backgroundTask.observer.GetItemsObserver;
+import edu.byu.cs.tweeter.client.model.backgroundTask.observer.GetItemsHandlerObserver;
 import edu.byu.cs.tweeter.client.model.service.FollowService;
 import edu.byu.cs.tweeter.client.model.service.LoginService;
 import edu.byu.cs.tweeter.client.model.service.StatusService;
@@ -141,7 +140,7 @@ public class MainActivityPresenter {
     }
 
     public void isFollower() {
-        followService.isFollower(this.selectedUser, new IsFollowerObserver());
+        followService.isFollower(this.selectedUser, new IsFollowerHandlerObserver());
     }
 
     public void toggleFollowing(boolean isFollowing) {
@@ -173,7 +172,17 @@ public class MainActivityPresenter {
 
     }
 
-    public class IsFollowerObserver implements GetItemsObserver {
+    public class IsFollowerHandlerObserver implements GetItemsHandlerObserver {
+
+        @Override
+        public void displayError(String message) {
+            view.displayMessage("error because: " + message);
+        }
+
+        @Override
+        public void displayException(Exception ex) {
+            view.displayMessage("exception because: " + ex.getMessage());
+        }
 
         @Override
         public void handleSuccess(Bundle data) {

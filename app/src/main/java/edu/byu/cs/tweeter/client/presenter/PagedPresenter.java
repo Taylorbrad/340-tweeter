@@ -6,73 +6,105 @@ import java.util.List;
 
 import edu.byu.cs.tweeter.client.model.backgroundTask.GetFeedTask;
 import edu.byu.cs.tweeter.client.model.backgroundTask.GetUserTask;
+import edu.byu.cs.tweeter.client.model.service.FollowService;
 import edu.byu.cs.tweeter.client.model.service.UserService;
-import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
 
 public abstract class PagedPresenter<T> extends Presenter {
 
-    private MorePagesView morePagesView;
+    private PagedView pagedView;
     private UserService userService;
-    public MorePagesView getMorePagesView() {
-        return morePagesView;
+    private FollowService followService;
+    private boolean isLoading = false;
+    private boolean hasMorePages;
+    private T lastItem;
+
+    public boolean isLoading() {
+        return isLoading;
+    }
+    public boolean hasMorePages() {
+        return hasMorePages;
+    }
+
+    public PagedView getMorePagesView() {
+        return pagedView;
     }
     public UserService getUserService() {
         return userService;
     }
-
-
-    PagedPresenter (MorePagesView<T> view, UserService userService) {
-        this.morePagesView = view;
-        this.userService = userService;
+    public FollowService getFollowService() {
+        return followService;
     }
 
-    public interface PagedView extends View {
+    PagedPresenter (PagedView<T> view, UserService userService) {
+        this.pagedView = view;
+        this.userService = userService;
+    }
+    PagedPresenter (PagedView<T> view, UserService userService, FollowService followService) {
+        this.pagedView = view;
+        this.userService = userService;
+        this.followService = followService;
+    }
+
+    public interface PagedView<T>{
         void displayMessage(String message);
         void displayUser(User user);
         void setLoadingFooter(boolean value);
-    }
-    public interface MorePagesView<T> extends PagedView {
-        void addItems(List<T> items, boolean hasMorePages, T lastItem);
+        void addItems(List<T> items);
     }
 
-
-    public void loadMoreItems(User user, boolean isLoading, T lastItem) {
+    public void loadMoreItems(User user) {
         if (!isLoading) {   // This guard is important for avoiding a race condition in the scrolling code.
-            isLoading = true;
+            this.isLoading = true;
 
-            morePagesView.setLoadingFooter(true);
-
+            pagedView.setLoadingFooter(true);
 
             loadItems(user, lastItem, new GetItemsObserver());
 
         }
     }
-    public abstract void loadItems(User user, T lastItem, GetItemsObserver observer);
 
-    public class GetItemsObserver implements UserService.GetItemsObserver {
+    public abstract void loadItems(User user, T lastItem, GetItemsObserver observer);
+    public abstract List<T> getItemsList(Bundle data);
+    public abstract T getLastItem(List<T> items);
+
+    public class GetItemsObserver implements UserService.GetItemsHandlerObserver {
 
         @Override
         public void displayMessage(String message) {
-            morePagesView.displayMessage(message);
+            pagedView.displayMessage(message);
+        }
+
+        @Override
+        public void displayError(String message) {
+            pagedView.displayMessage("error because: " + message);
+        }
+
+        @Override
+        public void displayException(Exception ex) {
+            pagedView.displayMessage("exception because: " + ex.getMessage());
         }
 
         @Override
         public void handleSuccess(Bundle data) {
-            morePagesView.setLoadingFooter(false);
-            List<Status> statuses = (List<Status>) data.getSerializable(GetFeedTask.ITEMS_KEY);
+            pagedView.setLoadingFooter(false);
 
-            boolean hasMorePages = data.getBoolean(GetFeedTask.MORE_PAGES_KEY);
+            isLoading = false;
 
-            Status lastStatus = (statuses.size() > 0) ? statuses.get(statuses.size() - 1) : null;
-            morePagesView.addItems(statuses, hasMorePages, lastStatus);
+            List<T> items = getItemsList(data);//   (List<Status>) data.getSerializable(GetFeedTask.ITEMS_KEY);
+
+            hasMorePages = data.getBoolean(GetFeedTask.MORE_PAGES_KEY);
+
+            lastItem = getLastItem(items);
+
+            pagedView.addItems(items);
         }
     }
     public class GetUserObserver implements UserService.GetUserObserver {
 
         @Override
         public void displayMessage(String message) {
-            getMorePagesView().displayMessage(message);
+            pagedView.displayMessage(message);
         }
 
         @Override
@@ -83,7 +115,7 @@ public abstract class PagedPresenter<T> extends Presenter {
 
         @Override
         public void handleSuccess(User user) {
-            getMorePagesView().displayUser(user);
+            pagedView.displayUser(user);
         }
     }
 }
