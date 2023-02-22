@@ -2,7 +2,6 @@ package edu.byu.cs.tweeter.client.presenter;
 
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.ImageView;
 
@@ -92,23 +91,9 @@ public class RegisterPresenter {
 
 
     public class RegisterObserver implements RegisterService.RegisterObserver {
-
-
-        @Override
-        public User getUser(Bundle data) {
-            User registeredUser = (User) data.getSerializable(RegisterTask.USER_KEY);
-            AuthToken authToken = (AuthToken) data.getSerializable(RegisterTask.AUTH_TOKEN_KEY);
-
-            Cache.getInstance().setCurrUser(registeredUser);
-            Cache.getInstance().setCurrUserAuthToken(authToken);
-
-            return registeredUser;
-        }
-
         @Override
         public void handleSuccess(User registeredUser) {
             view.displayRegistered(registeredUser);
-
         }
 
         @Override

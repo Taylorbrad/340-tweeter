@@ -120,11 +120,11 @@ public abstract class PagedPresenter<T> extends Presenter {
             pagedView.displayMessage(message);
         }
 
-        @Override
-        public User getUser(Bundle data) {
-            user = (User) data.getSerializable(GetUserTask.USER_KEY);
-            return user;
-        }
+//        @Override
+//        public User getUser(Bundle data) {
+//            user = (User) data.getSerializable(GetUserTask.USER_KEY);
+//            return user;
+//        }
 
         @Override
         public void handleSuccess(User user) {

@@ -63,23 +63,8 @@ public class LoginPresenter {
     public class LoginObserver implements LoginService.LoginObserver {
 
         @Override
-        public User getUser(Bundle data) {
-
-            User loggedInUser = (User) data.getSerializable(LoginTask.USER_KEY);
-            AuthToken authToken = (AuthToken) data.getSerializable(LoginTask.AUTH_TOKEN_KEY);
-
-            // Cache user session information
-            Cache.getInstance().setCurrUser(loggedInUser);
-            Cache.getInstance().setCurrUserAuthToken(authToken);
-
-            return loggedInUser;
-        }
-
-        @Override
         public void handleSuccess(User loggedInUser) {
-
             view.logInUser(loggedInUser);
-
         }
 
         @Override
