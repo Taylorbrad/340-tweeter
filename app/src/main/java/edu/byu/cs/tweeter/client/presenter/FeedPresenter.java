@@ -23,16 +23,6 @@ public class FeedPresenter extends PagedPresenter<Status>{
         getUserService().getFeed(user, PAGE_SIZE, lastStatus, new GetItemsObserver());
     }
 
-    @Override
-    public List<Status> getItemsList(Bundle data) {
-        return (List<Status>) data.getSerializable(PagedTask.ITEMS_KEY);
-    }
-
-    @Override
-    public Status getLastItem(List<Status> items) {
-        return (items.size() > 0) ? items.get(items.size() - 1) : null;
-    }
-
     public void getUser(String userAlias) {
         getUserService().getUserFeed(userAlias, new GetUserObserver());
         getMorePagesView().displayMessage("Getting user's profile...");

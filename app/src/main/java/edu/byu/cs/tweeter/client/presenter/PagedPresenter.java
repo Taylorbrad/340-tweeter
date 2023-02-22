@@ -6,8 +6,10 @@ import java.util.List;
 
 import edu.byu.cs.tweeter.client.model.backgroundTask.GetFeedTask;
 import edu.byu.cs.tweeter.client.model.backgroundTask.GetUserTask;
+import edu.byu.cs.tweeter.client.model.backgroundTask.PagedTask;
 import edu.byu.cs.tweeter.client.model.service.FollowService;
 import edu.byu.cs.tweeter.client.model.service.UserService;
+import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
 
 public abstract class PagedPresenter<T> extends Presenter {
@@ -15,6 +17,8 @@ public abstract class PagedPresenter<T> extends Presenter {
     private PagedView pagedView;
     private UserService userService;
     private FollowService followService;
+
+    private User user;
     private boolean isLoading = false;
     private boolean hasMorePages;
     private T lastItem;
@@ -65,8 +69,14 @@ public abstract class PagedPresenter<T> extends Presenter {
     }
 
     public abstract void loadItems(User user, T lastItem, GetItemsObserver observer);
-    public abstract List<T> getItemsList(Bundle data);
-    public abstract T getLastItem(List<T> items);
+
+    public List<T> getItemsList(Bundle data) {
+        return (List<T>) data.getSerializable(PagedTask.ITEMS_KEY);
+    }
+
+    public T getLastItem(List<T> items) {
+        return (items.size() > 0) ? items.get(items.size() - 1) : null;
+    }
 
     public class GetItemsObserver implements UserService.GetItemsHandlerObserver {
 
@@ -109,7 +119,7 @@ public abstract class PagedPresenter<T> extends Presenter {
 
         @Override
         public User getUser(Bundle data) {
-            User user = (User) data.getSerializable(GetUserTask.USER_KEY);
+            user = (User) data.getSerializable(GetUserTask.USER_KEY);
             return user;
         }
 

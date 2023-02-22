@@ -22,16 +22,6 @@ public class FollowingPresenter extends PagedPresenter<User> {
         getFollowService().loadMoreItemsFollowing(user, PAGE_SIZE, lastItem, observer);
     }
 
-    @Override
-    public List<User> getItemsList(Bundle data) {
-        return (List<User>) data.getSerializable(PagedTask.ITEMS_KEY);
-    }
-
-    @Override
-    public User getLastItem(List<User> items) {
-        return (items.size() > 0) ? items.get(items.size() - 1) : null;
-    }
-
     public void getUser(String userAlias) {
         getUserService().getUserFollowing(userAlias, new GetUserObserver());
     }

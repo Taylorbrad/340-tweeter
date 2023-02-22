@@ -18,24 +18,11 @@ public class StoryPresenter extends PagedPresenter<Status> {
         super(view, new UserService());
     }
 
-    public void getUser(String userAlias) {
-        getUserService().getUserStory(userAlias, new GetUserObserver());
-    }
-
     @Override
     public void loadItems(User user, Status lastStatus, PagedPresenter<Status>.GetItemsObserver observer) {
         getUserService().loadMoreItems(user, PAGE_SIZE, lastStatus, new GetItemsObserver());
     }
-
-    @Override
-    public List<Status> getItemsList(Bundle data) {
-        return (List<Status>) data.getSerializable(PagedTask.ITEMS_KEY);
+    public void getUser(String userAlias) {
+        getUserService().getUserStory(userAlias, new GetUserObserver());
     }
-
-    @Override
-    public Status getLastItem(List<Status> items) {
-        return (items.size() > 0) ? items.get(items.size() - 1) : null;
-    }
-
-
 }
