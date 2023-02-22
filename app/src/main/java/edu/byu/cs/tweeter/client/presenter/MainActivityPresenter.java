@@ -206,6 +206,8 @@ public class MainActivityPresenter {
 
         @Override
         public void handleSuccess(Bundle data) {
+
+            //TODO dont depend on bundle
             int followeeCount = data.getInt(GetCountTask.COUNT_KEY);
             view.setFollowerCount(followeeCount);
 

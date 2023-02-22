@@ -15,7 +15,8 @@ public class StoryPresenter extends PagedPresenter<Status> {
     public void loadItems(User user, Status lastStatus, PagedPresenter<Status>.GetItemsObserver observer) {
         getUserService().loadMoreItems(user, PAGE_SIZE, lastStatus, new GetItemsObserver());
     }
+
     public void getUser(String userAlias) {
-        getUserService().getUserStory(userAlias, new GetUserObserver());
+        getUserService().getUser(userAlias, new GetUserObserver());
     }
 }

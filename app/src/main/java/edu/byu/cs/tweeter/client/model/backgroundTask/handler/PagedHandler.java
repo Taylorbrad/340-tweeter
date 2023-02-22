@@ -12,6 +12,7 @@ public class PagedHandler<T> extends BackgroundTaskHandler<PagedObserver> {
 
     @Override
     protected void handleSuccess(Bundle data, PagedObserver observer) {
+        //TODO do stuff here
         observer.handleSuccess(data);
     }
 }

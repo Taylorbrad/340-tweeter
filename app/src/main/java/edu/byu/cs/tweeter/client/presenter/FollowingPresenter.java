@@ -16,7 +16,7 @@ public class FollowingPresenter extends PagedPresenter<User> {
     }
 
     public void getUser(String userAlias) {
-        getUserService().getUserFollowing(userAlias, new GetUserObserver());
+        getUserService().getUser(userAlias, new GetUserObserver());
     }
 
 }

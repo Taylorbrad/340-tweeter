@@ -57,25 +57,7 @@ public class UserService {
         executor.execute(getFeedTask);
     }
 
-    public void getUserStory(String userAlias, GetUserObserver observer) {
-        GetUserTask getUserTask = new GetUserTask(Cache.getInstance().getCurrUserAuthToken(),
-                userAlias, new UserHandler(observer));
-        executor.execute(getUserTask);
-    }
-
-    public void getUserFeed(String userAlias, GetUserObserver observer) {
-        GetUserTask getUserTask = new GetUserTask(Cache.getInstance().getCurrUserAuthToken(),
-                userAlias, new UserHandler(observer));
-        executor.execute(getUserTask);
-    }
-
-    public void getUserFollowers(String userAlias, GetUserObserver observer) {
-        GetUserTask getUserTask = new GetUserTask(Cache.getInstance().getCurrUserAuthToken(),
-                userAlias, new UserHandler(observer));
-        executor.execute(getUserTask);
-    }
-
-    public void getUserFollowing(String userAlias, GetUserObserver observer) {
+    public void getUser(String userAlias, GetUserObserver observer) {
         GetUserTask getUserTask = new GetUserTask(Cache.getInstance().getCurrUserAuthToken(),
                 userAlias, new UserHandler(observer));
         executor.execute(getUserTask);

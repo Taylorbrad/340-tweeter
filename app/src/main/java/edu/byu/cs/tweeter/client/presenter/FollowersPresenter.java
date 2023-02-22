@@ -12,7 +12,7 @@ public class FollowersPresenter extends PagedPresenter<User> {
     }
 
     public void getUser(String userAlias) {
-        getUserService().getUserFollowers(userAlias, new GetUserObserver());
+        getUserService().getUser(userAlias, new GetUserObserver());
     }
 
     @Override
