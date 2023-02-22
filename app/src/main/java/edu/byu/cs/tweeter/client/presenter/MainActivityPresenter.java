@@ -29,7 +29,6 @@ public class MainActivityPresenter {
 
     private User selectedUser;
 
-
     public void setSelectedUser(User selectedUser)
     {
         this.selectedUser = selectedUser;
@@ -203,7 +202,6 @@ public class MainActivityPresenter {
             view.displayMessage(message);
         }
     }
-
     public class GetItemsCountObserver implements edu.byu.cs.tweeter.client.model.backgroundTask.observer.GetItemsCountObserver {
 
         @Override
@@ -220,9 +218,7 @@ public class MainActivityPresenter {
             view.displayMessage(message);
         }
     }
-
-    public class MainActivitysObserver implements FollowService.MainActivityObserver
-    {
+    public class MainActivitysObserver implements FollowService.MainActivityObserver {
         @Override
         public void setFollowing(boolean isFollower) {
             // If logged in user if a follower of the selected user, display the follow button as "following"
@@ -257,8 +253,7 @@ public class MainActivityPresenter {
 
         }
     }
-    public class LoginServiceObserver implements LoginService.MainActivityObserver
-    {
+    public class LoginServiceObserver implements LoginService.MainActivityObserver {
 
         @Override
         public void handleSuccess() {
@@ -270,8 +265,7 @@ public class MainActivityPresenter {
             view.displayMessage(message);
         }
     }
-    public class StatusServiceObserver implements StatusService.MainActivityObserver
-    {
+    public class StatusServiceObserver implements StatusService.MainActivityObserver {
 
         @Override
         public void handleSuccess() {

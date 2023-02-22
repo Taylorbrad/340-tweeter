@@ -20,6 +20,24 @@ public class RegisterPresenter {
     private View view;
     private RegisterService registerService;
 
+    public interface View {
+
+        void displayRegistering();
+
+        void setErrorText(String message);
+
+        void displayRegistered(User registeredUser);
+
+        void displayMessage(String message);
+    }
+
+    public RegisterPresenter(View view)
+    {
+        this.view = view;
+
+        registerService = new RegisterService();
+    }
+
     public void attemptRegister(ImageView imageToUpload, EditText firstName, EditText lastName, EditText alias, EditText password) {
         try {
 
@@ -71,25 +89,7 @@ public class RegisterPresenter {
         }
     }
 
-//    private UserService userService;
 
-    public interface View {
-
-        void displayRegistering();
-
-        void setErrorText(String message);
-
-        void displayRegistered(User registeredUser);
-
-        void displayMessage(String message);
-    }
-
-    public RegisterPresenter(View view)
-    {
-        this.view = view;
-
-        registerService = new RegisterService();
-    }
 
     public class RegisterObserver implements RegisterService.RegisterObserver {
 
