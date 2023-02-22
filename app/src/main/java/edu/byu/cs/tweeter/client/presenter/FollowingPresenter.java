@@ -11,8 +11,6 @@ import edu.byu.cs.tweeter.model.domain.User;
 
 public class FollowingPresenter extends PagedPresenter<User> {
 
-    private static final int PAGE_SIZE = 10;
-
     public FollowingPresenter(PagedView<User> view) {
         super(view, new UserService(), new FollowService());
     }

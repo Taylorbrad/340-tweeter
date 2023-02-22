@@ -70,24 +70,12 @@ public class FollowService {
         executor.execute(getFollowingTask);
     }
 
-    public void loadMoreItemsFollowers(User user, int pageSize, User lastFollower, FollowersObserver observer) {
+    public void loadMoreItemsFollowers(User user, int pageSize, User lastFollower, PagedPresenter.GetItemsObserver observer) {
 
         GetFollowersTask getFollowersTask = new GetFollowersTask(Cache.getInstance().getCurrUserAuthToken(),
                 user, pageSize, lastFollower, new PagedHandler<User>(observer));
         executor.execute(getFollowersTask);
 
-    }
-
-
-    public interface FollowingObserver extends PagedObserver<User> { }
-
-    public interface FollowersObserver extends PagedObserver {
-
-        void displayError(String message);
-
-        void displayException(Exception ex);
-
-//        void handleSuccess(List<User> followers, boolean hasMorePages);
     }
 
     public interface MainActivityObserver extends SimpleNotificationObserver {

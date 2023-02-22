@@ -9,10 +9,11 @@ import edu.byu.cs.tweeter.client.model.backgroundTask.GetUserTask;
 import edu.byu.cs.tweeter.client.model.backgroundTask.PagedTask;
 import edu.byu.cs.tweeter.client.model.service.FollowService;
 import edu.byu.cs.tweeter.client.model.service.UserService;
-import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
 
 public abstract class PagedPresenter<T> extends Presenter {
+
+    public static final int PAGE_SIZE = 10;
 
     private PagedView pagedView;
     private UserService userService;
@@ -22,6 +23,7 @@ public abstract class PagedPresenter<T> extends Presenter {
     private boolean isLoading = false;
     private boolean hasMorePages;
     private T lastItem;
+
 
     public boolean isLoading() {
         return isLoading;

@@ -11,7 +11,6 @@ import edu.byu.cs.tweeter.model.domain.User;
 
 public class FeedPresenter extends PagedPresenter<Status>{
 
-    private static final int PAGE_SIZE = 10;
 
     public FeedPresenter (PagedView<Status> view)
     {

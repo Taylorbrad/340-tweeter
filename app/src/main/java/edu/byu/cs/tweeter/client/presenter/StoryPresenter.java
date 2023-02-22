@@ -11,8 +11,6 @@ import edu.byu.cs.tweeter.model.domain.User;
 
 public class StoryPresenter extends PagedPresenter<Status> {
 
-    private static final int PAGE_SIZE = 10;
-
     public StoryPresenter(PagedView<Status> view)
     {
         super(view, new UserService());
