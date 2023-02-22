@@ -11,10 +11,6 @@ public class FollowersPresenter extends PagedPresenter<User> {
         super(view, new UserService(), new FollowService());
     }
 
-    public void getUser(String userAlias) {
-        getUserService().getUser(userAlias, new GetUserObserver());
-    }
-
     @Override
     public void loadItems(User user, User lastItem, PagedPresenter.GetItemsObserver observer) {
         getFollowService().loadMoreItemsFollowers(user, PAGE_SIZE, lastItem, observer);

@@ -16,12 +16,4 @@ public class FeedPresenter extends PagedPresenter<Status>{
     public void loadItems(User user, Status lastStatus, GetItemsObserver observer) {
         getUserService().getFeed(user, PAGE_SIZE, lastStatus, new GetItemsObserver());
     }
-
-    public void getUser(String userAlias) {
-        getUserService().getUser(userAlias, new GetUserObserver());
-        getMorePagesView().displayMessage("Getting user's profile...");
-    }
-
-
-    
 }

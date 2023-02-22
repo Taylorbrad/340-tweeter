@@ -69,16 +69,17 @@ public abstract class PagedPresenter<T> extends Presenter {
 
         }
     }
-
-    public abstract void loadItems(User user, T lastItem, GetItemsObserver observer);
-
     public List<T> getItemsList(Bundle data) {
         return (List<T>) data.getSerializable(PagedTask.ITEMS_KEY);
     }
-
     public T getLastItem(List<T> items) {
         return (items.size() > 0) ? items.get(items.size() - 1) : null;
     }
+    public void getUser(String userAlias) {
+        getUserService().getUser(userAlias, new GetUserObserver());
+    }
+
+    public abstract void loadItems(User user, T lastItem, GetItemsObserver observer);
 
     public class GetItemsObserver implements UserService.GetItemsHandlerObserver {
 

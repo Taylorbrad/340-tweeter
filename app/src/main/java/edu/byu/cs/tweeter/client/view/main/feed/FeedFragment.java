@@ -167,7 +167,7 @@ public class FeedFragment extends Fragment implements PagedPresenter.PagedView<S
                 @Override
                 public void onClick(View view) {
                     presenter.getUser(userAlias.getText().toString());
-
+                    displayMessage("Getting user's profile...");
                 }
             });
         }
@@ -199,6 +199,7 @@ public class FeedFragment extends Fragment implements PagedPresenter.PagedView<S
                         String clickable = s.subSequence(start, end).toString();
 
                         presenter.getUser(clickable);
+                        displayMessage("Getting user's profile...");
                     }
 
                     @Override

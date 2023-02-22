@@ -14,9 +14,4 @@ public class FollowingPresenter extends PagedPresenter<User> {
     public void loadItems(User user, User lastItem, PagedPresenter.GetItemsObserver observer) {
         getFollowService().loadMoreItemsFollowing(user, PAGE_SIZE, lastItem, observer);
     }
-
-    public void getUser(String userAlias) {
-        getUserService().getUser(userAlias, new GetUserObserver());
-    }
-
 }
