@@ -11,12 +11,11 @@ import edu.byu.cs.tweeter.util.Pair;
 /**
  * Background task that retrieves a page of other users being followed by a specified user.
  */
-public class GetFollowingTask extends PagedTask<User> {
-    private static final String LOG_TAG = "GetFollowingTask";
+public class GetFollowingTask extends PagedUserTask {
 
     public GetFollowingTask(AuthToken authToken, User targetUser, int limit, User lastFollowee,
                             Handler messageHandler) {
-        super(messageHandler, authToken, targetUser, limit, lastFollowee);
+        super(authToken, targetUser, limit, lastFollowee, messageHandler);
     }
 
     @Override

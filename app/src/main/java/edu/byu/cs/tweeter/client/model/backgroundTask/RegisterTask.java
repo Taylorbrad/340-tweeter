@@ -9,22 +9,22 @@ import edu.byu.cs.tweeter.util.Pair;
 /**
  * Background task that creates a new user account and logs in the new user (i.e., starts a session).
  */
-public class RegisterTask extends AuthenticationTask {
-
-    private static final String LOG_TAG = "RegisterTask";
+public class RegisterTask extends AuthenticateTask {
 
     /**
      * The user's first name.
      */
-    private String firstName;
+    private final String firstName;
+    
     /**
      * The user's last name.
      */
-    private String lastName;
+    private final String lastName;
+
     /**
      * The base-64 encoded bytes of the user's profile image.
      */
-    private String image;
+    private final String image;
 
     public RegisterTask(String firstName, String lastName, String username, String password,
                         String image, Handler messageHandler) {
@@ -34,14 +34,10 @@ public class RegisterTask extends AuthenticationTask {
         this.image = image;
     }
 
-    private Pair<User, AuthToken> doRegister() {
+    @Override
+    protected Pair<User, AuthToken> runAuthenticationTask() {
         User registeredUser = getFakeData().getFirstUser();
         AuthToken authToken = getFakeData().getAuthToken();
         return new Pair<>(registeredUser, authToken);
-    }
-
-    @Override
-    protected Pair<User, AuthToken> doAuthenticate() {
-        return doRegister();
     }
 }

@@ -17,7 +17,6 @@ import edu.byu.cs.tweeter.client.model.backgroundTask.handler.PagedHandler;
 import edu.byu.cs.tweeter.client.model.backgroundTask.handler.SimpleNotificationHandler;
 import edu.byu.cs.tweeter.client.model.backgroundTask.observer.GetItemsCountObserver;
 import edu.byu.cs.tweeter.client.model.backgroundTask.observer.GetItemsHandlerObserver;
-import edu.byu.cs.tweeter.client.model.backgroundTask.observer.PagedObserver;
 import edu.byu.cs.tweeter.client.model.backgroundTask.observer.SimpleNotificationObserver;
 import edu.byu.cs.tweeter.client.presenter.PagedPresenter;
 import edu.byu.cs.tweeter.model.domain.User;
