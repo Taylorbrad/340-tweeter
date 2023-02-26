@@ -7,7 +7,7 @@ import edu.byu.cs.tweeter.client.cache.Cache;
 import edu.byu.cs.tweeter.client.model.backgroundTask.GetFeedTask;
 import edu.byu.cs.tweeter.client.model.backgroundTask.GetStoryTask;
 import edu.byu.cs.tweeter.client.model.backgroundTask.GetUserTask;
-import edu.byu.cs.tweeter.client.model.backgroundTask.handler.GetItemsHandler;
+import edu.byu.cs.tweeter.client.model.backgroundTask.handler.PagedHandler;
 import edu.byu.cs.tweeter.client.model.backgroundTask.handler.UserHandler;
 import edu.byu.cs.tweeter.client.model.backgroundTask.observer.PagedObserver;
 import edu.byu.cs.tweeter.model.domain.Status;
@@ -27,13 +27,13 @@ public class UserService {
 
     public void loadMoreItems(User user, int pageSize, Status lastStatus, PagedObserver<Status> observer) {
         GetStoryTask getStoryTask = new GetStoryTask(Cache.getInstance().getCurrUserAuthToken(),
-                user, pageSize, lastStatus, new GetItemsHandler<Status>(observer));
+                user, pageSize, lastStatus, new PagedHandler<Status>(observer));
         executor.execute(getStoryTask);
     }
 
-    public void getFeed(User user, int pageSize, Status lastStatus, PagedObserver observer) {
+    public void getFeed(User user, int pageSize, Status lastStatus, PagedObserver<Status> observer) {
         GetFeedTask getFeedTask = new GetFeedTask(Cache.getInstance().getCurrUserAuthToken(),
-                user, pageSize, lastStatus, new GetItemsHandler<Status>(observer));
+                user, pageSize, lastStatus, new PagedHandler<Status>(observer));
         executor.execute(getFeedTask);
     }
 

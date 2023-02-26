@@ -65,6 +65,8 @@ public abstract class PagedPresenter<T> extends Presenter {
     public void loadMoreItems(User user) {
         if (!isLoading) {   // This guard is important for avoiding a race condition in the scrolling code.
 
+//            System.out.println("loading more items");
+
             this.isLoading = true;
 
             pagedView.setLoadingFooter(true);
