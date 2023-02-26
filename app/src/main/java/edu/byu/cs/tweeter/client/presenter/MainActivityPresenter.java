@@ -1,6 +1,5 @@
 package edu.byu.cs.tweeter.client.presenter;
 
-import android.os.Bundle;
 import android.util.Log;
 
 import java.text.ParseException;
@@ -11,9 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.byu.cs.tweeter.client.cache.Cache;
-import edu.byu.cs.tweeter.client.model.backgroundTask.GetCountTask;
-import edu.byu.cs.tweeter.client.model.backgroundTask.IsFollowerTask;
-import edu.byu.cs.tweeter.client.model.backgroundTask.observer.GetItemsHandlerObserver;
+import edu.byu.cs.tweeter.client.model.backgroundTask.observer.GetItemsCountObserver;
+import edu.byu.cs.tweeter.client.model.backgroundTask.observer.IsFollowerHandlerObserver;
 import edu.byu.cs.tweeter.client.model.service.FollowService;
 import edu.byu.cs.tweeter.client.model.service.LoginService;
 import edu.byu.cs.tweeter.client.model.service.StatusService;
@@ -71,7 +69,7 @@ public class MainActivityPresenter {
     }
 
     public void updateSelectedUserFollowingAndFollowers() {
-        followService.updateUserFollows(selectedUser, new GetItemsCountObserver());
+        followService.updateUserFollows(selectedUser, new GetItemsCountObserverMain());
     }
 
     public String getFormattedDateTime() throws ParseException {
@@ -139,7 +137,7 @@ public class MainActivityPresenter {
     }
 
     public void isFollower() {
-        followService.isFollower(this.selectedUser, new IsFollowerHandlerObserver());
+        followService.isFollower(this.selectedUser, new IsFollowerHandlerObserverMain());
     }
 
     public void toggleFollowing(boolean isFollowing) {
@@ -171,22 +169,14 @@ public class MainActivityPresenter {
 
     }
 
-    public class IsFollowerHandlerObserver implements GetItemsHandlerObserver {
-
+    public class IsFollowerHandlerObserverMain implements IsFollowerHandlerObserver {
         @Override
-        public void displayError(String message) {
-            view.displayMessage("error because: " + message);
+        public void displayMessage(String message) {
+            view.displayMessage(message);
         }
 
         @Override
-        public void displayException(Exception ex) {
-            view.displayMessage("exception because: " + ex.getMessage());
-        }
-
-        @Override
-        public void handleSuccess(Bundle data) {
-            boolean isFollower = data.getBoolean(IsFollowerTask.IS_FOLLOWER_KEY);
-
+        public void handleSuccess(boolean isFollower) {
             if (isFollower)
             {
                 view.follow();
@@ -194,24 +184,13 @@ public class MainActivityPresenter {
             else {
                 view.unfollow();
             }
-
-        }
-
-        @Override
-        public void displayMessage(String message) {
-            view.displayMessage(message);
         }
     }
-    public class GetItemsCountObserver implements edu.byu.cs.tweeter.client.model.backgroundTask.observer.GetItemsCountObserver {
+    public class GetItemsCountObserverMain implements GetItemsCountObserver {
 
         @Override
-        public void handleSuccess(Bundle data) {
-
-            //TODO dont depend on bundle
-            int followeeCount = data.getInt(GetCountTask.COUNT_KEY);
+        public void handleSuccess(int followeeCount, int followingCount) {
             view.setFollowerCount(followeeCount);
-
-            int followingCount = data.getInt(GetCountTask.COUNT_KEY);
             view.setFolloweeCount(followingCount);
         }
 

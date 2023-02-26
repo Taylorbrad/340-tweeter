@@ -1,11 +1,7 @@
 package edu.byu.cs.tweeter.client.presenter;
 
-import android.os.Bundle;
-
 import java.util.List;
 
-import edu.byu.cs.tweeter.client.model.backgroundTask.GetFeedTask;
-import edu.byu.cs.tweeter.client.model.backgroundTask.PagedTask;
 import edu.byu.cs.tweeter.client.model.service.FollowService;
 import edu.byu.cs.tweeter.client.model.service.UserService;
 import edu.byu.cs.tweeter.model.domain.User;
@@ -20,6 +16,8 @@ public abstract class PagedPresenter<T> extends Presenter {
 
     private User user;
     private boolean isLoading = false;
+
+
     private boolean hasMorePages;
     private T lastItem;
 
@@ -29,6 +27,9 @@ public abstract class PagedPresenter<T> extends Presenter {
     }
     public boolean hasMorePages() {
         return hasMorePages;
+    }
+    public void setHasMorePages(boolean hasMorePages) {
+        this.hasMorePages = hasMorePages;
     }
 
     public PagedView getMorePagesView() {
@@ -60,6 +61,7 @@ public abstract class PagedPresenter<T> extends Presenter {
 
     public void loadMoreItems(User user) {
         if (!isLoading) {   // This guard is important for avoiding a race condition in the scrolling code.
+
             this.isLoading = true;
 
             pagedView.setLoadingFooter(true);
@@ -68,9 +70,7 @@ public abstract class PagedPresenter<T> extends Presenter {
 
         }
     }
-    public List<T> getItemsList(Bundle data) {
-        return (List<T>) data.getSerializable(PagedTask.ITEMS_KEY);
-    }
+
     public T getLastItem(List<T> items) {
         return (items.size() > 0) ? items.get(items.size() - 1) : null;
     }
@@ -98,16 +98,14 @@ public abstract class PagedPresenter<T> extends Presenter {
         }
 
         @Override
-        public void handleSuccess(Bundle data) {
+        public void handleSuccess(List items, boolean hasMorePages) {
             pagedView.setLoadingFooter(false);
 
             isLoading = false;
 
-            List<T> items = getItemsList(data);//   (List<Status>) data.getSerializable(GetFeedTask.ITEMS_KEY);
+            setHasMorePages(hasMorePages);
 
-            hasMorePages = data.getBoolean(GetFeedTask.MORE_PAGES_KEY);
-
-            lastItem = getLastItem(items);
+            lastItem = (T) getLastItem(items);
 
             pagedView.addItems(items);
         }
@@ -118,12 +116,7 @@ public abstract class PagedPresenter<T> extends Presenter {
         public void displayMessage(String message) {
             pagedView.displayMessage(message);
         }
-
-//        @Override
-//        public User getUser(Bundle data) {
-//            user = (User) data.getSerializable(GetUserTask.USER_KEY);
-//            return user;
-//        }
+        
 
         @Override
         public void handleSuccess(User user) {

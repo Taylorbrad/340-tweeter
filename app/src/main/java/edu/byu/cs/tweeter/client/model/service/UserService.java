@@ -24,21 +24,18 @@ public class UserService {
         executor = Executors.newSingleThreadExecutor();
     }
 
-    public interface UserObserver extends PagedObserver {
+//    public interface UserObserver extends PagedObserver {
+//
+//        void handleSuccess(User user);
+//
+//        void displayMessage(String message);
+//
+//        void setLoadingFooter(boolean b);
+//
+//        void handleSuccess(List<Status> statuses, boolean hasMorePages, Status lastStatus);
+//    }
 
-        void handleSuccess(User user);
-
-        void displayMessage(String message);
-
-        void setLoadingFooter(boolean b);
-
-        void handleSuccess(List<Status> statuses, boolean hasMorePages, Status lastStatus);
-    }
-
-    public interface GetItemsHandlerObserver extends edu.byu.cs.tweeter.client.model.backgroundTask.observer.GetItemsHandlerObserver {
-        @Override
-        void handleSuccess(Bundle data);
-    }
+    public interface GetItemsHandlerObserver extends edu.byu.cs.tweeter.client.model.backgroundTask.observer.GetItemsHandlerObserver { }
 
     public interface GetUserObserver extends edu.byu.cs.tweeter.client.model.backgroundTask.observer.UserObserver {
         void handleSuccess(User user);
