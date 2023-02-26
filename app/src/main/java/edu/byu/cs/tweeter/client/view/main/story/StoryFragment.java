@@ -112,22 +112,15 @@ public class StoryFragment extends Fragment implements PagedPresenter.PagedView<
     public void setLoadingFooter(boolean b) {
         if (b)
         {
-            storyRecyclerViewAdapter.setLoading(true);
+//            storyRecyclerViewAdapter.setLoading(true);
             storyRecyclerViewAdapter.addLoadingFooter();
         }
         else
         {
-            storyRecyclerViewAdapter.setLoading(false);
+//            storyRecyclerViewAdapter.setLoading(false);
             storyRecyclerViewAdapter.removeLoadingFooter();
         }
     }
-
-//    @Override
-//    public void addItems(List<Status> statuses, boolean hasMorePages, Status lastStatus) {
-//        storyRecyclerViewAdapter.addItems(statuses);
-//        storyRecyclerViewAdapter.setLastStatus(lastStatus);
-//        storyRecyclerViewAdapter.setHasMorePages(hasMorePages);
-//    }
 
     @Override
     public void addItems(List<Status> items) {
@@ -231,25 +224,6 @@ public class StoryFragment extends Fragment implements PagedPresenter.PagedView<
 
         private final List<Status> story = new ArrayList<>();
 
-        private Status lastStatus;
-
-        private boolean hasMorePages;
-        private boolean isLoading = false;
-
-
-        public void setLastStatus(Status lastStatus) {
-            this.lastStatus = lastStatus;
-        }
-
-        public void setHasMorePages(boolean hasMorePages) {
-            this.hasMorePages = hasMorePages;
-        }
-
-        public void setLoading(boolean loading) {
-            isLoading = loading;
-        }
-
-
         /**
          * Adds new statuses to the list from which the RecyclerView retrieves the statuses it displays
          * and notifies the RecyclerView that items have been added.
@@ -319,7 +293,7 @@ public class StoryFragment extends Fragment implements PagedPresenter.PagedView<
          */
         @Override
         public void onBindViewHolder(@NonNull StoryHolder storyHolder, int position) {
-            if (!isLoading) {
+            if (!presenter.isLoading()) {
                 storyHolder.bindStatus(story.get(position));
             }
         }
@@ -343,7 +317,7 @@ public class StoryFragment extends Fragment implements PagedPresenter.PagedView<
          */
         @Override
         public int getItemViewType(int position) {
-            return (position == story.size() - 1 && isLoading) ? LOADING_DATA_VIEW : ITEM_VIEW;
+            return (position == story.size() - 1 && presenter.isLoading()) ? LOADING_DATA_VIEW : ITEM_VIEW;
         }
 
         /**
@@ -413,7 +387,7 @@ public class StoryFragment extends Fragment implements PagedPresenter.PagedView<
             int totalItemCount = layoutManager.getItemCount();
             int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
 
-            if (!storyRecyclerViewAdapter.isLoading && storyRecyclerViewAdapter.hasMorePages) {
+            if (!presenter.isLoading() && presenter.hasMorePages()) {
                 if ((visibleItemCount + firstVisibleItemPosition) >=
                         totalItemCount && firstVisibleItemPosition >= 0) {
                     // Run this code later on the UI thread

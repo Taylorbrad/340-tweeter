@@ -42,14 +42,12 @@ import edu.byu.cs.tweeter.model.domain.User;
  */
 public class FeedFragment extends Fragment implements PagedPresenter.PagedView<Status> {
 
-    //TODO move has more pages and isloading
     private static final String LOG_TAG = "FeedFragment";
     private static final String USER_KEY = "UserKey";
 
     private static final int LOADING_DATA_VIEW = 0;
     private static final int ITEM_VIEW = 1;
 
-    private static final int PAGE_SIZE = 10;
 
     private User user;
 
@@ -116,26 +114,19 @@ public class FeedFragment extends Fragment implements PagedPresenter.PagedView<S
         if (b)
         {
             feedRecyclerViewAdapter.addLoadingFooter();
-            feedRecyclerViewAdapter.setIsLoading(true);
+//            feedRecyclerViewAdapter.setIsLoading(true);
         }
         else
         {
             feedRecyclerViewAdapter.removeLoadingFooter();
-            feedRecyclerViewAdapter.setIsLoading(false);
+//            feedRecyclerViewAdapter.setIsLoading(false);
         }
     }
-
-//    @Override
-//    public void addItems(List<Status> statuses, boolean hasMorePages, Status lastStatus) {
-//        feedRecyclerViewAdapter.addItems(statuses);
-//        feedRecyclerViewAdapter.setLastStatus(lastStatus);
-//        feedRecyclerViewAdapter.setHasMorePages(hasMorePages);
-//
-//    }
 
     @Override
     public void addItems(List<Status> items) {
         feedRecyclerViewAdapter.addItems(items);
+
     }
 
     /**
@@ -232,25 +223,6 @@ public class FeedFragment extends Fragment implements PagedPresenter.PagedView<S
 
         private final List<Status> feed = new ArrayList<>();
 
-        private Status lastStatus;
-
-        private boolean hasMorePages;
-        private boolean isLoading = false;
-
-        public void setLastStatus(Status lastStatus)
-        {
-            this.lastStatus = lastStatus;
-        }
-        void setHasMorePages(boolean val)
-        {
-            this.hasMorePages = val;
-        }
-        void setIsLoading(boolean val)
-        {
-            this.isLoading = val;
-        }
-
-
         /**
          * Adds new statuses to the list from which the RecyclerView retrieves the statuses it displays
          * and notifies the RecyclerView that items have been added.
@@ -259,6 +231,7 @@ public class FeedFragment extends Fragment implements PagedPresenter.PagedView<S
          */
         void addItems(List<Status> newStory) {
             int startInsertPosition = feed.size();
+            System.out.println("insert pos: " + startInsertPosition);
             feed.addAll(newStory);
             this.notifyItemRangeInserted(startInsertPosition, newStory.size());
         }
@@ -320,7 +293,7 @@ public class FeedFragment extends Fragment implements PagedPresenter.PagedView<S
          */
         @Override
         public void onBindViewHolder(@NonNull FeedHolder feedHolder, int position) {
-            if (!isLoading) {
+            if (!presenter.isLoading()) {
                 feedHolder.bindStatus(feed.get(position));
             }
         }
@@ -344,7 +317,7 @@ public class FeedFragment extends Fragment implements PagedPresenter.PagedView<S
          */
         @Override
         public int getItemViewType(int position) {
-            return (position == feed.size() - 1 && isLoading) ? LOADING_DATA_VIEW : ITEM_VIEW;
+            return (position == feed.size() - 1 && presenter.isLoading()) ? LOADING_DATA_VIEW : ITEM_VIEW;
         }
 
         /**
@@ -414,7 +387,7 @@ public class FeedFragment extends Fragment implements PagedPresenter.PagedView<S
             int totalItemCount = layoutManager.getItemCount();
             int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
 
-            if (!feedRecyclerViewAdapter.isLoading && feedRecyclerViewAdapter.hasMorePages) {
+            if (!presenter.isLoading() && presenter.hasMorePages()) {
                 if ((visibleItemCount + firstVisibleItemPosition) >=
                         totalItemCount && firstVisibleItemPosition >= 0) {
                     // Run this code later on the UI thread

@@ -16,10 +16,9 @@ public abstract class PagedPresenter<T> extends Presenter {
     private FollowService followService;
 
     private User user;
+
     private boolean isLoading = false;
-
     private boolean hasMorePages;
-
     private T lastItem;
 
 
@@ -64,8 +63,6 @@ public abstract class PagedPresenter<T> extends Presenter {
 
     public void loadMoreItems(User user) {
         if (!isLoading) {   // This guard is important for avoiding a race condition in the scrolling code.
-
-//            System.out.println("loading more items");
 
             this.isLoading = true;
 
