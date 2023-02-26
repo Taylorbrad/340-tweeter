@@ -7,7 +7,6 @@ import java.util.concurrent.Executors;
 
 import edu.byu.cs.tweeter.client.model.backgroundTask.RegisterTask;
 import edu.byu.cs.tweeter.client.model.backgroundTask.handler.AuthenticateUserHandler;
-import edu.byu.cs.tweeter.client.model.backgroundTask.handler.UserHandler;
 import edu.byu.cs.tweeter.client.model.backgroundTask.observer.UserObserver;
 import edu.byu.cs.tweeter.model.domain.User;
 

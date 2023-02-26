@@ -1,12 +1,8 @@
 package edu.byu.cs.tweeter.client.presenter;
 
-import android.os.Bundle;
 import android.widget.EditText;
 
-import edu.byu.cs.tweeter.client.cache.Cache;
-import edu.byu.cs.tweeter.client.model.backgroundTask.LoginTask;
 import edu.byu.cs.tweeter.client.model.service.LoginService;
-import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
 
 public class LoginPresenter {

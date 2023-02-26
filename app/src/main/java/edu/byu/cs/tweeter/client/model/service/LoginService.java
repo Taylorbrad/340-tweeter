@@ -10,7 +10,6 @@ import edu.byu.cs.tweeter.client.model.backgroundTask.LoginTask;
 import edu.byu.cs.tweeter.client.model.backgroundTask.LogoutTask;
 import edu.byu.cs.tweeter.client.model.backgroundTask.handler.AuthenticateUserHandler;
 import edu.byu.cs.tweeter.client.model.backgroundTask.handler.SimpleNotificationHandler;
-import edu.byu.cs.tweeter.client.model.backgroundTask.handler.UserHandler;
 import edu.byu.cs.tweeter.client.model.backgroundTask.observer.SimpleNotificationObserver;
 import edu.byu.cs.tweeter.client.model.backgroundTask.observer.UserObserver;
 import edu.byu.cs.tweeter.model.domain.User;

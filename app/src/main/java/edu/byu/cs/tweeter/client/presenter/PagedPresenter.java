@@ -5,7 +5,6 @@ import android.os.Bundle;
 import java.util.List;
 
 import edu.byu.cs.tweeter.client.model.backgroundTask.GetFeedTask;
-import edu.byu.cs.tweeter.client.model.backgroundTask.GetUserTask;
 import edu.byu.cs.tweeter.client.model.backgroundTask.PagedTask;
 import edu.byu.cs.tweeter.client.model.service.FollowService;
 import edu.byu.cs.tweeter.client.model.service.UserService;

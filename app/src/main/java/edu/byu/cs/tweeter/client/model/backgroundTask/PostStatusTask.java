@@ -25,11 +25,18 @@ public class PostStatusTask extends AuthenticatedTask {
     protected void runTask() {
         // We could do this from the presenter, without a task and handler, but we will
         // eventually access the database from here when we aren't using dummy data.
+        if (true)
+        {
+            // Call sendSuccessMessage if successful
+            sendSuccessMessage();
+        }
+        else
+        {
+            // or call sendFailedMessage if not successful
+            sendFailedMessage("Message failed to send because of <if statement condition> (probably server access failure)");
+        }
 
-        // Call sendSuccessMessage if successful
-        sendSuccessMessage();
-        // or call sendFailedMessage if not successful
-        // sendFailedMessage()
+
     }
 
 }
