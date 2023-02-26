@@ -20,9 +20,14 @@ public class PagedHandler<T> extends BackgroundTaskHandler<PagedObserver> {
 
         boolean hasMorePages = data.getBoolean(GetFeedTask.MORE_PAGES_KEY);
 
-        observer.handleSuccess(items, hasMorePages);
+        T lastItem = getLastItem(items);
+
+        observer.handleSuccess(items, hasMorePages, lastItem);
     }
     public List<T> getItemsList(Bundle data) {
         return (List<T>) data.getSerializable(PagedTask.ITEMS_KEY);
+    }
+    public T getLastItem(List<T> items) {
+        return (items.size() > 0) ? items.get(items.size() - 1) : null;
     }
 }

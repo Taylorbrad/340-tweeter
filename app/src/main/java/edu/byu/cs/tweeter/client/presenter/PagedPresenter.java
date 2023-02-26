@@ -18,8 +18,8 @@ public abstract class PagedPresenter<T> extends Presenter {
     private User user;
     private boolean isLoading = false;
 
-
     private boolean hasMorePages;
+
     private T lastItem;
 
 
@@ -32,7 +32,9 @@ public abstract class PagedPresenter<T> extends Presenter {
     public void setHasMorePages(boolean hasMorePages) {
         this.hasMorePages = hasMorePages;
     }
-
+    public void setLastItem(T lastItem) {
+        this.lastItem = lastItem;
+    }
     public PagedView getMorePagesView() {
         return pagedView;
     }
@@ -72,9 +74,6 @@ public abstract class PagedPresenter<T> extends Presenter {
         }
     }
 
-    public T getLastItem(List<T> items) {
-        return (items.size() > 0) ? items.get(items.size() - 1) : null;
-    }
     public void getUser(String userAlias) {
         getUserService().getUser(userAlias, new GetUserObserver());
     }
@@ -99,14 +98,14 @@ public abstract class PagedPresenter<T> extends Presenter {
         }
 
         @Override
-        public void handleSuccess(List items, boolean hasMorePages) {
+        public void handleSuccess(List items, boolean hasMorePages, Object lastItem) {
             pagedView.setLoadingFooter(false);
 
             isLoading = false;
 
             setHasMorePages(hasMorePages);
 
-            lastItem = (T) getLastItem(items);
+            setLastItem((T) lastItem);
 
             pagedView.addItems(items);
         }

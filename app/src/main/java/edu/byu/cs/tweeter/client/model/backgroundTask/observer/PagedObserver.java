@@ -8,5 +8,5 @@ public interface PagedObserver<T> extends ServiceObserver {
 
     void displayError(String message);
     void displayException(Exception ex);
-    void handleSuccess(List<T> items, boolean hasMorePages);
+    void handleSuccess(List<T> items, boolean hasMorePages, T lastItem);
 }

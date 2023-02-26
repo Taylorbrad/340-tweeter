@@ -21,23 +21,9 @@ public class UserService {
         executor = Executors.newSingleThreadExecutor();
     }
 
-//    public interface UserObserver extends PagedObserver {
-//
-//        void handleSuccess(User user);
-//
-//        void displayMessage(String message);
-//
-//        void setLoadingFooter(boolean b);
-//
-//        void handleSuccess(List<Status> statuses, boolean hasMorePages, Status lastStatus);
-//    }
-
-    public interface GetItemsHandlerObserver extends PagedObserver { }
-
     public interface GetUserObserver extends edu.byu.cs.tweeter.client.model.backgroundTask.observer.UserObserver {
         void handleSuccess(User user);
     }
-
 
     public void loadMoreItems(User user, int pageSize, Status lastStatus, PagedObserver<Status> observer) {
         GetStoryTask getStoryTask = new GetStoryTask(Cache.getInstance().getCurrUserAuthToken(),
