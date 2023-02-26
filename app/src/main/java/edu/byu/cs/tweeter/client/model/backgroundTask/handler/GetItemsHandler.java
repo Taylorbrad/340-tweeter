@@ -6,16 +6,16 @@ import java.util.List;
 
 import edu.byu.cs.tweeter.client.model.backgroundTask.GetFeedTask;
 import edu.byu.cs.tweeter.client.model.backgroundTask.PagedTask;
-import edu.byu.cs.tweeter.client.model.backgroundTask.observer.GetItemsHandlerObserver;
+import edu.byu.cs.tweeter.client.model.backgroundTask.observer.PagedObserver;
 
-public class GetItemsHandler<T> extends BackgroundTaskHandler<GetItemsHandlerObserver> {
-    public GetItemsHandler(GetItemsHandlerObserver observer) {
+public class GetItemsHandler<T> extends BackgroundTaskHandler<PagedObserver> {
+    public GetItemsHandler(PagedObserver<T> observer) {
         super(observer);
     }
 
-    @Override
-    protected void handleSuccess(Bundle data, GetItemsHandlerObserver observer) {
 
+    @Override
+    protected void handleSuccess(Bundle data, PagedObserver observer) {
         List<T> items = getItemsList(data);//   (List<Status>) data.getSerializable(GetFeedTask.ITEMS_KEY);
 
         boolean hasMorePages = data.getBoolean(GetFeedTask.MORE_PAGES_KEY);

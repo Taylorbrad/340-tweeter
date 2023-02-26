@@ -3,7 +3,6 @@ package edu.byu.cs.tweeter.client.model.backgroundTask.handler;
 import android.os.Bundle;
 
 import edu.byu.cs.tweeter.client.model.backgroundTask.IsFollowerTask;
-import edu.byu.cs.tweeter.client.model.backgroundTask.observer.GetItemsHandlerObserver;
 import edu.byu.cs.tweeter.client.model.backgroundTask.observer.IsFollowerHandlerObserver;
 
 // IsFollowerHandler

@@ -1,8 +1,5 @@
 package edu.byu.cs.tweeter.client.model.service;
 
-import android.os.Bundle;
-
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -35,20 +32,20 @@ public class UserService {
 //        void handleSuccess(List<Status> statuses, boolean hasMorePages, Status lastStatus);
 //    }
 
-    public interface GetItemsHandlerObserver extends edu.byu.cs.tweeter.client.model.backgroundTask.observer.GetItemsHandlerObserver { }
+    public interface GetItemsHandlerObserver extends PagedObserver { }
 
     public interface GetUserObserver extends edu.byu.cs.tweeter.client.model.backgroundTask.observer.UserObserver {
         void handleSuccess(User user);
     }
 
 
-    public void loadMoreItems(User user, int pageSize, Status lastStatus, GetItemsHandlerObserver observer) {
+    public void loadMoreItems(User user, int pageSize, Status lastStatus, PagedObserver<Status> observer) {
         GetStoryTask getStoryTask = new GetStoryTask(Cache.getInstance().getCurrUserAuthToken(),
                 user, pageSize, lastStatus, new GetItemsHandler<Status>(observer));
         executor.execute(getStoryTask);
     }
 
-    public void getFeed(User user, int pageSize, Status lastStatus, GetItemsHandlerObserver observer) {
+    public void getFeed(User user, int pageSize, Status lastStatus, PagedObserver observer) {
         GetFeedTask getFeedTask = new GetFeedTask(Cache.getInstance().getCurrUserAuthToken(),
                 user, pageSize, lastStatus, new GetItemsHandler<Status>(observer));
         executor.execute(getFeedTask);

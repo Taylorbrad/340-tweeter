@@ -2,6 +2,7 @@ package edu.byu.cs.tweeter.client.presenter;
 
 import java.util.List;
 
+import edu.byu.cs.tweeter.client.model.backgroundTask.observer.PagedObserver;
 import edu.byu.cs.tweeter.client.model.service.FollowService;
 import edu.byu.cs.tweeter.client.model.service.UserService;
 import edu.byu.cs.tweeter.model.domain.User;
@@ -80,7 +81,7 @@ public abstract class PagedPresenter<T> extends Presenter {
 
     public abstract void loadItems(User user, T lastItem, GetItemsObserver observer);
 
-    public class GetItemsObserver implements UserService.GetItemsHandlerObserver {
+    public class GetItemsObserver implements PagedObserver<T> {//UserService.GetItemsHandlerObserver {
 
         @Override
         public void displayMessage(String message) {
@@ -116,7 +117,7 @@ public abstract class PagedPresenter<T> extends Presenter {
         public void displayMessage(String message) {
             pagedView.displayMessage(message);
         }
-        
+
 
         @Override
         public void handleSuccess(User user) {
