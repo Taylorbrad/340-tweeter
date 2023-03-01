@@ -231,7 +231,7 @@ public class FeedFragment extends Fragment implements PagedPresenter.PagedView<S
          */
         void addItems(List<Status> newStory) {
             int startInsertPosition = feed.size();
-            System.out.println("insert pos: " + startInsertPosition);
+
             feed.addAll(newStory);
             this.notifyItemRangeInserted(startInsertPosition, newStory.size());
         }

@@ -18,7 +18,7 @@ import edu.byu.cs.tweeter.client.model.service.StatusService;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
 
-public class MainActivityPresenter {
+public class MainPresenter {
 
     private View view;
     private FollowService followService;
@@ -55,21 +55,37 @@ public class MainActivityPresenter {
 
         void logOut();
 
-        void postStatusMessage();
+        void statusPostedMessage();
     }
 
 
-    public MainActivityPresenter(View view)
+    public MainPresenter(View view)
     {
         this.view = view;
+    }
 
-        this.followService = new FollowService();
-        this.loginService = new LoginService();
-        this.statusService = new StatusService();
+    protected FollowService getFollowService() {
+        if (followService == null) {
+            followService = new FollowService();
+        }
+        return followService;
+    }
+    protected LoginService getLoginService() {
+        if (loginService == null) {
+            loginService = new LoginService();
+        }
+        return loginService;
+    }
+
+    protected StatusService getStatusService() {
+        if (statusService == null) {
+            statusService = new StatusService();
+        }
+        return statusService;
     }
 
     public void updateSelectedUserFollowingAndFollowers() {
-        followService.updateUserFollows(selectedUser, new GetItemsCountObserverMain());
+        getFollowService().updateUserFollows(selectedUser, new GetItemsCountObserverMain());
     }
 
     public String getFormattedDateTime() throws ParseException {
@@ -137,32 +153,31 @@ public class MainActivityPresenter {
     }
 
     public void isFollower() {
-        followService.isFollower(this.selectedUser, new IsFollowerHandlerObserverMain());
+        getFollowService().isFollower(this.selectedUser, new IsFollowerHandlerObserverMain());
     }
 
     public void toggleFollowing(boolean isFollowing) {
         if (isFollowing) {
-            followService.unfollow(this.selectedUser, new MainActivitysObserver());
+            getFollowService().unfollow(this.selectedUser, new MainActivitysObserver());
             view.displayMessage("Removing " + this.selectedUser.getName() + "...");
         } else {
-            followService.follow(this.selectedUser, new MainActivitysObserver());
+            getFollowService().follow(this.selectedUser, new MainActivitysObserver());
             view.displayMessage("Adding " +this. selectedUser.getName() + "...");
         }
     }
 
     public void logout() {
-
-        loginService.logout(new LoginServiceObserver());
+        getLoginService().logout(new LoginServiceObserver());
     }
 
     public void postStatus(String post) {
 
         try {
             Status newStatus = new Status(post, Cache.getInstance().getCurrUser(), getFormattedDateTime(), parseURLs(post), parseMentions(post));
-            statusService.postStatus(newStatus, new StatusServiceObserver());
+            getStatusService().postStatus(newStatus, new StatusServiceObserver());
 
         } catch (Exception ex) {
-            Log.e(LOG_TAG, ex.getMessage(), ex);
+//            Log.e(LOG_TAG, ex.getMessage(), ex);
             view.displayMessage("Failed to post the status because of exception: " + ex.getMessage());
         }
 
@@ -238,6 +253,7 @@ public class MainActivityPresenter {
 
         @Override
         public void handleSuccess() {
+            Cache.getInstance().clearCache();
             view.logOut();
         }
 
@@ -250,7 +266,7 @@ public class MainActivityPresenter {
 
         @Override
         public void handleSuccess() {
-            view.postStatusMessage();
+            view.statusPostedMessage();
         }
 
         @Override

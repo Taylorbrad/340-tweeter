@@ -20,7 +20,7 @@ import com.squareup.picasso.Picasso;
 
 import edu.byu.cs.tweeter.R;
 import edu.byu.cs.tweeter.client.cache.Cache;
-import edu.byu.cs.tweeter.client.presenter.MainActivityPresenter;
+import edu.byu.cs.tweeter.client.presenter.MainPresenter;
 import edu.byu.cs.tweeter.client.view.login.LoginActivity;
 import edu.byu.cs.tweeter.client.view.login.StatusDialogFragment;
 import edu.byu.cs.tweeter.model.domain.User;
@@ -28,7 +28,7 @@ import edu.byu.cs.tweeter.model.domain.User;
 /**
  * The main activity for the application. Contains tabs for feed, story, following, and followers.
  */
-public class MainActivity extends AppCompatActivity implements StatusDialogFragment.Observer, MainActivityPresenter.View {
+public class MainActivity extends AppCompatActivity implements StatusDialogFragment.Observer, MainPresenter.View {
 
     private static final String LOG_TAG = "MainActivity";
 
@@ -36,12 +36,11 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
 
     private Toast logOutToast;
     private Toast postingToast;
-//    private User selectedUser;
     private TextView followeeCount;
     private TextView followerCount;
     private Button followButton;
 
-    private MainActivityPresenter presenter;
+    private MainPresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,10 +48,9 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
         setContentView(R.layout.activity_main);
 
 
-        this.presenter = new MainActivityPresenter(this);
+        this.presenter = new MainPresenter(this);
 
         presenter.setSelectedUser((User) getIntent().getSerializableExtra(CURRENT_USER_KEY));
-//        selectedUser = (User) getIntent().getSerializableExtra(CURRENT_USER_KEY);
 
         if (presenter.getSelectedUser() == null) {
             throw new RuntimeException("User not passed to activity");
@@ -76,7 +74,6 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
         });
 
         presenter.updateSelectedUserFollowingAndFollowers();
-//        updateSelectedUserFollowingAndFollowers();
 
         TextView userName = findViewById(R.id.userName);
         userName.setText(presenter.getSelectedUser().getName());
@@ -132,16 +129,6 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
         }
     }
 
-    public void logoutUser() {
-        //Revert to login screen.
-        Intent intent = new Intent(this, LoginActivity.class);
-        //Clear everything so that the main activity is recreated with the login page.
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        //Clear user data (cached data).
-        Cache.getInstance().clearCache();
-        startActivity(intent);
-    }
-
     @Override
     public void onStatusPosted(String post) {
         postingToast = Toast.makeText(this, "Posting Status...", Toast.LENGTH_LONG);
@@ -150,8 +137,6 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
         presenter.postStatus(post);
 
     }
-
-
 
     public void updateFollowButton(boolean removed) {
 
@@ -205,11 +190,18 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
     @Override
     public void logOut() {
         logOutToast.cancel();
-        logoutUser();
+
+        //Revert to login screen.
+        Intent intent = new Intent(this, LoginActivity.class);
+        //Clear everything so that the main activity is recreated with the login page.
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+//        Cache.getInstance().clearCache();
+        startActivity(intent);
     }
 
     @Override
-    public void postStatusMessage() {
+    public void statusPostedMessage() {
         postingToast.cancel();
         Toast.makeText(MainActivity.this, "Successfully Posted!", Toast.LENGTH_LONG).show();
     }
