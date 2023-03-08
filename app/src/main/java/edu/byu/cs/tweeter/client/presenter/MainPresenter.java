@@ -173,7 +173,7 @@ public class MainPresenter {
     public void postStatus(String post) {
 
         try {
-            Status newStatus = new Status(post, Cache.getInstance().getCurrUser(), getFormattedDateTime(), parseURLs(post), parseMentions(post));
+            Status newStatus = new Status(post, Cache.getInstance().getCurrUser(), LocalDate.now().toEpochDay()/*getFormattedDateTime()*/, parseURLs(post), parseMentions(post));
             getStatusService().postStatus(newStatus, new StatusServiceObserver());
 
         } catch (Exception ex) {

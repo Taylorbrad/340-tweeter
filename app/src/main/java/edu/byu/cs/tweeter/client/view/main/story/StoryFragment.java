@@ -27,6 +27,7 @@ import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -172,7 +173,7 @@ public class StoryFragment extends Fragment implements PagedPresenter.PagedView<
             Picasso.get().load(status.getUser().getImageUrl()).into(userImage);
             userAlias.setText(status.getUser().getAlias());
             userName.setText(status.getUser().getName());
-            datetime.setText(status.getDate());
+            datetime.setText(status.getFormattedDate());
 
             // @mentions and urls clickable
             SpannableString spannableString = new SpannableString(status.getPost());
@@ -326,15 +327,14 @@ public class StoryFragment extends Fragment implements PagedPresenter.PagedView<
          */
         void loadMoreItems() {
             presenter.loadMoreItems(user);
-
         }
-
+        
         /**
          * Adds a dummy status to the list of statuses so the RecyclerView will display a view (the
          * loading footer view) at the bottom of the list.
          */
         private void addLoadingFooter() {
-            addItem(new Status("Dummy Post", new User("firstName", "lastName", "@coolAlias"), "2020-10-31 00:00:00", new ArrayList<String>() {{
+            addItem(new Status("Dummy Post", new User("firstName", "lastName", "@coolAlias"), LocalDate.now().toEpochDay(), new ArrayList<String>() {{
                 add("https://youtube.com");
             }}, new ArrayList<String>() {{
                 add("@Dude1");

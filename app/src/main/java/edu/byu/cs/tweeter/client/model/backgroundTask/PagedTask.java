@@ -25,7 +25,6 @@ public abstract class PagedTask<T> extends AuthenticatedTask {
     /**
      * Maximum number of statuses to return (i.e., page size).
      */
-
     private final int limit;
 
     /**
