@@ -6,6 +6,7 @@ import java.util.List;
 
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
+import edu.byu.cs.tweeter.model.net.request.FollowingRequest;
 import edu.byu.cs.tweeter.util.Pair;
 
 /**
@@ -20,6 +21,7 @@ public class GetFollowersTask extends PagedUserTask {
 
     @Override
     protected Pair<List<User>, Boolean> getItems() {
+
         return getFakeData().getPageOfUsers(getLastItem(), getLimit(), getTargetUser());
     }
 }
