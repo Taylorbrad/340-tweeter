@@ -39,7 +39,6 @@ class ClientCommunicator {
             @Override
             public void sendRequest(HttpURLConnection connection) throws IOException {
                 connection.setDoOutput(true);
-
                 String entityBody = JsonSerializer.serialize(requestInfo);
                 try (DataOutputStream os = new DataOutputStream(connection.getOutputStream())) {
                     os.writeBytes(entityBody);
@@ -47,7 +46,6 @@ class ClientCommunicator {
                 }
             }
         };
-
         return doRequest(urlPath, headers, returnType, requestStrategy);
     }
 
@@ -79,6 +77,7 @@ class ClientCommunicator {
             connection.setReadTimeout(TIMEOUT_MILLIS);
             requestStrategy.setRequestMethod(connection);
 
+
             if(headers != null) {
                 for (String headerKey : headers.keySet()) {
                     connection.setRequestProperty(headerKey, headers.get(headerKey));
@@ -86,6 +85,7 @@ class ClientCommunicator {
             }
 
             requestStrategy.sendRequest(connection);
+
 
             switch (connection.getResponseCode()) {
                 case HttpURLConnection.HTTP_OK:
