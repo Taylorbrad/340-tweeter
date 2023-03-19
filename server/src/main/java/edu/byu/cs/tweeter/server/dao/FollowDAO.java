@@ -5,8 +5,10 @@ import java.util.List;
 
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
+import edu.byu.cs.tweeter.model.net.request.FollowRequest;
 import edu.byu.cs.tweeter.model.net.request.FollowerRequest;
 import edu.byu.cs.tweeter.model.net.request.FollowingRequest;
+import edu.byu.cs.tweeter.model.net.response.FollowResponse;
 import edu.byu.cs.tweeter.model.net.response.FollowerResponse;
 import edu.byu.cs.tweeter.model.net.response.FollowingResponse;
 import edu.byu.cs.tweeter.util.FakeData;
@@ -129,6 +131,11 @@ public class FollowDAO {
         }
 
         return new FollowerResponse(responseFollowers, hasMorePages);
+    }
+
+    public FollowResponse follow(FollowRequest request) {
+        //TODO add checking for if user exists?
+        return new FollowResponse("Following...");
     }
 
     List<User> getDummyFollowers() {
