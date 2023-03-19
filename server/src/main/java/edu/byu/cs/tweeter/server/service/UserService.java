@@ -3,7 +3,9 @@ package edu.byu.cs.tweeter.server.service;
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.net.request.LoginRequest;
+import edu.byu.cs.tweeter.model.net.request.RegisterRequest;
 import edu.byu.cs.tweeter.model.net.response.LoginResponse;
+import edu.byu.cs.tweeter.server.dao.FollowDAO;
 import edu.byu.cs.tweeter.util.FakeData;
 
 public class UserService {
@@ -13,6 +15,26 @@ public class UserService {
             throw new RuntimeException("[Bad Request] Missing a username");
         } else if(request.getPassword() == null) {
             throw new RuntimeException("[Bad Request] Missing a password");
+        }
+
+        // TODO: Generates dummy data. Replace with a real implementation.
+        // Use DAO here??
+        User user = getDummyUser();
+        AuthToken authToken = getDummyAuthToken();
+        return new LoginResponse(user, authToken);
+    }
+
+    public LoginResponse register(RegisterRequest request) {
+        if(request.getUsername() == null){
+            throw new RuntimeException("[Bad Request] Missing a username");
+        } else if(request.getPassword() == null) {
+            throw new RuntimeException("[Bad Request] Missing a password");
+        } else if(request.getFirstName() == null) {
+            throw new RuntimeException("[Bad Request] Missing a first name");
+        } else if(request.getLastName() == null) {
+            throw new RuntimeException("[Bad Request] Missing a last name");
+        } else if(request.getImageEncodedToString() == null) {
+            throw new RuntimeException("[Bad Request] Missing an image string");
         }
 
         // TODO: Generates dummy data. Replace with a real implementation.

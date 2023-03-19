@@ -6,6 +6,7 @@ import edu.byu.cs.tweeter.model.net.request.LoginRequest;
 
 /**
  * A response for a {@link LoginRequest}.
+ * also for RegisterRequest
  */
 public class LoginResponse extends Response {
 

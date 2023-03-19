@@ -40,10 +40,6 @@ public class LoginTask extends AuthenticateTask {
             System.out.println(e.getMessage());
         }
 
-//        JsonSerializer.deserialize(response.getUser(), );
-//        User loggedInUser = getFakeData().getFirstUser();
-//        AuthToken authToken = getFakeData().getAuthToken();
-
         User loggedInUser = response.getUser();
         AuthToken authToken = response.getAuthToken();
         return new Pair<>(loggedInUser, authToken);
