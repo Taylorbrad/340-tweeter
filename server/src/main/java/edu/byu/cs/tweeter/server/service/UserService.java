@@ -2,10 +2,13 @@ package edu.byu.cs.tweeter.server.service;
 
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
+import edu.byu.cs.tweeter.model.net.request.GetUserRequest;
 import edu.byu.cs.tweeter.model.net.request.LoginRequest;
 import edu.byu.cs.tweeter.model.net.request.RegisterRequest;
+import edu.byu.cs.tweeter.model.net.response.GetUserResponse;
 import edu.byu.cs.tweeter.model.net.response.LoginResponse;
 import edu.byu.cs.tweeter.server.dao.FollowDAO;
+import edu.byu.cs.tweeter.server.dao.UserDAO;
 import edu.byu.cs.tweeter.util.FakeData;
 
 public class UserService {
@@ -43,6 +46,18 @@ public class UserService {
         return new LoginResponse(user, authToken);
     }
 
+    public GetUserResponse getUser(GetUserRequest request) {
+        if(request.getAlias() == null){
+            throw new RuntimeException("[Bad Request] Missing a username");
+        }
+        User user = getUserDAO().getUser(request);
+//        User user = getDummyUser();
+        if(user == null){
+            throw new RuntimeException("[Bad Request] User not found");
+        }
+        return new GetUserResponse(user);
+    }
+
     /**
      * Returns the dummy user to be returned by the login operation.
      * This is written as a separate method to allow mocking of the dummy user.
@@ -71,5 +86,9 @@ public class UserService {
      */
     FakeData getFakeData() {
         return FakeData.getInstance();
+    }
+
+    UserDAO getUserDAO() {
+        return new UserDAO();
     }
 }
