@@ -3,10 +3,18 @@ package edu.byu.cs.tweeter.client.model.backgroundTask;
 import android.os.Bundle;
 import android.os.Handler;
 
+import java.io.IOException;
 import java.util.Random;
 
+import edu.byu.cs.tweeter.client.cache.Cache;
+import edu.byu.cs.tweeter.client.net.ServerFacade;
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
+import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
+import edu.byu.cs.tweeter.model.net.request.FollowRequest;
+import edu.byu.cs.tweeter.model.net.request.IsFollowerRequest;
+import edu.byu.cs.tweeter.model.net.response.FollowResponse;
+import edu.byu.cs.tweeter.model.net.response.IsFollowerResponse;
 
 /**
  * Background task that determines if one user is following another.
@@ -35,7 +43,23 @@ public class IsFollowerTask extends AuthenticatedTask {
 
     @Override
     protected void runTask() {
-        isFollower = new Random().nextInt() > 0;
+        //TODO add checking for actual
+        IsFollowerResponse response = null;
+        try
+        {
+            ServerFacade serverFacade = new ServerFacade();
+            IsFollowerRequest request = new IsFollowerRequest(this.follower.getAlias(), this.followee.getAlias());
+
+            response = serverFacade.isFollower(request, "/isfollower");
+        } catch (TweeterRemoteException te)
+        {
+            System.out.println(te.getMessage());
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+
+
+        isFollower = response.getIsFollower();
 
         // Call sendSuccessMessage if successful
         sendSuccessMessage();

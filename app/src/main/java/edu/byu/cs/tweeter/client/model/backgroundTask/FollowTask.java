@@ -48,7 +48,7 @@ public class FollowTask extends AuthenticatedTask {
             System.out.println(e.getMessage());
         }
 
-        System.out.println("Server Follow Success");
+//        System.out.println("Server Follow Success");
         sendSuccessMessage();
 
 //        return new Pair<>(loggedInUser, authToken);

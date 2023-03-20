@@ -2,15 +2,18 @@ package edu.byu.cs.tweeter.server.dao;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.net.request.FollowRequest;
 import edu.byu.cs.tweeter.model.net.request.FollowerRequest;
 import edu.byu.cs.tweeter.model.net.request.FollowingRequest;
+import edu.byu.cs.tweeter.model.net.request.IsFollowerRequest;
 import edu.byu.cs.tweeter.model.net.response.FollowResponse;
 import edu.byu.cs.tweeter.model.net.response.FollowerResponse;
 import edu.byu.cs.tweeter.model.net.response.FollowingResponse;
+import edu.byu.cs.tweeter.model.net.response.IsFollowerResponse;
 import edu.byu.cs.tweeter.util.FakeData;
 
 /**
@@ -136,6 +139,11 @@ public class FollowDAO {
     public FollowResponse follow(FollowRequest request) {
         //TODO add checking for if user exists?
         return new FollowResponse("Following...");
+    }
+
+    public IsFollowerResponse isFollower(IsFollowerRequest request) {
+        //TODO Currently dummy. Use request in 4
+        return new IsFollowerResponse(new Random().nextInt() > 0);
     }
 
     List<User> getDummyFollowers() {
