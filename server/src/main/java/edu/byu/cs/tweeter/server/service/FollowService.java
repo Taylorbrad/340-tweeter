@@ -3,9 +3,11 @@ package edu.byu.cs.tweeter.server.service;
 import edu.byu.cs.tweeter.model.net.request.FollowRequest;
 import edu.byu.cs.tweeter.model.net.request.FollowerRequest;
 import edu.byu.cs.tweeter.model.net.request.FollowingRequest;
+import edu.byu.cs.tweeter.model.net.request.UnfollowRequest;
 import edu.byu.cs.tweeter.model.net.response.FollowResponse;
 import edu.byu.cs.tweeter.model.net.response.FollowerResponse;
 import edu.byu.cs.tweeter.model.net.response.FollowingResponse;
+import edu.byu.cs.tweeter.model.net.response.UnfollowResponse;
 import edu.byu.cs.tweeter.server.dao.FollowDAO;
 
 /**
@@ -40,7 +42,23 @@ public class FollowService {
     }
 
     public FollowResponse follow(FollowRequest request) {
+
+        if(request.getFollower() == null) {
+            throw new RuntimeException("[Bad Request] Missing follower");
+        } else if(request.getFollowee() == null) {
+            throw new RuntimeException("[Bad Request] Missing followee");
+        }
+
         return getFollowingDAO().follow(request);
+    }
+
+    public UnfollowResponse unfollow(UnfollowRequest request) {
+        if(request.getTargetAlias() == null) {
+            throw new RuntimeException("[Bad Request] Missing target user");
+        } else if(request.getSourceAlias() == null) {
+            throw new RuntimeException("[Bad Request] Missing source user");
+        }
+        return getFollowingDAO().unfollow(request);
     }
 
     /**

@@ -10,10 +10,12 @@ import edu.byu.cs.tweeter.model.net.request.FollowRequest;
 import edu.byu.cs.tweeter.model.net.request.FollowerRequest;
 import edu.byu.cs.tweeter.model.net.request.FollowingRequest;
 import edu.byu.cs.tweeter.model.net.request.IsFollowerRequest;
+import edu.byu.cs.tweeter.model.net.request.UnfollowRequest;
 import edu.byu.cs.tweeter.model.net.response.FollowResponse;
 import edu.byu.cs.tweeter.model.net.response.FollowerResponse;
 import edu.byu.cs.tweeter.model.net.response.FollowingResponse;
 import edu.byu.cs.tweeter.model.net.response.IsFollowerResponse;
+import edu.byu.cs.tweeter.model.net.response.UnfollowResponse;
 import edu.byu.cs.tweeter.util.FakeData;
 
 /**
@@ -138,7 +140,11 @@ public class FollowDAO {
 
     public FollowResponse follow(FollowRequest request) {
         //TODO add checking for if user exists?
-        return new FollowResponse("Following...");
+        return new FollowResponse();
+    }
+
+    public UnfollowResponse unfollow(UnfollowRequest request) {
+        return new UnfollowResponse();
     }
 
     public IsFollowerResponse isFollower(IsFollowerRequest request) {
