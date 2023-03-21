@@ -1,9 +1,11 @@
 package edu.byu.cs.tweeter.server.dao;
 
 import edu.byu.cs.tweeter.model.net.request.GetFollowerCountRequest;
+import edu.byu.cs.tweeter.model.net.request.GetFollowingCountRequest;
 import edu.byu.cs.tweeter.model.net.request.GetUserRequest;
 import edu.byu.cs.tweeter.model.net.request.LogoutRequest;
 import edu.byu.cs.tweeter.model.net.response.GetFollowerCountResponse;
+import edu.byu.cs.tweeter.model.net.response.GetFollowingCountResponse;
 import edu.byu.cs.tweeter.model.net.response.GetUserResponse;
 import edu.byu.cs.tweeter.model.net.response.LogoutResponse;
 import edu.byu.cs.tweeter.util.FakeData;
@@ -25,7 +27,11 @@ public class UserDAO {
 
     public GetFollowerCountResponse getFollowerCount(GetFollowerCountRequest request) {
         GetFollowerCountResponse response = new GetFollowerCountResponse(22);
+        return response;
+    }
 
+    public GetFollowingCountResponse getFollowingCount(GetFollowingCountRequest request) {
+        GetFollowingCountResponse response = new GetFollowingCountResponse(25);
         return response;
     }
 }

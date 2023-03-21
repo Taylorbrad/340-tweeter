@@ -8,7 +8,7 @@ import edu.byu.cs.tweeter.model.domain.User;
 
 public abstract class GetCountTask extends AuthenticatedTask {
 
-    public static final String COUNT_KEY = "count";
+//    public static final String COUNT_KEY = "count";
 
     /**
      * The user whose count is being retrieved.
@@ -29,7 +29,8 @@ public abstract class GetCountTask extends AuthenticatedTask {
 
     @Override
     protected void runTask() {
-        count = runCountTask();
+//        count = runCountTask();
+        runCountTask();
 
         // Call sendSuccessMessage if successful
         sendSuccessMessage();
@@ -37,10 +38,10 @@ public abstract class GetCountTask extends AuthenticatedTask {
         // sendFailedMessage()
     }
 
-    protected abstract int runCountTask();
+    protected abstract void runCountTask();
 
-    @Override
-    protected void loadSuccessBundle(Bundle msgBundle) {
-        msgBundle.putInt(COUNT_KEY, count);
-    }
+//    @Override
+//    protected void loadSuccessBundle(Bundle msgBundle) {
+//        msgBundle.putInt(COUNT_KEY, count);
+//    }
 }

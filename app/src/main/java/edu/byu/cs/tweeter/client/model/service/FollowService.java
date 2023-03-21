@@ -11,7 +11,8 @@ import edu.byu.cs.tweeter.client.model.backgroundTask.GetFollowingCountTask;
 import edu.byu.cs.tweeter.client.model.backgroundTask.GetFollowingTask;
 import edu.byu.cs.tweeter.client.model.backgroundTask.IsFollowerTask;
 import edu.byu.cs.tweeter.client.model.backgroundTask.UnfollowTask;
-import edu.byu.cs.tweeter.client.model.backgroundTask.handler.GetItemsCountHandler;
+import edu.byu.cs.tweeter.client.model.backgroundTask.handler.GetFollowerCountHandler;
+import edu.byu.cs.tweeter.client.model.backgroundTask.handler.GetFollowingCountHandler;
 import edu.byu.cs.tweeter.client.model.backgroundTask.handler.IsFollowerHandler;
 import edu.byu.cs.tweeter.client.model.backgroundTask.handler.PagedHandler;
 import edu.byu.cs.tweeter.client.model.backgroundTask.handler.SimpleNotificationHandler;
@@ -54,12 +55,12 @@ public class FollowService {
 
         // Get count of most recently selected user's followers.
         GetFollowersCountTask followersCountTask = new GetFollowersCountTask(Cache.getInstance().getCurrUserAuthToken(),
-                selectedUser, new GetItemsCountHandler(observer));
+                selectedUser, new GetFollowerCountHandler(observer));
         executor.execute(followersCountTask);
 
         // Get count of most recently selected user's followees (who they are following)
         GetFollowingCountTask followingCountTask = new GetFollowingCountTask(Cache.getInstance().getCurrUserAuthToken(),
-                selectedUser, new GetItemsCountHandler(observer));
+                selectedUser, new GetFollowingCountHandler(observer));
         executor.execute(followingCountTask);
     }
 

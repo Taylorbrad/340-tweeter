@@ -1,5 +1,6 @@
 package edu.byu.cs.tweeter.client.model.backgroundTask;
 
+import android.os.Bundle;
 import android.os.Handler;
 
 import java.io.IOException;
@@ -18,12 +19,16 @@ import edu.byu.cs.tweeter.model.net.response.LoginResponse;
  */
 public class GetFollowersCountTask extends GetCountTask {
 
+    public static final String FOLLOWER_COUNT_KEY = "follower_count";
+
+    private int followerCount;
+
     public GetFollowersCountTask(AuthToken authToken, User targetUser, Handler messageHandler) {
         super(authToken, targetUser, messageHandler);
     }
 
     @Override
-    protected int runCountTask() {
+    protected void runCountTask() {
 
         GetFollowerCountResponse response = null;
         try
@@ -40,7 +45,15 @@ public class GetFollowersCountTask extends GetCountTask {
             System.out.println(e.getMessage());
         }
 
-//        System.out.println(response.getFollowerCount());
-        return response.getFollowerCount();
+        this.followerCount = response.getFollowerCount();
+    }
+
+    @Override
+    protected void loadSuccessBundle(Bundle msgBundle) {
+        msgBundle.putInt(FOLLOWER_COUNT_KEY, this.getFollowerCount());
+    }
+
+    public int getFollowerCount() {
+        return followerCount;
     }
 }

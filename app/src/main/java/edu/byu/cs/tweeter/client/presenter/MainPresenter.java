@@ -204,14 +204,18 @@ public class MainPresenter {
     public class GetItemsCountObserverMain implements GetItemsCountObserver {
 
         @Override
-        public void handleSuccess(int followeeCount, int followingCount) {
-            view.setFollowerCount(followeeCount);
-            view.setFolloweeCount(followingCount);
+        public void displayMessage(String message) {
+            view.displayMessage(message);
         }
 
         @Override
-        public void displayMessage(String message) {
-            view.displayMessage(message);
+        public void handleFollowerSuccess(int followerCount) {
+            view.setFollowerCount(followerCount);
+        }
+
+        @Override
+        public void handleFollowingSuccess(int followingCount) {
+            view.setFolloweeCount(followingCount);
         }
     }
     public class MainActivitysObserver implements FollowService.MainActivityObserver {

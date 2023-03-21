@@ -3,11 +3,13 @@ package edu.byu.cs.tweeter.server.service;
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.net.request.GetFollowerCountRequest;
+import edu.byu.cs.tweeter.model.net.request.GetFollowingCountRequest;
 import edu.byu.cs.tweeter.model.net.request.GetUserRequest;
 import edu.byu.cs.tweeter.model.net.request.LoginRequest;
 import edu.byu.cs.tweeter.model.net.request.LogoutRequest;
 import edu.byu.cs.tweeter.model.net.request.RegisterRequest;
 import edu.byu.cs.tweeter.model.net.response.GetFollowerCountResponse;
+import edu.byu.cs.tweeter.model.net.response.GetFollowingCountResponse;
 import edu.byu.cs.tweeter.model.net.response.GetUserResponse;
 import edu.byu.cs.tweeter.model.net.response.LoginResponse;
 import edu.byu.cs.tweeter.model.net.response.LogoutResponse;
@@ -77,6 +79,16 @@ public class UserService {
         }
 
         return getUserDAO().getFollowerCount(request);
+    }
+
+    public GetFollowingCountResponse getFollowingCount(GetFollowingCountRequest request) {
+        if(request.getAuthToken() == null){
+            throw new RuntimeException("[Bad Request] Missing an authtoken");
+        } else if(request.getTargetUser() == null){
+            throw new RuntimeException("[Bad Request] Missing a user");
+        }
+
+        return getUserDAO().getFollowingCount(request);
     }
 
     /**
