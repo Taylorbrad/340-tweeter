@@ -13,13 +13,13 @@ import java.util.Map;
 
 import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 
-class ClientCommunicator {
+public class ClientCommunicator {
 
     private static final int TIMEOUT_MILLIS = 60000;
 
     private final String baseURL;
 
-    ClientCommunicator(String baseURL) {
+    public ClientCommunicator(String baseURL) {
         this.baseURL = baseURL;
     }
 
@@ -28,7 +28,7 @@ class ClientCommunicator {
         void sendRequest(HttpURLConnection connection) throws IOException;
     }
 
-    <T> T doPost(String urlPath, final Object requestInfo, Map<String, String> headers, Class<T> returnType)
+    public <T> T doPost(String urlPath, final Object requestInfo, Map<String, String> headers, Class<T> returnType)
             throws IOException, TweeterRemoteException {
         RequestStrategy requestStrategy = new RequestStrategy() {
             @Override

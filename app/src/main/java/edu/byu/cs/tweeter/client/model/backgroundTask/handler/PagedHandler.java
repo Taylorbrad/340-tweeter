@@ -15,7 +15,7 @@ public class PagedHandler<T> extends BackgroundTaskHandler<PagedObserver> {
     }
 
     @Override
-    protected void handleSuccess(Bundle data, PagedObserver observer) {
+    public void handleSuccess(Bundle data, PagedObserver observer) {
         List<T> items = getItemsList(data);//   (List<Status>) data.getSerializable(GetFeedTask.ITEMS_KEY);
 
         boolean hasMorePages = data.getBoolean(GetFeedTask.MORE_PAGES_KEY);
