@@ -38,9 +38,10 @@ public class FollowTask extends AuthenticatedTask {
         try
         {
             ServerFacade serverFacade = new ServerFacade();
-            FollowRequest request = new FollowRequest(this.followee.getAlias(), Cache.getInstance().getCurrUser().getAlias());
+            FollowRequest request = new FollowRequest(this.followee, Cache.getInstance().getCurrUser());
 
             response = serverFacade.follow(request, "/follow");
+
         } catch (TweeterRemoteException te)
         {
             System.out.println(te.getMessage());

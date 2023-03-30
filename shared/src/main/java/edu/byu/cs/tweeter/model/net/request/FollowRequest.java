@@ -1,32 +1,31 @@
 package edu.byu.cs.tweeter.model.net.request;
 
-import edu.byu.cs.tweeter.model.net.response.FollowResponse;
+import edu.byu.cs.tweeter.model.domain.User;
 
 public class FollowRequest {
-    private String followee;
-    private String follower;
+
+    private User followee;
+    private User follower;
 
 
     private FollowRequest() {}
 
-    public FollowRequest(String followee, String follower) {
+    public FollowRequest(User followee, User follower) {
         this.followee = followee;
         this.follower = follower;
     }
 
-    public String getFollowee() {
+    public User getFollowee() {
         return followee;
     }
-
-    public void setFollowee(String followee) {
+    public void setFollowee(User followee) {
         this.followee = followee;
     }
 
-    public String getFollower() {
+    public User getFollower() {
         return follower;
     }
-
-    public void setFollower(String follower) {
+    public void setFollower(User follower) {
         this.follower = follower;
     }
 }

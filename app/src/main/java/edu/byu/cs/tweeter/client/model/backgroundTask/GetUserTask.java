@@ -1,6 +1,7 @@
 package edu.byu.cs.tweeter.client.model.backgroundTask;
 
 import android.os.Bundle;
+import android.os.DeadSystemException;
 import android.os.Handler;
 
 import java.io.IOException;
@@ -41,6 +42,8 @@ public class GetUserTask extends AuthenticatedTask {
         {
             ServerFacade serverFacade = new ServerFacade();
             GetUserRequest request = new GetUserRequest(this.alias);
+
+            System.out.println(this.alias);
 
             response = serverFacade.getUser(request, "/getuser");
 
