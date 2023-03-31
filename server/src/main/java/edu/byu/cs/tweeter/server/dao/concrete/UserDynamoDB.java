@@ -1,6 +1,6 @@
 package edu.byu.cs.tweeter.server.dao.concrete;
 
-import static edu.byu.cs.tweeter.server.dao.DAOInterface.expirySeconds;
+import static edu.byu.cs.tweeter.server.dao.interfaces.AuthTokenDAO.expirySeconds;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

@@ -6,7 +6,7 @@ package edu.byu.cs.tweeter.server.dao.concrete;
 
 //import static edu.byu.cs.tweeter.server.dao.DAOInterface.TableName;
 
-import static edu.byu.cs.tweeter.server.dao.DAOInterface.expirySeconds;
+import static edu.byu.cs.tweeter.server.dao.interfaces.AuthTokenDAO.expirySeconds;
 
 import edu.byu.cs.tweeter.model.net.request.GetFollowerCountRequest;
 import edu.byu.cs.tweeter.model.net.request.GetFollowingCountRequest;
