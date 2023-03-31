@@ -46,12 +46,12 @@ public class FollowServiceTest {
     }
 
     /**
-     * Verify that the {@link FollowService#getFollowees(FollowingRequest)}
+     * Verify that the {@link FollowService#getFollowing(FollowingRequest)}
      * method returns the same result as the {@link FollowDynamoDB} class.
      */
     @Test
     public void testGetFollowees_validRequest_correctResponse() {
-        FollowingResponse response = followServiceSpy.getFollowees(request);
+        FollowingResponse response = followServiceSpy.getFollowing(request);
         Assertions.assertEquals(expectedResponse, response);
     }
 }

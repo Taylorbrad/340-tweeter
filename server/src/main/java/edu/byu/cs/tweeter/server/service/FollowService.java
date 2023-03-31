@@ -27,13 +27,25 @@ public class FollowService {
      * @param request contains the data required to fulfill the request.
      * @return the followees.
      */
-    public FollowingResponse getFollowees(FollowingRequest request) {
+    public FollowingResponse getFollowing(FollowingRequest request) {
         if(request.getFollowerAlias() == null) {
             throw new RuntimeException("[Bad Request] Request needs to have a follower alias");
         } else if(request.getLimit() <= 0) {
             throw new RuntimeException("[Bad Request] Request needs to have a positive limit");
         }
-        return getFollowingDAO().getFollowing(request);
+        FollowingResponse response;
+
+        try {
+            response = getFollowingDAO().getFollowing(request);
+        } catch (RuntimeException e) {
+            throw new RuntimeException("[Bad Request] AuthToken expired");
+//            response = new FollowResponse("Authtoken expired");
+        }
+
+
+        return response;
+
+//        return getFollowingDAO().getFollowing(request);
     }
     public FollowerResponse getFollowers(FollowerRequest request) {
         if(request.getFolloweeAlias() == null) {
@@ -41,7 +53,19 @@ public class FollowService {
         } else if(request.getLimit() <= 0) {
             throw new RuntimeException("[Bad Request] Request needs to have a positive limit");
         }
-        return getFollowingDAO().getFollowers(request);
+
+        FollowerResponse response;
+
+        try {
+            response = getFollowingDAO().getFollowers(request);
+        } catch (RuntimeException e) {
+            throw new RuntimeException("[Bad Request] AuthToken expired");
+//            response = new FollowResponse("Authtoken expired");
+        }
+
+
+        return response;
+//        return getFollowingDAO().getFollowers(request);
     }
 
     public FollowResponse follow(FollowRequest request) {
@@ -52,16 +76,35 @@ public class FollowService {
             throw new RuntimeException("[Bad Request] Missing followee");
         }
 
-        return getFollowingDAO().follow(request);
-    }
+        FollowResponse response;
 
+        try {
+            response = getFollowingDAO().follow(request);
+        } catch (RuntimeException e) {
+            throw new RuntimeException("[Bad Request] AuthToken expired");
+//            response = new FollowResponse("Authtoken expired");
+        }
+
+
+        return response;
+    }
     public UnfollowResponse unfollow(UnfollowRequest request) {
         if(request.getTargetAlias() == null) {
             throw new RuntimeException("[Bad Request] Missing target user");
         } else if(request.getSourceAlias() == null) {
             throw new RuntimeException("[Bad Request] Missing source user");
         }
-        return getFollowingDAO().unfollow(request);
+        UnfollowResponse response;
+
+        try {
+            response = getFollowingDAO().unfollow(request);
+        } catch (RuntimeException e) {
+            throw new RuntimeException("[Bad Request] AuthToken expired");
+//            response = new UnfollowResponse("Authtoken expired");
+        }
+
+
+        return response;
     }
     public IsFollowerResponse isFollower(IsFollowerRequest request) {
         if(request.getFollower() == null) {

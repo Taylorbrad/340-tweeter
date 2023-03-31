@@ -40,17 +40,21 @@ public class UnfollowTask extends AuthenticatedTask {
 
             response = serverFacade.unfollow(request, "/unfollow");
 
+            sendSuccessMessage();
+
         } catch (TweeterRemoteException te)
         {
-            System.out.println(te.getMessage());
+            sendFailedMessage(te.getMessage());
+//            System.out.println(te.getMessage());
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            sendFailedMessage(e.getMessage());
+//            System.out.println(e.getMessage());
         }
         // We could do this from the presenter, without a task and handler, but we will
         // eventually access the database from here when we aren't using dummy data.
 
         // Call sendSuccessMessage if successful
-        sendSuccessMessage();
+
         // or call sendFailedMessage if not successful
         // sendFailedMessage()
     }

@@ -49,6 +49,7 @@ public class UserService {
             throw new RuntimeException("[Bad Request] Missing an authtoken");
         }
         authTokenDAO.deleteToken(request.getAuthToken());
+
         return getUserDAO().logout(request);
     }
 

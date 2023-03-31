@@ -29,11 +29,11 @@ public abstract class BackgroundTaskHandler<T extends ServiceObserver> extends H
 
         } else if (msg.getData().containsKey(BackgroundTask.MESSAGE_KEY)) {
             String message = msg.getData().getString(BackgroundTask.MESSAGE_KEY);
-            observer.displayMessage("Failed to follow: " + message);
+            observer.displayMessage("Operation failed: " + message);
 
         } else if (msg.getData().containsKey(BackgroundTask.EXCEPTION_KEY)) {
             Exception ex = (Exception) msg.getData().getSerializable(BackgroundTask.EXCEPTION_KEY);
-            observer.displayMessage("Failed to follow because of exception: " + ex.getMessage());
+            observer.displayMessage("Operation failed because of exception: " + ex.getMessage());
         }
 
 

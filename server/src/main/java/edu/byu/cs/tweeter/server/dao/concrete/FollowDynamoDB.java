@@ -15,6 +15,7 @@ import edu.byu.cs.tweeter.model.net.response.GetFollowingCountResponse;
 import edu.byu.cs.tweeter.server.dao.DataPage;
 import edu.byu.cs.tweeter.server.dao.interfaces.AuthTokenDAO;
 import edu.byu.cs.tweeter.server.dao.interfaces.FollowDAO;
+import edu.byu.cs.tweeter.server.dao.table_model.AuthTokenTableModel;
 import edu.byu.cs.tweeter.server.dao.table_model.FollowsTableModel;
 import software.amazon.awssdk.core.pagination.sync.SdkIterable;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbIndex;
@@ -309,10 +310,40 @@ public class FollowDynamoDB implements FollowDAO {
         return new UnfollowResponse();
     }
 
-    public IsFollowerResponse isFollower(IsFollowerRequest request) {
+    public IsFollowerResponse isFollower(IsFollowerRequest inRequest) {
 
+        DynamoDbTable<FollowsTableModel> table = enhancedClient.table(TableName, TableSchema.fromBean(FollowsTableModel.class));
+
+        Key key = Key.builder()
+                .partitionValue(inRequest.getFollower())
+                .sortValue(inRequest.getFollowee())
+                .build();
+
+        QueryEnhancedRequest.Builder requestBuilder = QueryEnhancedRequest.builder()
+                .queryConditional(QueryConditional.keyEqualTo(key));
+
+        QueryEnhancedRequest request = requestBuilder.build();
+
+        DataPage<FollowsTableModel> result = new DataPage<>();
+
+        SdkIterable<Page<FollowsTableModel>> pages = table.query(request);
+
+        pages.stream()
+                .limit(1)
+                .forEach((Page<FollowsTableModel> page) -> {
+
+                    result.setHasMorePages(page.lastEvaluatedKey() != null);
+
+                    page.items().forEach(token2 -> result.getValues().add(token2));
+                });
+        if (result.getValues().get(0) != null) {
+            return new IsFollowerResponse(true);
+        }
+        else {
+            return new IsFollowerResponse(false);
+        }
         //TODO Currently dummy. Use request in 4
-        return new IsFollowerResponse(new Random().nextInt() > 0);
+//        return new IsFollowerResponse(new Random().nextInt() > 0);
     }
 
 

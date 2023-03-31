@@ -42,15 +42,19 @@ public class FollowTask extends AuthenticatedTask {
 
             response = serverFacade.follow(request, "/follow");
 
+            sendSuccessMessage();
+
         } catch (TweeterRemoteException te)
         {
-            System.out.println(te.getMessage());
+            sendFailedMessage(te.getMessage());
+//            System.out.println(te.getMessage());
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            sendFailedMessage(e.getMessage());
+//            System.out.println(e.getMessage());
         }
 
 //        System.out.println("Server Follow Success");
-        sendSuccessMessage();
+
 
 //        return new Pair<>(loggedInUser, authToken);
         // We could do this from the presenter, without a task and handler, but we will

@@ -238,6 +238,7 @@ public class MainPresenter {
         public void handleSuccess() {
             updateSelectedUserFollowingAndFollowers();
 //            view.refreshFollowButton(false);
+
             view.setFollowButton();
         }
 

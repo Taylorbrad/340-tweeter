@@ -3,6 +3,7 @@ package edu.byu.cs.tweeter.client.model.backgroundTask;
 import android.os.Handler;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import edu.byu.cs.tweeter.client.net.ServerFacade;
@@ -47,15 +48,21 @@ public class GetFollowersTask extends PagedUserTask {
 
             response = serverFacade.getFollowers(request, "/getfollowers");
 
+            return new Pair<>(response.getFollowers(), response.getHasMorePages());
+
         } catch (TweeterRemoteException te) {
-            System.out.println("te");
-            System.out.println(te.getMessage());
+//            System.out.println("te");
+//            System.out.println(te.getMessage());
+            sendFailedMessage(te.getMessage());
+            return new Pair<>(new ArrayList<User>(), false);
         } catch (IOException e) {
-            System.out.println("e");
-            System.out.println(e.getMessage());
+//            System.out.println("e");
+//            System.out.println(e.getMessage());
+            sendFailedMessage(e.getMessage());
+            return new Pair<>(new ArrayList<User>(), false);
         }
 
-        return new Pair<>(response.getFollowers(), response.getHasMorePages());
+
 //        return getFakeData().getPageOfUsers(getLastItem(), getLimit(), getTargetUser());
     }
 }
