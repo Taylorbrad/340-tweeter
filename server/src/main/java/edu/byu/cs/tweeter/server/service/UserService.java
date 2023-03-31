@@ -99,7 +99,7 @@ public class UserService {
         GetFollowerCountResponse response;
 
         try {
-            response = getFollowDAO().getFollowerCount(request);
+            response = getUserDAO().getFollowerCount(request);
             getAuthTokenDAO().updateToken(request.getAuthToken().getToken());
         } catch (RuntimeException e) {
             throw new RuntimeException("[Bad Request] AuthToken expired");
@@ -119,7 +119,7 @@ public class UserService {
         GetFollowingCountResponse response;
 
         try {
-            response = getFollowDAO().getFollowingCount(request);
+            response = getUserDAO().getFollowingCount(request);
             getAuthTokenDAO().updateToken(request.getAuthToken().getToken());
         } catch (RuntimeException e) {
             throw new RuntimeException("[Bad Request] AuthToken expired");

@@ -16,6 +16,7 @@ import edu.byu.cs.tweeter.model.net.response.IsFollowerResponse;
 import edu.byu.cs.tweeter.model.net.response.UnfollowResponse;
 
 public interface FollowDAO {
+
     FollowerResponse getFollowers(FollowerRequest inRequest);
     FollowingResponse getFollowing(FollowingRequest inRequest);
 
@@ -24,6 +25,5 @@ public interface FollowDAO {
 
     IsFollowerResponse isFollower(IsFollowerRequest request);
 
-    GetFollowerCountResponse getFollowerCount(GetFollowerCountRequest request);
-    GetFollowingCountResponse getFollowingCount(GetFollowingCountRequest request);
+
 }

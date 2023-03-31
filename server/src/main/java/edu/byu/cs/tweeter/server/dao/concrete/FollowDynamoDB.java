@@ -74,34 +74,7 @@ public class FollowDynamoDB implements FollowDAO {
             .dynamoDbClient(dynamoDbClient)
             .build();
 
-    /**
-     * Gets the count of users from the database that the user specified is following. The
-     * current implementation uses generated data and doesn't actually access a database.
-     *
-     * @param request the User whose count of how many following is desired.
-     * @return said count.
-     */
-    public GetFollowingCountResponse getFollowingCount(GetFollowingCountRequest request) {
-        //        if (!authTokenDAO.validateToken(request.getAuthToken().getToken(), expirySeconds)) {
-//            throw new RuntimeException("Token Expired");
-//        }
-//
-//        GetFollowerCountResponse response = new GetFollowerCountResponse(22);
-//        return response;
-        // TODO: uses the dummy data.  Replace with a real implementation.
-//        assert follower != null;
-//        return getDummyFollowees().size();
-        return new GetFollowingCountResponse(getDummyFollowees().size());
-    }
-    public GetFollowerCountResponse getFollowerCount(GetFollowerCountRequest request) {
-        if (!authTokenDAO.validateToken(request.getAuthToken().getToken(), expirySeconds)) {
-            throw new RuntimeException("Token Expired");
-        }
 
-        // TODO: uses the dummy data.  Replace with a real implementation.
-//        assert follower != null;
-        return new GetFollowerCountResponse(getDummyFollowers().size());
-    }
 
     /**
      * Gets the users from the database that the user specified in the request is following. Uses

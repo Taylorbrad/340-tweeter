@@ -7,11 +7,19 @@ import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 
 import edu.byu.cs.tweeter.model.domain.User;
+import edu.byu.cs.tweeter.model.net.request.FollowerRequest;
+import edu.byu.cs.tweeter.model.net.request.FollowingRequest;
+import edu.byu.cs.tweeter.model.net.request.GetFollowerCountRequest;
+import edu.byu.cs.tweeter.model.net.request.GetFollowingCountRequest;
 import edu.byu.cs.tweeter.model.net.request.GetUserRequest;
 import edu.byu.cs.tweeter.model.net.request.LoginRequest;
 import edu.byu.cs.tweeter.model.net.request.LogoutRequest;
 import edu.byu.cs.tweeter.model.net.request.PostStatusRequest;
 import edu.byu.cs.tweeter.model.net.request.RegisterRequest;
+import edu.byu.cs.tweeter.model.net.response.FollowerResponse;
+import edu.byu.cs.tweeter.model.net.response.FollowingResponse;
+import edu.byu.cs.tweeter.model.net.response.GetFollowerCountResponse;
+import edu.byu.cs.tweeter.model.net.response.GetFollowingCountResponse;
 import edu.byu.cs.tweeter.model.net.response.GetUserResponse;
 import edu.byu.cs.tweeter.model.net.response.LogoutResponse;
 import edu.byu.cs.tweeter.model.net.response.PostStatusResponse;
@@ -144,6 +152,42 @@ public class UserDynamoDB implements UserDAO {
         return new LogoutResponse();
     }
 
+    /**
+     * Gets the count of users from the database that the user specified is following. The
+     * current implementation uses generated data and doesn't actually access a database.
+     *
+     * @param request the User whose count of how many following is desired.
+     * @return said count.
+     */
+    public GetFollowingCountResponse getFollowingCount(GetFollowingCountRequest request) {
+
+        if (!authTokenDAO.validateToken(request.getAuthToken().getToken(), expirySeconds)) {
+            throw new RuntimeException("Token Expired");
+        }
+
+        FollowingResponse response =  new FollowDynamoDB().getFollowing(new FollowingRequest(request.getAuthToken(), request.getTargetUser().getAlias(), 100, ""));
+
+        int size = response.getFollowees().size();
+
+        return new GetFollowingCountResponse(size);
+
+//        return new GetFollowingCountResponse(getDummyFollowees().size());
+    }
+
+
+
+    public GetFollowerCountResponse getFollowerCount(GetFollowerCountRequest request) {
+        if (!authTokenDAO.validateToken(request.getAuthToken().getToken(), expirySeconds)) {
+            throw new RuntimeException("Token Expired");
+        }
+
+        FollowerResponse response =  new FollowDynamoDB().getFollowers(new FollowerRequest(request.getAuthToken(), request.getTargetUser().getAlias(), 100, ""));
+
+        int size = response.getFollowers().size();
+
+        return new GetFollowerCountResponse(size);
+    }
+
     protected FakeData getFakeData() {
         return FakeData.getInstance();
     }
@@ -163,4 +207,5 @@ public class UserDynamoDB implements UserDAO {
         }
         return "FAILED TO HASH";
     }
+
 }
