@@ -35,7 +35,7 @@ public class PostStatusTask extends AuthenticatedTask {
         try
         {
             ServerFacade serverFacade = new ServerFacade();
-            PostStatusRequest request = new PostStatusRequest(status.getPost(), Cache.getInstance().getCurrUserAuthToken());
+            PostStatusRequest request = new PostStatusRequest(status.getPost(), Cache.getInstance().getCurrUser(), Cache.getInstance().getCurrUserAuthToken());
 
             response = serverFacade.postStatus(request, "/poststatus");
         } catch (TweeterRemoteException te)

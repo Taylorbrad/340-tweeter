@@ -6,7 +6,9 @@ import java.util.List;
 
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.net.request.GetStoryRequest;
+import edu.byu.cs.tweeter.model.net.request.PostStatusRequest;
 import edu.byu.cs.tweeter.model.net.response.GetStoryResponse;
+import edu.byu.cs.tweeter.model.net.response.PostStatusResponse;
 import edu.byu.cs.tweeter.server.dao.interfaces.AuthTokenDAO;
 import edu.byu.cs.tweeter.server.dao.interfaces.StoryDAO;
 import edu.byu.cs.tweeter.util.FakeData;
@@ -28,6 +30,11 @@ public class StoryDynamoDB implements StoryDAO {
 
     public void addToStory(Status inStatus) {
 
+    }
+
+    public PostStatusResponse postStatus(PostStatusRequest request) {
+        //TODO
+        return new PostStatusResponse();
     }
 
     protected FakeData getFakeData() {

@@ -93,9 +93,19 @@ public class UserService {
             throw new RuntimeException("[Bad Request] Missing a user");
         }
 
-        return getFollowDAO().getFollowerCount(request);
-    }
+        GetFollowerCountResponse response;
 
+        try {
+            response = getFollowDAO().getFollowerCount(request);
+            getAuthTokenDAO().updateToken(request.getAuthToken().getToken());
+        } catch (RuntimeException e) {
+            throw new RuntimeException("[Bad Request] AuthToken expired");
+        }
+
+        return response;
+
+//        return getFollowDAO().getFollowerCount(request);
+    }
     public GetFollowingCountResponse getFollowingCount(GetFollowingCountRequest request) {
         if(request.getAuthToken() == null){
             throw new RuntimeException("[Bad Request] Missing an authtoken");
@@ -103,7 +113,18 @@ public class UserService {
             throw new RuntimeException("[Bad Request] Missing a user");
         }
 
-        return getFollowDAO().getFollowingCount(request);
+        GetFollowingCountResponse response;
+
+        try {
+            response = getFollowDAO().getFollowingCount(request);
+            getAuthTokenDAO().updateToken(request.getAuthToken().getToken());
+        } catch (RuntimeException e) {
+            throw new RuntimeException("[Bad Request] AuthToken expired");
+        }
+
+        return response;
+
+//        return getFollowDAO().getFollowingCount(request);
     }
 
     /**
@@ -141,5 +162,8 @@ public class UserService {
     }
     FollowDAO getFollowDAO() {
         return new FollowDynamoDB();
+    }
+    private AuthTokenDAO getAuthTokenDAO() {
+        return new AuthTokenDynamoDB();
     }
 }

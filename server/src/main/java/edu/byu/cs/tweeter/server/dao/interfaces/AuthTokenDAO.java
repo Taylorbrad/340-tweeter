@@ -4,7 +4,7 @@ import edu.byu.cs.tweeter.model.domain.AuthToken;
 
 public interface AuthTokenDAO {
 
-    int expirySeconds = 30;
+    int expirySeconds = 60;
 
     AuthToken getToken();
     boolean validateToken(String token, int expirySeconds);

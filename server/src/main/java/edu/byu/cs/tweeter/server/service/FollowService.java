@@ -10,7 +10,9 @@ import edu.byu.cs.tweeter.model.net.response.FollowerResponse;
 import edu.byu.cs.tweeter.model.net.response.FollowingResponse;
 import edu.byu.cs.tweeter.model.net.response.IsFollowerResponse;
 import edu.byu.cs.tweeter.model.net.response.UnfollowResponse;
+import edu.byu.cs.tweeter.server.dao.concrete.AuthTokenDynamoDB;
 import edu.byu.cs.tweeter.server.dao.concrete.FollowDynamoDB;
+import edu.byu.cs.tweeter.server.dao.interfaces.AuthTokenDAO;
 import edu.byu.cs.tweeter.server.dao.interfaces.FollowDAO;
 
 /**
@@ -37,6 +39,7 @@ public class FollowService {
 
         try {
             response = getFollowingDAO().getFollowing(request);
+            getAuthTokenDAO().updateToken(request.getAuthToken().getToken());
         } catch (RuntimeException e) {
             throw new RuntimeException("[Bad Request] AuthToken expired");
 //            response = new FollowResponse("Authtoken expired");
@@ -58,6 +61,7 @@ public class FollowService {
 
         try {
             response = getFollowingDAO().getFollowers(request);
+            getAuthTokenDAO().updateToken(request.getAuthToken().getToken());
         } catch (RuntimeException e) {
             throw new RuntimeException("[Bad Request] AuthToken expired");
 //            response = new FollowResponse("Authtoken expired");
@@ -80,6 +84,7 @@ public class FollowService {
 
         try {
             response = getFollowingDAO().follow(request);
+            getAuthTokenDAO().updateToken(request.getAuthToken().getToken());
         } catch (RuntimeException e) {
             throw new RuntimeException("[Bad Request] AuthToken expired");
 //            response = new FollowResponse("Authtoken expired");
@@ -98,6 +103,7 @@ public class FollowService {
 
         try {
             response = getFollowingDAO().unfollow(request);
+            getAuthTokenDAO().updateToken(request.getAuthToken().getToken());
         } catch (RuntimeException e) {
             throw new RuntimeException("[Bad Request] AuthToken expired");
 //            response = new UnfollowResponse("Authtoken expired");
@@ -124,5 +130,8 @@ public class FollowService {
      */
     FollowDAO getFollowingDAO() {
         return new FollowDynamoDB();
+    }
+    AuthTokenDAO getAuthTokenDAO() {
+        return new AuthTokenDynamoDB();
     }
 }
