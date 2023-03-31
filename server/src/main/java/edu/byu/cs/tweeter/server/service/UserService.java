@@ -15,11 +15,16 @@ import edu.byu.cs.tweeter.model.net.response.GetFollowingCountResponse;
 import edu.byu.cs.tweeter.model.net.response.GetUserResponse;
 import edu.byu.cs.tweeter.model.net.response.LoginResponse;
 import edu.byu.cs.tweeter.model.net.response.LogoutResponse;
-import edu.byu.cs.tweeter.server.dao.AuthTokenDAO;
-import edu.byu.cs.tweeter.server.dao.UserDAO;
+import edu.byu.cs.tweeter.server.dao.concrete.AuthTokenDynamoDB;
+import edu.byu.cs.tweeter.server.dao.concrete.FollowDynamoDB;
+import edu.byu.cs.tweeter.server.dao.concrete.UserDynamoDB;
+import edu.byu.cs.tweeter.server.dao.interfaces.AuthTokenDAO;
+import edu.byu.cs.tweeter.server.dao.interfaces.FollowDAO;
 import edu.byu.cs.tweeter.util.FakeData;
 
 public class UserService {
+
+    AuthTokenDAO authTokenDAO = new AuthTokenDynamoDB();
 
     public LoginResponse login(LoginRequest request) {
         if(request.getUsername() == null){
@@ -30,8 +35,8 @@ public class UserService {
 
         // TODO: Generates dummy data. Replace with a real implementation.
 
-        User user = UserDAO.login(request); //Fail if user does not exist
-        AuthToken authToken = AuthTokenDAO.getToken();
+        User user = getUserDAO().login(request); //Fail if user does not exist
+        AuthToken authToken = authTokenDAO.getToken();
 
 //        User user = getDummyUser();
 //        AuthToken authToken = getDummyAuthToken();
@@ -43,7 +48,7 @@ public class UserService {
         if(request.getAuthToken() == null){
             throw new RuntimeException("[Bad Request] Missing an authtoken");
         }
-        AuthTokenDAO.deleteToken(request.getAuthToken());
+        authTokenDAO.deleteToken(request.getAuthToken());
         return getUserDAO().logout(request);
     }
 
@@ -60,8 +65,8 @@ public class UserService {
             throw new RuntimeException("[Bad Request] Missing an image string");
         }
 
-        User user = UserDAO.register(request); //Fail if user does not exist
-        AuthToken authToken = AuthTokenDAO.getToken();
+        User user = getUserDAO().register(request); //Fail if user does not exist
+        AuthToken authToken = authTokenDAO.getToken();
 
 //        User user = getDummyUser();
 //        AuthToken authToken = getDummyAuthToken();
@@ -87,7 +92,7 @@ public class UserService {
             throw new RuntimeException("[Bad Request] Missing a user");
         }
 
-        return getUserDAO().getFollowerCount(request);
+        return getFollowDAO().getFollowerCount(request);
     }
 
     public GetFollowingCountResponse getFollowingCount(GetFollowingCountRequest request) {
@@ -97,7 +102,7 @@ public class UserService {
             throw new RuntimeException("[Bad Request] Missing a user");
         }
 
-        return getUserDAO().getFollowingCount(request);
+        return getFollowDAO().getFollowingCount(request);
     }
 
     /**
@@ -130,7 +135,10 @@ public class UserService {
         return FakeData.getInstance();
     }
 
-    UserDAO getUserDAO() {
-        return new UserDAO();
+    UserDynamoDB getUserDAO() {
+        return new UserDynamoDB();
+    }
+    FollowDAO getFollowDAO() {
+        return new FollowDynamoDB();
     }
 }

@@ -1,26 +1,24 @@
-package edu.byu.cs.tweeter.server.dao;
+package edu.byu.cs.tweeter.server.dao.concrete;
 
 import static edu.byu.cs.tweeter.server.dao.DAOInterface.expirySeconds;
 
-import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 
 import edu.byu.cs.tweeter.model.domain.User;
-import edu.byu.cs.tweeter.model.net.request.GetFollowerCountRequest;
-import edu.byu.cs.tweeter.model.net.request.GetFollowingCountRequest;
 import edu.byu.cs.tweeter.model.net.request.GetUserRequest;
 import edu.byu.cs.tweeter.model.net.request.LoginRequest;
 import edu.byu.cs.tweeter.model.net.request.LogoutRequest;
+import edu.byu.cs.tweeter.model.net.request.PostStatusRequest;
 import edu.byu.cs.tweeter.model.net.request.RegisterRequest;
-import edu.byu.cs.tweeter.model.net.response.FollowResponse;
-import edu.byu.cs.tweeter.model.net.response.GetFollowerCountResponse;
-import edu.byu.cs.tweeter.model.net.response.GetFollowingCountResponse;
 import edu.byu.cs.tweeter.model.net.response.GetUserResponse;
 import edu.byu.cs.tweeter.model.net.response.LogoutResponse;
-import edu.byu.cs.tweeter.server.dao.table.AuthTokenTableModel;
-import edu.byu.cs.tweeter.server.dao.table.UserTableModel;
+import edu.byu.cs.tweeter.model.net.response.PostStatusResponse;
+import edu.byu.cs.tweeter.server.dao.DataPage;
+import edu.byu.cs.tweeter.server.dao.interfaces.AuthTokenDAO;
+import edu.byu.cs.tweeter.server.dao.interfaces.UserDAO;
+import edu.byu.cs.tweeter.server.dao.table_model.UserTableModel;
 import edu.byu.cs.tweeter.util.FakeData;
 import software.amazon.awssdk.core.pagination.sync.SdkIterable;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
@@ -36,7 +34,9 @@ import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
 import software.amazon.awssdk.services.dynamodb.model.DynamoDbException;
 import software.amazon.awssdk.services.dynamodb.model.PutItemRequest;
 
-public class UserDAO {
+public class UserDynamoDB implements UserDAO {
+
+    AuthTokenDAO authTokenDAO = new AuthTokenDynamoDB();
 
     private static final String TableName = "User";
 
@@ -48,7 +48,7 @@ public class UserDAO {
             .dynamoDbClient(dynamoDbClient)
             .build();
 
-    public static User register(RegisterRequest inRequest) throws NoSuchAlgorithmException {
+    public User register(RegisterRequest inRequest) {
 
         String hashedPassword = hashPassword(inRequest.getPassword());
 
@@ -91,7 +91,7 @@ public class UserDAO {
         return new User(inRequest.getFirstName(), inRequest.getLastName(), inRequest.getUsername(), "inRequest.getImageEncodedToString()");
     }
 
-    public static User login(LoginRequest inRequest) {
+    public User login(LoginRequest inRequest) {
 
         String hashedPassword = hashPassword(inRequest.getPassword());
 
@@ -126,6 +126,16 @@ public class UserDAO {
         return new User(user.getFirst_name(), user.getLast_name(), user.getAlias(), user.getImage_url());
     }
 
+    public PostStatusResponse postStatus(PostStatusRequest request) {
+
+        if (!authTokenDAO.validateToken(request.getAuthToken().getToken(), expirySeconds)) {
+            throw new RuntimeException("Token Expired");
+        }
+
+        //TODO Currently dummy. Use request in 4
+        return new PostStatusResponse();
+    }
+
     public GetUserResponse getUser(GetUserRequest request) {
         return new GetUserResponse(getFakeData().findUserByAlias(request.getAlias()));
     }
@@ -136,26 +146,6 @@ public class UserDAO {
 
     protected FakeData getFakeData() {
         return FakeData.getInstance();
-    }
-
-    public GetFollowerCountResponse getFollowerCount(GetFollowerCountRequest request) {
-
-        if (!AuthTokenDAO.validateToken(request.getAuthToken().getToken(), expirySeconds)) {
-            throw new RuntimeException("Token Expired");
-        }
-
-        GetFollowerCountResponse response = new GetFollowerCountResponse(22);
-        return response;
-    }
-
-    public GetFollowingCountResponse getFollowingCount(GetFollowingCountRequest request) {
-
-        if (!AuthTokenDAO.validateToken(request.getAuthToken().getToken(), expirySeconds)) {
-            throw new RuntimeException("Token Expired");
-        }
-
-        GetFollowingCountResponse response = new GetFollowingCountResponse(25);
-        return response;
     }
 
     private static String hashPassword(String passwordToHash) {

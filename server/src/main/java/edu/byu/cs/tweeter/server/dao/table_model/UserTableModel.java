@@ -1,4 +1,4 @@
-package edu.byu.cs.tweeter.server.dao.table;
+package edu.byu.cs.tweeter.server.dao.table_model;
 
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbAttribute;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;

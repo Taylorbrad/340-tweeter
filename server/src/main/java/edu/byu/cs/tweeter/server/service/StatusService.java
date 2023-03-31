@@ -6,7 +6,9 @@ import edu.byu.cs.tweeter.model.net.request.PostStatusRequest;
 import edu.byu.cs.tweeter.model.net.response.GetFeedResponse;
 import edu.byu.cs.tweeter.model.net.response.GetStoryResponse;
 import edu.byu.cs.tweeter.model.net.response.PostStatusResponse;
-import edu.byu.cs.tweeter.server.dao.StatusDAO;
+import edu.byu.cs.tweeter.server.dao.concrete.FeedDynamoDB;
+import edu.byu.cs.tweeter.server.dao.concrete.StoryDynamoDB;
+import edu.byu.cs.tweeter.server.dao.concrete.UserDynamoDB;
 
 public class StatusService {
 
@@ -16,7 +18,7 @@ public class StatusService {
         } else if(request.getAuthToken() == null) {
             throw new RuntimeException("[Bad Request] Missing Authtoken");
         }
-        return getStatusDAO().postStatus(request);
+        return getUserDAO().postStatus(request);
     }
 
     public GetFeedResponse getFeed(GetFeedRequest request) {
@@ -27,7 +29,7 @@ public class StatusService {
         } else if(request.getLimit() < 1) {
             throw new RuntimeException("[Bad Request] Missing Limit (or < 1)");
         }
-        return getStatusDAO().getFeed(request);
+        return getFeedDAO().getFeed(request);
     }
 
     public GetStoryResponse getStory(GetStoryRequest request) {
@@ -38,11 +40,17 @@ public class StatusService {
         } else if(request.getLimit() < 1) {
             throw new RuntimeException("[Bad Request] Missing Limit (or < 1)");
         }
-        return getStatusDAO().getStory(request);
+        return getStoryDAO().getStory(request);
     }
 
-    StatusDAO getStatusDAO() {
-        return new StatusDAO();
+    StoryDynamoDB getStoryDAO() {
+        return new StoryDynamoDB();
+    }
+    FeedDynamoDB getFeedDAO() {
+        return new FeedDynamoDB() ;
+    }
+    UserDynamoDB getUserDAO() {
+        return new UserDynamoDB();
     }
 
 }

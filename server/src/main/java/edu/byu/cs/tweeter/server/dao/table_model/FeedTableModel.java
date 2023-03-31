@@ -1,28 +1,28 @@
-package edu.byu.cs.tweeter.server.dao.table;
+package edu.byu.cs.tweeter.server.dao.table_model;
 
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbAttribute;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
-import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbSecondaryPartitionKey;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbSortKey;
 
 @DynamoDbBean
-public class AuthTokenTableModel {
+public class FeedTableModel {
 
 
-        private String token;
+        private String author_alias;
         private String datetime;
+        private String post;
 
         @DynamoDbPartitionKey
-        public String getToken() {
-            return token;
+        public String getAuthor_alias() {
+            return author_alias;
         }
 
-        public void setToken(String token) {
-            this.token = token;
+        public void setAuthor_alias(String author_alias) {
+            this.author_alias = author_alias;
         }
 
-        @DynamoDbAttribute("datetime")
+        @DynamoDbSortKey
         public String getDatetime() {
             return datetime;
         }
@@ -31,11 +31,24 @@ public class AuthTokenTableModel {
             this.datetime = datetime;
         }
 
+        @DynamoDbAttribute("post")
+        public String getPost() {
+            return post;
+        }
+
+        public void setPost(String post) {
+            this.post = post;
+        }
+
+
+
+
     @Override
         public String toString() {
-            return "authToken{" +
-                    "token='" + token + '\'' +
+            return "status{" +
+                    "author='" + author_alias + '\'' +
                     ", datetime='" + datetime + '\'' +
+                    ", post='" + post + '\'' +
                     '}';
         }
     }

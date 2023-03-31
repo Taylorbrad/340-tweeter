@@ -1,10 +1,12 @@
-package edu.byu.cs.tweeter.server.dao;
+package edu.byu.cs.tweeter.server.dao.concrete;
 
 import java.util.HashMap;
 import java.util.UUID;
 
 import edu.byu.cs.tweeter.model.domain.AuthToken;
-import edu.byu.cs.tweeter.server.dao.table.AuthTokenTableModel;
+import edu.byu.cs.tweeter.server.dao.DataPage;
+import edu.byu.cs.tweeter.server.dao.interfaces.AuthTokenDAO;
+import edu.byu.cs.tweeter.server.dao.table_model.AuthTokenTableModel;
 import software.amazon.awssdk.core.pagination.sync.SdkIterable;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
@@ -20,7 +22,7 @@ import software.amazon.awssdk.services.dynamodb.model.DeleteItemRequest;
 import software.amazon.awssdk.services.dynamodb.model.DynamoDbException;
 import software.amazon.awssdk.services.dynamodb.model.PutItemRequest;
 
-public class AuthTokenDAO {
+public class AuthTokenDynamoDB implements AuthTokenDAO {
 
     private static final String TableName = "AuthToken";
 
@@ -32,7 +34,7 @@ public class AuthTokenDAO {
             .dynamoDbClient(dynamoDbClient)
             .build();
 
-    public static AuthToken getToken() {
+    public AuthToken getToken() {
 
         HashMap<String, AttributeValue> keyToPut = new HashMap<>();
 
@@ -62,7 +64,7 @@ public class AuthTokenDAO {
         return new AuthToken(token, String.valueOf(dateTime));
     }
 
-    public static boolean validateToken(String token, int expirySeconds) {
+    public boolean validateToken(String token, int expirySeconds) {
 
         DynamoDbTable<AuthTokenTableModel> table = enhancedClient.table(TableName, TableSchema.fromBean(AuthTokenTableModel.class));
 
@@ -92,11 +94,11 @@ public class AuthTokenDAO {
         return ((System.currentTimeMillis() - Long.parseLong(result.getValues().get(0).getDatetime()) ) / 1000) < expirySeconds;
     }
 
-    public static void updateToken(String token) {
+    public void updateToken(String token) {
 
     }
 
-    public static void deleteToken(String authToken) {
+    public void deleteToken(String authToken) {
 
         HashMap<String, AttributeValue> keyToPut = new HashMap<>();
 

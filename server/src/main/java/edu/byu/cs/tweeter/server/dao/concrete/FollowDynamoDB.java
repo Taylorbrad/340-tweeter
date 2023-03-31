@@ -1,4 +1,4 @@
-package edu.byu.cs.tweeter.server.dao;
+package edu.byu.cs.tweeter.server.dao.concrete;
 
 //import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 //import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
@@ -8,7 +8,14 @@ package edu.byu.cs.tweeter.server.dao;
 
 import static edu.byu.cs.tweeter.server.dao.DAOInterface.expirySeconds;
 
-import edu.byu.cs.tweeter.server.dao.table.FollowsTableModel;
+import edu.byu.cs.tweeter.model.net.request.GetFollowerCountRequest;
+import edu.byu.cs.tweeter.model.net.request.GetFollowingCountRequest;
+import edu.byu.cs.tweeter.model.net.response.GetFollowerCountResponse;
+import edu.byu.cs.tweeter.model.net.response.GetFollowingCountResponse;
+import edu.byu.cs.tweeter.server.dao.DataPage;
+import edu.byu.cs.tweeter.server.dao.interfaces.AuthTokenDAO;
+import edu.byu.cs.tweeter.server.dao.interfaces.FollowDAO;
+import edu.byu.cs.tweeter.server.dao.table_model.FollowsTableModel;
 import software.amazon.awssdk.core.pagination.sync.SdkIterable;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbIndex;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
@@ -44,12 +51,10 @@ import software.amazon.awssdk.services.dynamodb.model.DeleteItemRequest;
 import software.amazon.awssdk.services.dynamodb.model.DynamoDbException;
 import software.amazon.awssdk.services.dynamodb.model.PutItemRequest;
 
-//import org.example.DataPage;
-
 /**
  * A DAO for accessing 'following' data from the database.
  */
-public class FollowDAO {
+public class FollowDynamoDB implements FollowDAO {
 
     private static final String TableName = "follows";
     public static final String IndexName = "follows_index";
@@ -57,10 +62,7 @@ public class FollowDAO {
     private static final String followerAttr = "follower_handle";
     private static final String followeeAttr = "followee_handle";
 
-//    private AmazonDynamoDB dynamoDbClient = AmazonDynamoDBClientBuilder.standard()
-//            .withRegion(Region.US_EAST_1)
-//            .build();
-//    private AmazonDynamoDB client = AmazonDynamoDBClient.builder()
+    AuthTokenDAO authTokenDAO = new AuthTokenDynamoDB();
 
     //TODO make it return the instance if its already been created
     private static DynamoDbClient dynamoDbClient = DynamoDbClient.builder()
@@ -75,13 +77,29 @@ public class FollowDAO {
      * Gets the count of users from the database that the user specified is following. The
      * current implementation uses generated data and doesn't actually access a database.
      *
-     * @param follower the User whose count of how many following is desired.
+     * @param request the User whose count of how many following is desired.
      * @return said count.
      */
-    public Integer getFolloweeCount(User follower) {
+    public GetFollowingCountResponse getFollowingCount(GetFollowingCountRequest request) {
+        //        if (!authTokenDAO.validateToken(request.getAuthToken().getToken(), expirySeconds)) {
+//            throw new RuntimeException("Token Expired");
+//        }
+//
+//        GetFollowerCountResponse response = new GetFollowerCountResponse(22);
+//        return response;
         // TODO: uses the dummy data.  Replace with a real implementation.
-        assert follower != null;
-        return getDummyFollowees().size();
+//        assert follower != null;
+//        return getDummyFollowees().size();
+        return new GetFollowingCountResponse(getDummyFollowees().size());
+    }
+    public GetFollowerCountResponse getFollowerCount(GetFollowerCountRequest request) {
+        if (!authTokenDAO.validateToken(request.getAuthToken().getToken(), expirySeconds)) {
+            throw new RuntimeException("Token Expired");
+        }
+
+        // TODO: uses the dummy data.  Replace with a real implementation.
+//        assert follower != null;
+        return new GetFollowerCountResponse(getDummyFollowers().size());
     }
 
     /**
@@ -96,7 +114,7 @@ public class FollowDAO {
      */
     public FollowingResponse getFollowing(FollowingRequest inRequest) {
 
-        if (!AuthTokenDAO.validateToken(inRequest.getAuthToken().getToken(), expirySeconds)) {
+        if (!authTokenDAO.validateToken(inRequest.getAuthToken().getToken(), expirySeconds)) {
             throw new RuntimeException("Token Expired");
         }
 
@@ -149,54 +167,9 @@ public class FollowDAO {
 
         return new FollowingResponse(userList, result.isHasMorePages());
     }
-
-    /**
-     * Determines the index for the first followee in the specified 'allFollowees' list that should
-     * be returned in the current request. This will be the index of the next followee after the
-     * specified 'lastFollowee'.
-     *
-     * @param lastFolloweeAlias the alias of the last followee that was returned in the previous
-     *                          request or null if there was no previous request.
-     * @param allFollowees the generated list of followees from which we are returning paged results.
-     * @return the index of the first followee to be returned.
-     */
-    private int getFolloweesStartingIndex(String lastFolloweeAlias, List<User> allFollowees) {
-
-        int followeesIndex = 0;
-
-        if(lastFolloweeAlias != null) {
-            // This is a paged request for something after the first page. Find the first item
-            // we should return
-            for (int i = 0; i < allFollowees.size(); i++) {
-                if(lastFolloweeAlias.equals(allFollowees.get(i).getAlias())) {
-                    // We found the index of the last item returned last time. Increment to get
-                    // to the first one we should return
-                    followeesIndex = i + 1;
-                    break;
-                }
-            }
-        }
-
-        return followeesIndex;
-    }
-
-    /**
-     * Returns the list of dummy followee data. This is written as a separate method to allow
-     * mocking of the followees.
-     *
-     * @return the followees.
-     */
-    List<User> getDummyFollowees() {
-        return getFakeData().getFakeUsers();
-    }
-
-    private static boolean isNonEmptyString(String value) {
-        return (value != null && value.length() > 0);
-    }
-
     public FollowerResponse getFollowers(FollowerRequest inRequest) {
 
-        if (!AuthTokenDAO.validateToken(inRequest.getAuthToken().getToken(), expirySeconds)) {
+        if (!authTokenDAO.validateToken(inRequest.getAuthToken().getToken(), expirySeconds)) {
             throw new RuntimeException("Token Expired");
         }
 
@@ -254,7 +227,7 @@ public class FollowDAO {
 
     public FollowResponse follow(FollowRequest inRequest) {
 
-        if (!AuthTokenDAO.validateToken(inRequest.getAuthToken().getToken(), expirySeconds)) {
+        if (!authTokenDAO.validateToken(inRequest.getAuthToken().getToken(), expirySeconds)) {
             throw new RuntimeException("Token Expired");
         }
 
@@ -307,13 +280,12 @@ public class FollowDAO {
         }
         return new FollowResponse();
     }
-
     public UnfollowResponse unfollow(UnfollowRequest inRequest) {
 //        DynamoDbTable<FollowsTableModel> table = enhancedClient.table(TableName, TableSchema.fromBean(FollowsTableModel.class));
 //        Key key = Key.builder()
 //                .partitionValue("keyVal2").sortValue("asdf")
 //                .build();
-        if (!AuthTokenDAO.validateToken(inRequest.getAuthToken().getToken(), expirySeconds)) {
+        if (!authTokenDAO.validateToken(inRequest.getAuthToken().getToken(), expirySeconds)) {
             throw new RuntimeException("Token Expired");
         }
 
@@ -343,9 +315,8 @@ public class FollowDAO {
         return new IsFollowerResponse(new Random().nextInt() > 0);
     }
 
-    List<User> getDummyFollowers() {
-        return getFakeData().getFakeUsers();
-    }
+
+
     /**
      * Returns the {@link FakeData} object used to generate dummy followees.
      * This is written as a separate method to allow mocking of the {@link FakeData}.
@@ -356,4 +327,50 @@ public class FollowDAO {
         return FakeData.getInstance();
     }
 
+    /**
+     * Returns the list of dummy followee data. This is written as a separate method to allow
+     * mocking of the followees.
+     *
+     * @return the followees.
+     */
+    List<User> getDummyFollowees() {
+        return getFakeData().getFakeUsers();
+    }
+    List<User> getDummyFollowers() {
+        return getFakeData().getFakeUsers();
+    }
+
+    /**
+     * Determines the index for the first followee in the specified 'allFollowees' list that should
+     * be returned in the current request. This will be the index of the next followee after the
+     * specified 'lastFollowee'.
+     *
+     * @param lastFolloweeAlias the alias of the last followee that was returned in the previous
+     *                          request or null if there was no previous request.
+     * @param allFollowees the generated list of followees from which we are returning paged results.
+     * @return the index of the first followee to be returned.
+     */
+    private int getFolloweesStartingIndex(String lastFolloweeAlias, List<User> allFollowees) {
+
+        int followeesIndex = 0;
+
+        if(lastFolloweeAlias != null) {
+            // This is a paged request for something after the first page. Find the first item
+            // we should return
+            for (int i = 0; i < allFollowees.size(); i++) {
+                if(lastFolloweeAlias.equals(allFollowees.get(i).getAlias())) {
+                    // We found the index of the last item returned last time. Increment to get
+                    // to the first one we should return
+                    followeesIndex = i + 1;
+                    break;
+                }
+            }
+        }
+
+        return followeesIndex;
+    }
+
+    private static boolean isNonEmptyString(String value) {
+        return (value != null && value.length() > 0);
+    }
 }
