@@ -26,6 +26,7 @@ import edu.byu.cs.tweeter.model.net.response.PostStatusResponse;
 import edu.byu.cs.tweeter.server.dao.DataPage;
 import edu.byu.cs.tweeter.server.dao.interfaces.AuthTokenDAO;
 import edu.byu.cs.tweeter.server.dao.interfaces.UserDAO;
+import edu.byu.cs.tweeter.server.dao.table_model.AuthTokenTableModel;
 import edu.byu.cs.tweeter.server.dao.table_model.UserTableModel;
 import edu.byu.cs.tweeter.util.FakeData;
 import software.amazon.awssdk.core.pagination.sync.SdkIterable;
@@ -144,8 +145,38 @@ public class UserDynamoDB implements UserDAO {
         return new PostStatusResponse();
     }
 
-    public GetUserResponse getUser(GetUserRequest request) {
-        return new GetUserResponse(getFakeData().findUserByAlias(request.getAlias()));
+    public GetUserResponse getUser(GetUserRequest inRequest) {
+
+        DynamoDbTable<UserTableModel> table = enhancedClient.table(TableName, TableSchema.fromBean(UserTableModel.class));
+
+        Key key = Key.builder()
+                .partitionValue(inRequest.getAlias())
+                .build();
+
+
+        QueryEnhancedRequest.Builder requestBuilder = QueryEnhancedRequest.builder()
+                .queryConditional(QueryConditional.keyEqualTo(key));
+
+        QueryEnhancedRequest request = requestBuilder.build();
+
+        DataPage<UserTableModel> result = new DataPage<>();
+
+        SdkIterable<Page<UserTableModel>> pages = table.query(request);
+
+        pages.stream()
+                .limit(1)
+                .forEach((Page<UserTableModel> page) -> {
+
+                    result.setHasMorePages(page.lastEvaluatedKey() != null);
+
+                    page.items().forEach(token2 -> result.getValues().add(token2));
+                });
+
+        UserTableModel founduser = result.getValues().get(0);
+        User user = new User(founduser.getFirst_name(), founduser.getLast_name(), founduser.getAlias(), founduser.getImage_url());
+
+        return new GetUserResponse(user);
+//        return new GetUserResponse(getFakeData().findUserByAlias(request.getAlias()));
     }
 
     public LogoutResponse logout(LogoutRequest request) {
