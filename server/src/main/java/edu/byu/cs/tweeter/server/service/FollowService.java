@@ -13,12 +13,16 @@ import edu.byu.cs.tweeter.model.net.response.UnfollowResponse;
 import edu.byu.cs.tweeter.server.dao.concrete.AuthTokenDynamoDB;
 import edu.byu.cs.tweeter.server.dao.concrete.FollowDynamoDB;
 import edu.byu.cs.tweeter.server.dao.interfaces.AuthTokenDAO;
+import edu.byu.cs.tweeter.server.dao.interfaces.DAOProvider;
+import edu.byu.cs.tweeter.server.dao.interfaces.DynamoDBFactory;
 import edu.byu.cs.tweeter.server.dao.interfaces.FollowDAO;
 
 /**
  * Contains the business logic for getting the users a user is following.
  */
 public class FollowService {
+
+    DAOProvider daoSet = new DAOProvider(new DynamoDBFactory());
 
     /**
      * Returns the users that the user specified in the request is following. Uses information in
@@ -29,6 +33,7 @@ public class FollowService {
      * @param request contains the data required to fulfill the request.
      * @return the followees.
      */
+
     public FollowingResponse getFollowing(FollowingRequest request) {
         if(request.getFollowerAlias() == null) {
             throw new RuntimeException("[Bad Request] Request needs to have a follower alias");
@@ -129,9 +134,9 @@ public class FollowService {
      * @return the instance.
      */
     FollowDAO getFollowingDAO() {
-        return new FollowDynamoDB();
+        return daoSet.factory.getFollowDAO();
     }
     AuthTokenDAO getAuthTokenDAO() {
-        return new AuthTokenDynamoDB();
+        return daoSet.factory.getAuthTokenDAO();
     }
 }

@@ -4,7 +4,7 @@ package edu.byu.cs.tweeter.server.dao.concrete;
 //import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 //import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 
-//import static edu.byu.cs.tweeter.server.dao.DAOInterface.TableName;
+//import static edu.byu.cs.tweeter.server.dao.interfaces.DAOInterface.TableName;
 
 import static edu.byu.cs.tweeter.server.dao.interfaces.AuthTokenDAO.expirySeconds;
 

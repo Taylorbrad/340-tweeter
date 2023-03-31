@@ -19,12 +19,15 @@ import edu.byu.cs.tweeter.server.dao.concrete.AuthTokenDynamoDB;
 import edu.byu.cs.tweeter.server.dao.concrete.FollowDynamoDB;
 import edu.byu.cs.tweeter.server.dao.concrete.UserDynamoDB;
 import edu.byu.cs.tweeter.server.dao.interfaces.AuthTokenDAO;
+import edu.byu.cs.tweeter.server.dao.interfaces.DAOProvider;
+import edu.byu.cs.tweeter.server.dao.interfaces.DynamoDBFactory;
 import edu.byu.cs.tweeter.server.dao.interfaces.FollowDAO;
+import edu.byu.cs.tweeter.server.dao.interfaces.UserDAO;
 import edu.byu.cs.tweeter.util.FakeData;
 
 public class UserService {
 
-    AuthTokenDAO authTokenDAO = new AuthTokenDynamoDB();
+    DAOProvider daoSet = new DAOProvider(new DynamoDBFactory());
 
     public LoginResponse login(LoginRequest request) {
         if(request.getUsername() == null){
@@ -36,7 +39,7 @@ public class UserService {
         // TODO: Generates dummy data. Replace with a real implementation.
 
         User user = getUserDAO().login(request); //Fail if user does not exist
-        AuthToken authToken = authTokenDAO.getToken();
+        AuthToken authToken = getAuthTokenDAO().getToken();
 
 //        User user = getDummyUser();
 //        AuthToken authToken = getDummyAuthToken();
@@ -48,7 +51,7 @@ public class UserService {
         if(request.getAuthToken() == null){
             throw new RuntimeException("[Bad Request] Missing an authtoken");
         }
-        authTokenDAO.deleteToken(request.getAuthToken());
+        getAuthTokenDAO().deleteToken(request.getAuthToken());
 
         return getUserDAO().logout(request);
     }
@@ -67,7 +70,7 @@ public class UserService {
         }
 
         User user = getUserDAO().register(request); //Fail if user does not exist
-        AuthToken authToken = authTokenDAO.getToken();
+        AuthToken authToken = getAuthTokenDAO().getToken();
 
 //        User user = getDummyUser();
 //        AuthToken authToken = getDummyAuthToken();
@@ -157,13 +160,13 @@ public class UserService {
         return FakeData.getInstance();
     }
 
-    UserDynamoDB getUserDAO() {
-        return new UserDynamoDB();
+    UserDAO getUserDAO() {
+        return daoSet.factory.getUserDAO();
     }
     FollowDAO getFollowDAO() {
-        return new FollowDynamoDB();
+        return daoSet.factory.getFollowDAO();
     }
-    private AuthTokenDAO getAuthTokenDAO() {
-        return new AuthTokenDynamoDB();
+    AuthTokenDAO getAuthTokenDAO() {
+        return daoSet.factory.getAuthTokenDAO();
     }
 }

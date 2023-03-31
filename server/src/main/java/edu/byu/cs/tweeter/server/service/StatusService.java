@@ -12,11 +12,15 @@ import edu.byu.cs.tweeter.server.dao.concrete.FeedDynamoDB;
 import edu.byu.cs.tweeter.server.dao.concrete.StoryDynamoDB;
 import edu.byu.cs.tweeter.server.dao.concrete.UserDynamoDB;
 import edu.byu.cs.tweeter.server.dao.interfaces.AuthTokenDAO;
+import edu.byu.cs.tweeter.server.dao.interfaces.DAOProvider;
+import edu.byu.cs.tweeter.server.dao.interfaces.DynamoDBFactory;
 import edu.byu.cs.tweeter.server.dao.interfaces.FeedDAO;
 import edu.byu.cs.tweeter.server.dao.interfaces.StoryDAO;
 import edu.byu.cs.tweeter.server.dao.interfaces.UserDAO;
 
 public class StatusService {
+
+    DAOProvider daoSet = new DAOProvider(new DynamoDBFactory());
 
     public PostStatusResponse postStatus(PostStatusRequest request) {
         if(request.getStatus() == null) {
@@ -90,16 +94,16 @@ public class StatusService {
     }
 
     StoryDAO getStoryDAO() {
-        return new StoryDynamoDB();
+        return daoSet.factory.getStoryDAO();
     }
     FeedDAO getFeedDAO() {
-        return new FeedDynamoDB() ;
+        return daoSet.factory.getFeedDAO();
     }
     UserDAO getUserDAO() {
-        return new UserDynamoDB();
+        return daoSet.factory.getUserDAO();
     }
     AuthTokenDAO getAuthTokenDAO() {
-        return new AuthTokenDynamoDB();
+        return daoSet.factory.getAuthTokenDAO();
     }
 
 }

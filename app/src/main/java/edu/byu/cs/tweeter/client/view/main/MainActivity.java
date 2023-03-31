@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
             }
         });
 
-        System.out.println(Cache.getInstance().getCurrUserAuthToken().getToken());
+//        System.out.println(Cache.getInstance().getCurrUserAuthToken().getToken());
 
         presenter.updateSelectedUserFollowingAndFollowers();
 
