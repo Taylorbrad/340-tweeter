@@ -34,7 +34,7 @@ public class GetFeedTask extends PagedStatusTask {
         try
         {
             ServerFacade serverFacade = new ServerFacade();
-            GetFeedRequest request = new GetFeedRequest("dumy token", Cache.getInstance().getCurrUser().getAlias(), 10, getLastItem());
+            GetFeedRequest request = new GetFeedRequest(Cache.getInstance().getCurrUserAuthToken(), Cache.getInstance().getCurrUser().getAlias(), 10, getLastItem());
 
             response = serverFacade.getFeed(request, "/getfeed");
 

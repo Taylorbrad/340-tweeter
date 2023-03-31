@@ -42,6 +42,9 @@ public class LoginTask extends AuthenticateTask {
 
         User loggedInUser = response.getUser();
         AuthToken authToken = response.getAuthToken();
+
+//        System.out.println(authToken.getToken());
+
         return new Pair<>(loggedInUser, authToken);
     }
 }

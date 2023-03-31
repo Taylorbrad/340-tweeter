@@ -1,5 +1,7 @@
 package edu.byu.cs.tweeter.server.dao;
 
+import static edu.byu.cs.tweeter.server.dao.DAOInterface.expirySeconds;
+
 import java.util.List;
 
 import edu.byu.cs.tweeter.model.domain.Status;
@@ -15,11 +17,21 @@ import edu.byu.cs.tweeter.util.Pair;
 public class StatusDAO {
 
     public PostStatusResponse postStatus(PostStatusRequest request) {
+
+        if (!AuthTokenDAO.validateToken(request.getAuthToken().getToken(), expirySeconds)) {
+            throw new RuntimeException("Token Expired");
+        }
+
         //TODO Currently dummy. Use request in 4
         return new PostStatusResponse();
     }
 
     public GetFeedResponse getFeed(GetFeedRequest request) {
+
+//        if (!AuthTokenDAO.validateToken(request.getAuthToken().getToken(), expirySeconds)) {
+//            throw new RuntimeException("Token Expired");
+//        }
+
         //TODO Currently dummy. Use request in 4
         Pair<List<Status>, Boolean> data = getFakeData().getPageOfStatus(request.getLastStatus(), request.getLimit());
 
@@ -27,6 +39,9 @@ public class StatusDAO {
     }
 
     public GetStoryResponse getStory(GetStoryRequest request) {
+//        if (!AuthTokenDAO.validateToken(request.getAuthToken().getToken(), expirySeconds)) {
+//            throw new RuntimeException("Token Expired");
+//        }
         //TODO Currently dummy. Use request in 4
         Pair<List<Status>, Boolean> data = getFakeData().getPageOfStatus(request.getLastStatus(), request.getLimit());
 

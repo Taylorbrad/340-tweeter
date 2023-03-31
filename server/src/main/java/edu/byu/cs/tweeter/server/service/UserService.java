@@ -1,5 +1,7 @@
 package edu.byu.cs.tweeter.server.service;
 
+import java.security.NoSuchAlgorithmException;
+
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.net.request.GetFollowerCountRequest;
@@ -13,6 +15,7 @@ import edu.byu.cs.tweeter.model.net.response.GetFollowingCountResponse;
 import edu.byu.cs.tweeter.model.net.response.GetUserResponse;
 import edu.byu.cs.tweeter.model.net.response.LoginResponse;
 import edu.byu.cs.tweeter.model.net.response.LogoutResponse;
+import edu.byu.cs.tweeter.server.dao.AuthTokenDAO;
 import edu.byu.cs.tweeter.server.dao.UserDAO;
 import edu.byu.cs.tweeter.util.FakeData;
 
@@ -26,9 +29,12 @@ public class UserService {
         }
 
         // TODO: Generates dummy data. Replace with a real implementation.
-        // Use DAO here??
-        User user = getDummyUser();
-        AuthToken authToken = getDummyAuthToken();
+
+        User user = UserDAO.login(request); //Fail if user does not exist
+        AuthToken authToken = AuthTokenDAO.getToken();
+
+//        User user = getDummyUser();
+//        AuthToken authToken = getDummyAuthToken();
         return new LoginResponse(user, authToken);
     }
 
@@ -37,10 +43,11 @@ public class UserService {
         if(request.getAuthToken() == null){
             throw new RuntimeException("[Bad Request] Missing an authtoken");
         }
+        AuthTokenDAO.deleteToken(request.getAuthToken());
         return getUserDAO().logout(request);
     }
 
-    public LoginResponse register(RegisterRequest request) {
+    public LoginResponse register(RegisterRequest request) throws NoSuchAlgorithmException {
         if(request.getUsername() == null){
             throw new RuntimeException("[Bad Request] Missing a username");
         } else if(request.getPassword() == null) {
@@ -53,9 +60,11 @@ public class UserService {
             throw new RuntimeException("[Bad Request] Missing an image string");
         }
 
-        // TODO: Generates dummy data. Replace with a real implementation.
-        User user = getDummyUser();
-        AuthToken authToken = getDummyAuthToken();
+        User user = UserDAO.register(request); //Fail if user does not exist
+        AuthToken authToken = AuthTokenDAO.getToken();
+
+//        User user = getDummyUser();
+//        AuthToken authToken = getDummyAuthToken();
         return new LoginResponse(user, authToken);
     }
 

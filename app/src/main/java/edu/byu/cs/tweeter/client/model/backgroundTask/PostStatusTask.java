@@ -4,6 +4,7 @@ import android.os.Handler;
 
 import java.io.IOException;
 
+import edu.byu.cs.tweeter.client.cache.Cache;
 import edu.byu.cs.tweeter.client.net.ServerFacade;
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.Status;
@@ -34,7 +35,7 @@ public class PostStatusTask extends AuthenticatedTask {
         try
         {
             ServerFacade serverFacade = new ServerFacade();
-            PostStatusRequest request = new PostStatusRequest(status.getPost(), "Dummy Token");
+            PostStatusRequest request = new PostStatusRequest(status.getPost(), Cache.getInstance().getCurrUserAuthToken());
 
             response = serverFacade.postStatus(request, "/poststatus");
         } catch (TweeterRemoteException te)

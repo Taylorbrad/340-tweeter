@@ -4,6 +4,11 @@ package edu.byu.cs.tweeter.server.dao;
 //import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 //import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 
+//import static edu.byu.cs.tweeter.server.dao.DAOInterface.TableName;
+
+import static edu.byu.cs.tweeter.server.dao.DAOInterface.expirySeconds;
+
+import edu.byu.cs.tweeter.server.dao.table.FollowsTableModel;
 import software.amazon.awssdk.core.pagination.sync.SdkIterable;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbIndex;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
@@ -91,7 +96,9 @@ public class FollowDAO {
      */
     public FollowingResponse getFollowing(FollowingRequest inRequest) {
 
-        //TODO Use Authtoken for validation
+        if (!AuthTokenDAO.validateToken(inRequest.getAuthToken().getToken(), expirySeconds)) {
+            throw new RuntimeException("Token Expired");
+        }
 
         DynamoDbTable<FollowsTableModel> table = enhancedClient.table(TableName, TableSchema.fromBean(FollowsTableModel.class));
 //        DynamoDbTable<followsTableModel> table = enhancedClient.table(TableName, TableSchema.fromBean(followsTableModel.class)).index("follows_index");
@@ -139,8 +146,6 @@ public class FollowDAO {
 
             userList.add(userToAdd);
         }
-
-
 
         return new FollowingResponse(userList, result.isHasMorePages());
     }
@@ -191,7 +196,9 @@ public class FollowDAO {
 
     public FollowerResponse getFollowers(FollowerRequest inRequest) {
 
-        //TODO Use Authtoken for validation
+        if (!AuthTokenDAO.validateToken(inRequest.getAuthToken().getToken(), expirySeconds)) {
+            throw new RuntimeException("Token Expired");
+        }
 
         DynamoDbIndex<FollowsTableModel> index = enhancedClient.table(TableName, TableSchema.fromBean(FollowsTableModel.class)).index("follows_index");
 //        DynamoDbTable<followsTableModel> table = enhancedClient.table(TableName, TableSchema.fromBean(followsTableModel.class)).index("follows_index");
@@ -246,6 +253,10 @@ public class FollowDAO {
     }
 
     public FollowResponse follow(FollowRequest inRequest) {
+
+        if (!AuthTokenDAO.validateToken(inRequest.getAuthToken().getToken(), expirySeconds)) {
+            throw new RuntimeException("Token Expired");
+        }
 
         User follower = inRequest.getFollower();
         User followee = inRequest.getFollowee();
@@ -302,7 +313,9 @@ public class FollowDAO {
 //        Key key = Key.builder()
 //                .partitionValue("keyVal2").sortValue("asdf")
 //                .build();
-        //TODO use authtoken for validation
+        if (!AuthTokenDAO.validateToken(inRequest.getAuthToken().getToken(), expirySeconds)) {
+            throw new RuntimeException("Token Expired");
+        }
 
         HashMap<String, AttributeValue> keyToPut = new HashMap<>();
 
@@ -325,6 +338,7 @@ public class FollowDAO {
     }
 
     public IsFollowerResponse isFollower(IsFollowerRequest request) {
+
         //TODO Currently dummy. Use request in 4
         return new IsFollowerResponse(new Random().nextInt() > 0);
     }

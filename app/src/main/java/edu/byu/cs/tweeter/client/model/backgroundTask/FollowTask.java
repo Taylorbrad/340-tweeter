@@ -38,7 +38,7 @@ public class FollowTask extends AuthenticatedTask {
         try
         {
             ServerFacade serverFacade = new ServerFacade();
-            FollowRequest request = new FollowRequest(this.followee, Cache.getInstance().getCurrUser());
+            FollowRequest request = new FollowRequest(this.followee, Cache.getInstance().getCurrUser(), Cache.getInstance().getCurrUserAuthToken());
 
             response = serverFacade.follow(request, "/follow");
 

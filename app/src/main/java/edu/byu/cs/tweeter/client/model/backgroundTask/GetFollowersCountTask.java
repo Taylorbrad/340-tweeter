@@ -5,6 +5,7 @@ import android.os.Handler;
 
 import java.io.IOException;
 
+import edu.byu.cs.tweeter.client.cache.Cache;
 import edu.byu.cs.tweeter.client.net.ServerFacade;
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
@@ -34,7 +35,7 @@ public class GetFollowersCountTask extends GetCountTask {
         try
         {
             ServerFacade serverFacade = new ServerFacade();
-            GetFollowerCountRequest request = new GetFollowerCountRequest("getAuthToken().getToken()", getTargetUser());
+            GetFollowerCountRequest request = new GetFollowerCountRequest(Cache.getInstance().getCurrUserAuthToken(), getTargetUser());
 
             response = serverFacade.getFollowerCount(request, "/getfollowercount");
 

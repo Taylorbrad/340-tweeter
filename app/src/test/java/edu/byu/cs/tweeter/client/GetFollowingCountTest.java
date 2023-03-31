@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
+import edu.byu.cs.tweeter.client.cache.Cache;
 import edu.byu.cs.tweeter.client.net.ServerFacade;
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
@@ -27,7 +28,7 @@ public class GetFollowingCountTest {
 
         User user = new User("allen", "allen", "@allen", "asdf");
 
-        request = new GetFollowingCountRequest("token", user);
+        request = new GetFollowingCountRequest(Cache.getInstance().getCurrUserAuthToken(), user);
     }
 
     @Test

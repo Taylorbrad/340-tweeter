@@ -34,7 +34,7 @@ public class GetStoryTask extends PagedStatusTask {
         try
         {
             ServerFacade serverFacade = new ServerFacade();
-            GetStoryRequest request = new GetStoryRequest("dumy token", Cache.getInstance().getCurrUser().getAlias(), getLimit(), getLastItem());
+            GetStoryRequest request = new GetStoryRequest(Cache.getInstance().getCurrUserAuthToken(), Cache.getInstance().getCurrUser().getAlias(), getLimit(), getLastItem());
 
             response = serverFacade.getStory(request, "/getstory");
 

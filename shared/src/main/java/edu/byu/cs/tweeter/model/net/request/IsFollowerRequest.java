@@ -1,6 +1,7 @@
 package edu.byu.cs.tweeter.model.net.request;
 
 public class IsFollowerRequest {
+
     private String follower;
     private String followee;
 

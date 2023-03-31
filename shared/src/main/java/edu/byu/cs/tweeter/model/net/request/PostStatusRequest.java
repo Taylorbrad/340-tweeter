@@ -1,13 +1,15 @@
 package edu.byu.cs.tweeter.model.net.request;
 
+import edu.byu.cs.tweeter.model.domain.AuthToken;
+
 public class PostStatusRequest {
 
     private String status;
-    private String authToken;
+    private AuthToken authToken;
 
     PostStatusRequest() {}
 
-    public PostStatusRequest(String status, String authToken) {
+    public PostStatusRequest(String status, AuthToken authToken) {
         this.status = status;
         this.authToken = authToken;
     }
@@ -20,11 +22,11 @@ public class PostStatusRequest {
         this.status = status;
     }
 
-    public String getAuthToken() {
+    public AuthToken getAuthToken() {
         return authToken;
     }
 
-    public void setAuthToken(String authToken) {
+    public void setAuthToken(AuthToken authToken) {
         this.authToken = authToken;
     }
 }

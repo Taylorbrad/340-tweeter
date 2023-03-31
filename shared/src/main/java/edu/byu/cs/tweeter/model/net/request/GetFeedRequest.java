@@ -6,25 +6,25 @@ import edu.byu.cs.tweeter.model.net.response.GetFeedResponse;
 
 public class GetFeedRequest {
 
-    private String authToken;
+    private AuthToken authToken;
     private String targetUser;
     private int limit;
     private Status lastStatus;
 
     GetFeedRequest() { }
 
-    public GetFeedRequest(String authToken, String targetUser, int limit, Status lastStatus) {
+    public GetFeedRequest(AuthToken authToken, String targetUser, int limit, Status lastStatus) {
         this.authToken = authToken;
         this.targetUser = targetUser;
         this.limit = limit;
         this.lastStatus = lastStatus;
     }
 
-    public String getAuthToken() {
+    public AuthToken getAuthToken() {
         return authToken;
     }
 
-    public void setAuthToken(String authToken) {
+    public void setAuthToken(AuthToken authToken) {
         this.authToken = authToken;
     }
 

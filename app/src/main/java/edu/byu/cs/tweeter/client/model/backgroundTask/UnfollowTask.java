@@ -36,7 +36,7 @@ public class UnfollowTask extends AuthenticatedTask {
         try
         {
             ServerFacade serverFacade = new ServerFacade();
-            UnfollowRequest request = new UnfollowRequest(Cache.getInstance().getCurrUser().getAlias(), followee.getAlias());
+            UnfollowRequest request = new UnfollowRequest(Cache.getInstance().getCurrUser().getAlias(), followee.getAlias(),Cache.getInstance().getCurrUserAuthToken() );
 
             response = serverFacade.unfollow(request, "/unfollow");
 

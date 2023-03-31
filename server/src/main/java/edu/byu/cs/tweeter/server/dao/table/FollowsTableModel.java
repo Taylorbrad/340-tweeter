@@ -1,7 +1,8 @@
-package edu.byu.cs.tweeter.server.dao;
+package edu.byu.cs.tweeter.server.dao.table;
 
 import java.util.ArrayList;
 
+import edu.byu.cs.tweeter.server.dao.FollowDAO;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.*;
 
 @DynamoDbBean
