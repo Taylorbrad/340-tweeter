@@ -65,6 +65,7 @@ public class StatusService {
 //        return getFeedDAO().getFeed(request);
 //        getAuthTokenDAO().updateToken(request.getAuthToken().getToken());
     }
+
     public GetStoryResponse getStory(GetStoryRequest request) {
         if(request.getTargetUser() == null) {
             throw new RuntimeException("[Bad Request] Missing User designation");
@@ -76,12 +77,12 @@ public class StatusService {
 
         GetStoryResponse response;
 
-        try {
+//        try {
             response = getStoryDAO().getStory(request);
             getAuthTokenDAO().updateToken(request.getAuthToken().getToken());
-        } catch (RuntimeException e) {
-            throw new RuntimeException("[Bad Request] AuthToken expired");
-        }
+//        } catch (RuntimeException e) {
+//            throw new RuntimeException("[Bad Request] " + e.getMessage());
+//        }
 
         return response;
 

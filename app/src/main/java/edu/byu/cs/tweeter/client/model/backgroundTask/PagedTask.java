@@ -62,6 +62,7 @@ public abstract class PagedTask<T> extends AuthenticatedTask {
         return lastItem;
     }
 
+
     @Override
     protected final void runTask() throws IOException {
         Pair<List<T>, Boolean> pageOfItems = getItems();
