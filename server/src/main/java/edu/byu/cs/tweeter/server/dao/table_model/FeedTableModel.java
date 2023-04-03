@@ -11,6 +11,7 @@ import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbSortK
 public class FeedTableModel {
 
 
+    private String alias;
     private String author_alias;
     private String datetime;
     private String post;
@@ -18,12 +19,12 @@ public class FeedTableModel {
     private List<String> mentions;
 
     @DynamoDbPartitionKey
-    public String getAuthor_alias() {
-        return author_alias;
+    public String getAlias() {
+        return alias;
     }
 
-    public void setAuthor_alias(String author_alias) {
-        this.author_alias = author_alias;
+    public void setAlias(String alias) {
+        this.alias = alias;
     }
 
     @DynamoDbSortKey
@@ -34,6 +35,18 @@ public class FeedTableModel {
     public void setDatetime(String datetime) {
         this.datetime = datetime;
     }
+
+    @DynamoDbAttribute("author_alias")
+    public String getAuthor_alias() {
+        return author_alias;
+    }
+
+    public void setAuthor_alias(String author_alias) {
+        this.author_alias = author_alias;
+    }
+
+
+
 
     @DynamoDbAttribute("post")
     public String getPost() {
@@ -67,7 +80,7 @@ public class FeedTableModel {
     @Override
         public String toString() {
             return "status{" +
-                    "author='" + author_alias + '\'' +
+                    "author='" + alias + '\'' +
                     ", datetime='" + datetime + '\'' +
                     ", post='" + post + '\'' +
                     '}';

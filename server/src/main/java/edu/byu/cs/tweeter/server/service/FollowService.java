@@ -64,13 +64,13 @@ public class FollowService {
 
         FollowerResponse response;
 
-        try {
+//        try {
             response = getFollowingDAO().getFollowers(request);
             getAuthTokenDAO().updateToken(request.getAuthToken().getToken());
-        } catch (RuntimeException e) {
-            throw new RuntimeException("[Bad Request] AuthToken expired");
-//            response = new FollowResponse("Authtoken expired");
-        }
+//        } catch (RuntimeException e) {
+//            throw new RuntimeException("[Bad Request] AuthToken expired");
+////            response = new FollowResponse("Authtoken expired");
+//        }
 
 
         return response;

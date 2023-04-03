@@ -17,6 +17,7 @@ import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.net.request.FollowRequest;
 import edu.byu.cs.tweeter.model.net.request.FollowerRequest;
 import edu.byu.cs.tweeter.model.net.request.FollowingRequest;
+import edu.byu.cs.tweeter.model.net.request.GetUserRequest;
 import edu.byu.cs.tweeter.model.net.request.IsFollowerRequest;
 import edu.byu.cs.tweeter.model.net.request.UnfollowRequest;
 import edu.byu.cs.tweeter.model.net.response.FollowResponse;
@@ -107,33 +108,36 @@ public class FollowDynamoDB implements FollowDAO {
 
         QueryEnhancedRequest request = requestBuilder.build();
 
-        DataPage<FollowsTableModel> result = new DataPage<FollowsTableModel>();
+        DataPage<FollowsTableModel> result = new DataPage<>();
 
         SdkIterable<Page<FollowsTableModel>> pages = table.query(request);
         pages.stream()
-                .limit(inRequest.getLimit()) //was 1
+                .limit(2) //was 1
                 .forEach((Page<FollowsTableModel> page) -> {
                     result.setHasMorePages(page.lastEvaluatedKey() != null);
                     page.items().forEach(follow -> result.getValues().add(follow));
                 });
 
-        ArrayList<User> userList = new ArrayList<>();
 
+        ArrayList<User> userList = new ArrayList<>();
+//        ArrayList<User> userList = new UserDynamoDB().getUser(new FollowingRequest())
 
         for (FollowsTableModel i : result.getValues())
         {
-            User userToAdd = new User(
-                    i.getFollowee_fname(),
-                    i.getFollowee_lname(),
-                    i.getFollowee_handle(),
-                    i.getFollowee_url()
-            );
+            User userToAdd = new UserDynamoDB().getUser(new GetUserRequest(i.getFollowee_handle())).getUser();
+//            User userToAdd = new User(
+//                    i.getFollowee_fname(),
+//                    i.getFollowee_lname(),
+//                    i.getFollowee_handle(),
+//                    i.getFollowee_url()
+//            );
 
             userList.add(userToAdd);
         }
 
         return new FollowingResponse(userList, result.isHasMorePages());
     }
+
     public FollowerResponse getFollowers(FollowerRequest inRequest) {
 
         if (!authTokenDAO.validateToken(inRequest.getAuthToken().getToken(), expirySeconds)) {
@@ -162,7 +166,7 @@ public class FollowDynamoDB implements FollowDAO {
 
         QueryEnhancedRequest request = requestBuilder.build();
 
-        DataPage<FollowsTableModel> result = new DataPage<FollowsTableModel>();
+        DataPage<FollowsTableModel> result = new DataPage<>();
 
         SdkIterable<Page<FollowsTableModel>> pages = index.query(request);
         pages.stream()
@@ -176,17 +180,16 @@ public class FollowDynamoDB implements FollowDAO {
 
         for (FollowsTableModel i : result.getValues())
         {
-            User userToAdd = new User(
-                    i.getFollower_fname(),
-                    i.getFollower_lname(),
-                    i.getFollower_handle(),
-                    i.getFollower_url()
-            );
+            User userToAdd = new UserDynamoDB().getUser(new GetUserRequest(i.getFollower_handle())).getUser();
+//            User userToAdd = new User(
+//                    i.getFollower_fname(),
+//                    i.getFollower_lname(),
+//                    i.getFollower_handle(),
+//                    i.getFollower_url()
+//            );
 
             userList.add(userToAdd);
         }
-
-
 
         return new FollowerResponse(userList, result.isHasMorePages());
 
@@ -212,26 +215,26 @@ public class FollowDynamoDB implements FollowDAO {
                 .s(followee.getAlias())
                 .build());
 
-        keyToPut.put("follower_fname", AttributeValue.builder()
-                .s(follower.getFirstName())
-                .build());
-        keyToPut.put("follower_lname", AttributeValue.builder()
-                .s(follower.getLastName())
-                .build());
-        keyToPut.put("follower_url", AttributeValue.builder()
-                .s(follower.getImageUrl())
-                .build());
-
-
-        keyToPut.put("followee_fname", AttributeValue.builder()
-                .s(followee.getFirstName())
-                .build());
-        keyToPut.put("followee_lname", AttributeValue.builder()
-                .s(followee.getLastName())
-                .build());
-        keyToPut.put("followee_url", AttributeValue.builder()
-                .s(followee.getImageUrl())
-                .build());
+//        keyToPut.put("follower_fname", AttributeValue.builder()
+//                .s(follower.getFirstName())
+//                .build());
+//        keyToPut.put("follower_lname", AttributeValue.builder()
+//                .s(follower.getLastName())
+//                .build());
+//        keyToPut.put("follower_url", AttributeValue.builder()
+//                .s(follower.getImageUrl())
+//                .build());
+//
+//
+//        keyToPut.put("followee_fname", AttributeValue.builder()
+//                .s(followee.getFirstName())
+//                .build());
+//        keyToPut.put("followee_lname", AttributeValue.builder()
+//                .s(followee.getLastName())
+//                .build());
+//        keyToPut.put("followee_url", AttributeValue.builder()
+//                .s(followee.getImageUrl())
+//                .build());
 
         PutItemRequest request = PutItemRequest.builder()
                 .tableName(TableName)

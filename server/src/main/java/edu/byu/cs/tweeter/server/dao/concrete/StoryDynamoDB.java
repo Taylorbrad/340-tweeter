@@ -57,6 +57,7 @@ public class StoryDynamoDB implements StoryDAO {
                     .build();
 
             QueryEnhancedRequest.Builder requestBuilder = QueryEnhancedRequest.builder()
+                    .scanIndexForward(false)
                     .queryConditional(QueryConditional.keyEqualTo(key))
                     .limit(inRequest.getLimit());
 

@@ -43,7 +43,7 @@ public class GetFollowersTask extends PagedUserTask {
 
             FollowerRequest request = new FollowerRequest(this.getAuthToken(),
                     getTargetUser().getAlias(),
-                    getLimit(),
+                    11,
                     lastUserAlias);
 
             response = serverFacade.getFollowers(request, "/getfollowers");

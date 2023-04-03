@@ -3,6 +3,7 @@ package edu.byu.cs.tweeter.client.model.backgroundTask;
 import android.os.Handler;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import edu.byu.cs.tweeter.client.cache.Cache;
@@ -31,21 +32,31 @@ public class GetFeedTask extends PagedStatusTask {
     protected Pair<List<Status>, Boolean> getItems() {
 
         GetFeedResponse response = null;
-        try
-        {
+        Status lastStatus = getLastItem();
+        if (lastStatus == null) {
+            lastStatus = new Status("", new User(""), Long.valueOf(1), new ArrayList<>(), new ArrayList<>());
+        }
+
+        try {
             ServerFacade serverFacade = new ServerFacade();
-            GetFeedRequest request = new GetFeedRequest(Cache.getInstance().getCurrUserAuthToken(), Cache.getInstance().getCurrUser().getAlias(), 10, getLastItem());
+            GetFeedRequest request = new GetFeedRequest(Cache.getInstance().getCurrUserAuthToken(), getTargetUser().getAlias(), getLimit(), lastStatus);
 
             response = serverFacade.getFeed(request, "/getfeed");
 
+            return new Pair<>(response.getFeed(), response.getHasMorePages());
+
         } catch (TweeterRemoteException te)
         {
-            System.out.println(te.getMessage());
+            sendFailedMessage("task fail tr: " + te.getMessage());
+//            System.out.println(te.getMessage());
+            return new Pair<>(new ArrayList<>(), false);
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            sendFailedMessage("task fail io: " + e.getMessage());
+//            System.out.println(te.getMessage());
+            return new Pair<>(new ArrayList<>(), false);
         }
 
-        return new Pair<>(response.getFeed(), response.getHasMorePages());
+
 
 //        User loggedInUser = response.getUser();
 //        AuthToken authToken = response.getAuthToken();
