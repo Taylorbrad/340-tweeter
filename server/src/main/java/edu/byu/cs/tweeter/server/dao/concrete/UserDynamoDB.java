@@ -35,7 +35,6 @@ import edu.byu.cs.tweeter.model.net.response.PostStatusResponse;
 import edu.byu.cs.tweeter.server.dao.DataPage;
 import edu.byu.cs.tweeter.server.dao.interfaces.AuthTokenDAO;
 import edu.byu.cs.tweeter.server.dao.interfaces.UserDAO;
-import edu.byu.cs.tweeter.server.dao.table_model.AuthTokenTableModel;
 import edu.byu.cs.tweeter.server.dao.table_model.UserTableModel;
 import edu.byu.cs.tweeter.util.FakeData;
 import software.amazon.awssdk.core.pagination.sync.SdkIterable;

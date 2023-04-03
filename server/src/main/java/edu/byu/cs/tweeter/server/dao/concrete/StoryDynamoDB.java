@@ -6,25 +6,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
-import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.Status;
-import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.net.request.GetStoryRequest;
 import edu.byu.cs.tweeter.model.net.request.GetUserRequest;
 import edu.byu.cs.tweeter.model.net.request.PostStatusRequest;
-import edu.byu.cs.tweeter.model.net.response.FollowingResponse;
 import edu.byu.cs.tweeter.model.net.response.GetStoryResponse;
 import edu.byu.cs.tweeter.model.net.response.PostStatusResponse;
 import edu.byu.cs.tweeter.server.dao.DataPage;
 import edu.byu.cs.tweeter.server.dao.interfaces.AuthTokenDAO;
 import edu.byu.cs.tweeter.server.dao.interfaces.StoryDAO;
 import edu.byu.cs.tweeter.server.dao.interfaces.UserDAO;
-import edu.byu.cs.tweeter.server.dao.table_model.FollowsTableModel;
 import edu.byu.cs.tweeter.server.dao.table_model.StoryTableModel;
 import edu.byu.cs.tweeter.util.FakeData;
-import edu.byu.cs.tweeter.util.Pair;
 import software.amazon.awssdk.core.pagination.sync.SdkIterable;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
@@ -55,7 +49,6 @@ public class StoryDynamoDB implements StoryDAO {
             throw new RuntimeException("Token Expired");
         }
 
-//        try {
             DynamoDbTable<StoryTableModel> table = getEnhancedClient().table(TableName, TableSchema.fromBean(StoryTableModel.class));
 //        DynamoDbTable<followsTableModel> table = enhancedClient.table(TableName, TableSchema.fromBean(followsTableModel.class)).index("follows_index");
 
@@ -67,7 +60,6 @@ public class StoryDynamoDB implements StoryDAO {
                     .queryConditional(QueryConditional.keyEqualTo(key))
                     .limit(inRequest.getLimit());
 
-        //TODO fix with null object checking
             if(isNonEmptyString(inRequest.getLastStatus().getPost())) {
                 // Build up the Exclusive Start Key (telling DynamoDB where you left off reading items)
                 Map<String, AttributeValue> startKey = new HashMap<>();
@@ -107,16 +99,6 @@ public class StoryDynamoDB implements StoryDAO {
             }
 
             return new GetStoryResponse(statusList, result.isHasMorePages());
-//        }
-//        catch (RuntimeException e) {
-//            throw new RuntimeException(e.getMessage());
-//        }
-
-
-//        //TODO Currently dummy. Use request in 4
-//        Pair<List<Status>, Boolean> data = getFakeData().getPageOfStatus(request.getLastStatus(), request.getLimit());
-//
-//        return new GetStoryResponse(data.getFirst(), data.getSecond());
     }
 
     public PostStatusResponse addToStory(PostStatusRequest inRequest) {
@@ -163,6 +145,7 @@ public class StoryDynamoDB implements StoryDAO {
 
         try {
             getClient().putItem(request);
+            new FeedDynamoDB().addToFeed(inRequest);
         } catch (
                 DynamoDbException e) {
             System.err.println(e.getMessage());
