@@ -4,6 +4,7 @@ import java.util.List;
 
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.net.request.GetFeedRequest;
+import edu.byu.cs.tweeter.model.net.request.PostStatusRequest;
 import edu.byu.cs.tweeter.model.net.response.GetFeedResponse;
 import edu.byu.cs.tweeter.server.dao.interfaces.FeedDAO;
 import edu.byu.cs.tweeter.util.FakeData;
@@ -23,7 +24,8 @@ public class FeedDynamoDB implements FeedDAO {
         return new GetFeedResponse(data.getFirst(), data.getSecond());
     }
 
-    public void addToFeed(Status status) {
+    public void addToFeed(PostStatusRequest request) {
+
 
     }
 

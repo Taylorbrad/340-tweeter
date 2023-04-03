@@ -6,11 +6,6 @@ import edu.byu.cs.tweeter.model.net.request.PostStatusRequest;
 import edu.byu.cs.tweeter.model.net.response.GetFeedResponse;
 import edu.byu.cs.tweeter.model.net.response.GetStoryResponse;
 import edu.byu.cs.tweeter.model.net.response.PostStatusResponse;
-import edu.byu.cs.tweeter.model.net.response.UnfollowResponse;
-import edu.byu.cs.tweeter.server.dao.concrete.AuthTokenDynamoDB;
-import edu.byu.cs.tweeter.server.dao.concrete.FeedDynamoDB;
-import edu.byu.cs.tweeter.server.dao.concrete.StoryDynamoDB;
-import edu.byu.cs.tweeter.server.dao.concrete.UserDynamoDB;
 import edu.byu.cs.tweeter.server.dao.interfaces.AuthTokenDAO;
 import edu.byu.cs.tweeter.server.dao.interfaces.DAOProvider;
 import edu.byu.cs.tweeter.server.dao.interfaces.DynamoDBFactory;
@@ -32,12 +27,13 @@ public class StatusService {
         PostStatusResponse response;
 
         try {
-            response = getStoryDAO().postStatus(request);
+            response = getUserDAO().postStatus(request);
+//            response = getStoryDAO().addToStory(request);
 
             getAuthTokenDAO().updateToken(request.getAuthToken().getToken());
 
         } catch (RuntimeException e) {
-            throw new RuntimeException("[Bad Request] AuthToken expired");
+            throw new RuntimeException("[Bad Request] Post failed: " + e.getMessage());
 //            response = new UnfollowResponse("Authtoken expired");
         }
 

@@ -9,7 +9,5 @@ import edu.byu.cs.tweeter.model.net.response.PostStatusResponse;
 public interface StoryDAO {
 
     GetStoryResponse getStory(GetStoryRequest request);
-    void addToStory(Status inStatus);
-
-    PostStatusResponse postStatus(PostStatusRequest request);
+    PostStatusResponse addToStory(PostStatusRequest request);
 }

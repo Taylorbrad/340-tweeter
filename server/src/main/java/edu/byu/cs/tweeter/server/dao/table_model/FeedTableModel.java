@@ -1,5 +1,7 @@
 package edu.byu.cs.tweeter.server.dao.table_model;
 
+import java.util.List;
+
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbAttribute;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
@@ -9,38 +11,57 @@ import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbSortK
 public class FeedTableModel {
 
 
-        private String author_alias;
-        private String datetime;
-        private String post;
+    private String author_alias;
+    private String datetime;
+    private String post;
+    private List<String> urls;
+    private List<String> mentions;
 
-        @DynamoDbPartitionKey
-        public String getAuthor_alias() {
-            return author_alias;
-        }
+    @DynamoDbPartitionKey
+    public String getAuthor_alias() {
+        return author_alias;
+    }
 
-        public void setAuthor_alias(String author_alias) {
-            this.author_alias = author_alias;
-        }
+    public void setAuthor_alias(String author_alias) {
+        this.author_alias = author_alias;
+    }
 
-        @DynamoDbSortKey
-        public String getDatetime() {
-            return datetime;
-        }
+    @DynamoDbSortKey
+    public String getDatetime() {
+        return datetime;
+    }
 
-        public void setDatetime(String datetime) {
-            this.datetime = datetime;
-        }
+    public void setDatetime(String datetime) {
+        this.datetime = datetime;
+    }
 
-        @DynamoDbAttribute("post")
-        public String getPost() {
-            return post;
-        }
+    @DynamoDbAttribute("post")
+    public String getPost() {
+        return post;
+    }
 
-        public void setPost(String post) {
-            this.post = post;
-        }
+    public void setPost(String post) {
+        this.post = post;
+    }
 
 
+    @DynamoDbAttribute("urls")
+    public List<String> getUrls() {
+        return urls;
+    }
+
+    public void setUrls(List<String> urls) {
+        this.urls = urls;
+    }
+
+    @DynamoDbAttribute("mentions")
+    public List<String> getMentions() {
+        return mentions;
+    }
+
+    public void setMentions(List<String> mentions) {
+    this.mentions = mentions;
+}
 
 
     @Override

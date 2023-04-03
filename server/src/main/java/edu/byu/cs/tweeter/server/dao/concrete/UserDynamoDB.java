@@ -2,8 +2,17 @@ package edu.byu.cs.tweeter.server.dao.concrete;
 
 import static edu.byu.cs.tweeter.server.dao.interfaces.AuthTokenDAO.expirySeconds;
 
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
+
+import java.io.ByteArrayInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 import java.util.HashMap;
 
 import edu.byu.cs.tweeter.model.domain.User;
@@ -49,17 +58,15 @@ public class UserDynamoDB implements UserDAO {
 
     private static final String TableName = "User";
 
-    private static DynamoDbClient dynamoDbClient = DynamoDbClient.builder()
-            .region(Region.US_EAST_1)
-            .build();
+    private static DynamoDbClient dynamoDbClient;
 
-    private static DynamoDbEnhancedClient enhancedClient = DynamoDbEnhancedClient.builder()
-            .dynamoDbClient(dynamoDbClient)
-            .build();
+    private static DynamoDbEnhancedClient enhancedClient;
 
     public User register(RegisterRequest inRequest) {
 
         String hashedPassword = hashPassword(inRequest.getPassword());
+
+        String imageUrl = uploadToS3(inRequest.getImageEncodedToString(), inRequest.getUsername());
 
         //TODO add checking for if user exists?
         HashMap<String, AttributeValue> keyToPut = new HashMap<>();
@@ -82,7 +89,7 @@ public class UserDynamoDB implements UserDAO {
 
         //TODO upload to S3, get url
         keyToPut.put("image_url", AttributeValue.builder()
-                .s("inRequest.getImageEncodedToString()")
+                .s(imageUrl)
                 .build());
 
         PutItemRequest request = PutItemRequest.builder()
@@ -91,7 +98,7 @@ public class UserDynamoDB implements UserDAO {
                 .build();
 
         try {
-            dynamoDbClient.putItem(request);
+            getClient().putItem(request);
 //            ddb.deleteItem(deleteReq);
         } catch (DynamoDbException e) {
             System.err.println(e.getMessage());
@@ -104,7 +111,7 @@ public class UserDynamoDB implements UserDAO {
 
         String hashedPassword = hashPassword(inRequest.getPassword());
 
-        DynamoDbTable<UserTableModel> table = enhancedClient.table(TableName, TableSchema.fromBean(UserTableModel.class));
+        DynamoDbTable<UserTableModel> table = getEnhancedClient().table(TableName, TableSchema.fromBean(UserTableModel.class));
 
         Key key = Key.builder()
                 .partitionValue(inRequest.getUsername())
@@ -140,14 +147,20 @@ public class UserDynamoDB implements UserDAO {
         if (!authTokenDAO.validateToken(request.getAuthToken().getToken(), expirySeconds)) {
             throw new RuntimeException("Token Expired");
         }
+//        authTokenDAO.updateToken(request.getAuthToken().getToken());
 
-        //TODO Currently dummy. Use request in 4
+        try {
+            new StoryDynamoDB().addToStory(request);
+//            new FeedDynamoDB().addToFeed(request);
+        } catch (RuntimeException e) {
+            throw new RuntimeException("Failed to post status: " + e.getMessage());
+        }
         return new PostStatusResponse();
     }
 
     public GetUserResponse getUser(GetUserRequest inRequest) {
 
-        DynamoDbTable<UserTableModel> table = enhancedClient.table(TableName, TableSchema.fromBean(UserTableModel.class));
+        DynamoDbTable<UserTableModel> table = getEnhancedClient().table(TableName, TableSchema.fromBean(UserTableModel.class));
 
         Key key = Key.builder()
                 .partitionValue(inRequest.getAlias())
@@ -204,9 +217,6 @@ public class UserDynamoDB implements UserDAO {
 
 //        return new GetFollowingCountResponse(getDummyFollowees().size());
     }
-
-
-
     public GetFollowerCountResponse getFollowerCount(GetFollowerCountRequest request) {
         if (!authTokenDAO.validateToken(request.getAuthToken().getToken(), expirySeconds)) {
             throw new RuntimeException("Token Expired");
@@ -237,6 +247,50 @@ public class UserDynamoDB implements UserDAO {
             e.printStackTrace();
         }
         return "FAILED TO HASH";
+    }
+
+    private static String uploadToS3(String image_string, String alias) {
+
+        AmazonS3 s3 = AmazonS3ClientBuilder
+                .standard()
+                .withRegion(Regions.US_EAST_1)
+                .build();
+
+        byte[] byteArray = Base64.getDecoder().decode(image_string);
+
+        ObjectMetadata data = new ObjectMetadata();
+
+        data.setContentLength(byteArray.length);
+
+        data.setContentType("image/jpeg");
+
+        PutObjectRequest request = new PutObjectRequest("tweeter-profile-images-cs340", alias, new ByteArrayInputStream(byteArray), data).withCannedAcl(CannedAccessControlList.PublicRead);
+
+        s3.putObject(request);
+
+        return "https://tweeter-profile-images-cs340.s3.us-east-1.amazonaws.com/" + alias;
+    }
+
+    DynamoDbClient getClient() {
+        if (dynamoDbClient == null)
+        {
+            return DynamoDbClient.builder()
+                    .region(Region.US_EAST_1)
+                    .build();
+        }
+        else return dynamoDbClient;
+
+    }
+
+    DynamoDbEnhancedClient getEnhancedClient() {
+        if (enhancedClient == null) {
+            return DynamoDbEnhancedClient.builder()
+                    .dynamoDbClient(dynamoDbClient)
+                    .build();
+        }
+        else {
+            return enhancedClient;
+        }
     }
 
 }

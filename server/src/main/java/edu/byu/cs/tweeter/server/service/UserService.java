@@ -57,6 +57,7 @@ public class UserService {
     }
 
     public LoginResponse register(RegisterRequest request) throws NoSuchAlgorithmException {
+
         if(request.getUsername() == null){
             throw new RuntimeException("[Bad Request] Missing a username");
         } else if(request.getPassword() == null) {
@@ -68,8 +69,18 @@ public class UserService {
         } else if(request.getImageEncodedToString() == null) {
             throw new RuntimeException("[Bad Request] Missing an image string");
         }
+        User user;
+        try {
+            user = getUserDAO().register(request); //Fail if user does not exist
 
-        User user = getUserDAO().register(request); //Fail if user does not exist
+            if (user == null)
+            {
+                throw new RuntimeException("user is null on register");
+            }
+        } catch (RuntimeException e) {
+            throw new RuntimeException("Registration failed: " + e.getMessage());
+        }
+
         AuthToken authToken = getAuthTokenDAO().getToken();
 
 //        User user = getDummyUser();
@@ -81,11 +92,21 @@ public class UserService {
         if(request.getAlias() == null){
             throw new RuntimeException("[Bad Request] Missing a username");
         }
-        GetUserResponse response = getUserDAO().getUser(request);
+        GetUserResponse response;// = getUserDAO().getUser(request);
 //        User user = getDummyUser();
-        if(response == null){
-            throw new RuntimeException("[Bad Request] User not found");
+
+        try {
+            response = getUserDAO().getUser(request);
+
+            if (response.getUser() == null) {
+                throw new RuntimeException("User not found");
+            }
+        } catch (RuntimeException e) {
+            throw new RuntimeException("[Server Error] User not found: " + e.getMessage());
         }
+//        if(response == null){
+//            throw new RuntimeException("[Bad Request] User not found");
+//        }
         return response;
     }
 

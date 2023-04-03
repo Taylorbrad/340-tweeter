@@ -35,27 +35,18 @@ public class PostStatusTask extends AuthenticatedTask {
         try
         {
             ServerFacade serverFacade = new ServerFacade();
-            PostStatusRequest request = new PostStatusRequest(status.getPost(), Cache.getInstance().getCurrUser(), Cache.getInstance().getCurrUserAuthToken());
+            PostStatusRequest request = new PostStatusRequest(status.getPost(), Cache.getInstance().getCurrUser(), Cache.getInstance().getCurrUserAuthToken(), status.getUrls(), status.getMentions());
 
             response = serverFacade.postStatus(request, "/poststatus");
+            sendSuccessMessage();
+
         } catch (TweeterRemoteException te)
         {
-            System.out.println(te.getMessage());
+            sendFailedMessage(te.getMessage());
+//            System.out.println(te.getMessage());
         } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
-
-        // We could do this from the presenter, without a task and handler, but we will
-        // eventually access the database from here when we aren't using dummy data.
-        if (response.isSuccess())
-        {
-            // Call sendSuccessMessage if successful
-            sendSuccessMessage();
-        }
-        else
-        {
-            // or call sendFailedMessage if not successful
-            sendFailedMessage("Message failed to send because of <if statement condition> (probably server access failure)");
+            sendFailedMessage(e.getMessage());
+//            System.out.println(e.getMessage());
         }
 
 

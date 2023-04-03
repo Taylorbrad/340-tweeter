@@ -51,16 +51,20 @@ public class RegisterTask extends AuthenticateTask {
             RegisterRequest request = new RegisterRequest(this.firstName, this.lastName, this.username, this.password, this.image);
 
             response = serverFacade.register(request, "/register");
+
+            User loggedInUser = response.getUser();
+            AuthToken authToken = response.getAuthToken();
+            return new Pair<>(loggedInUser, authToken);
         } catch (TweeterRemoteException te)
         {
-            System.out.println(te.getMessage());
+            sendFailedMessage(te.getMessage());
+            return new Pair<>(new User(""), new AuthToken());
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            sendFailedMessage(e.getMessage());
+            return new Pair<>(new User(""), new AuthToken());
         }
 
-        User loggedInUser = response.getUser();
-        AuthToken authToken = response.getAuthToken();
-        return new Pair<>(loggedInUser, authToken);
+
 
 //        User registeredUser = getFakeData().getFirstUser();
 //        AuthToken authToken = getFakeData().getAuthToken();
