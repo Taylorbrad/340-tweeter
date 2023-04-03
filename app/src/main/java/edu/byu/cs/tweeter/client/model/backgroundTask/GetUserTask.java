@@ -44,19 +44,22 @@ public class GetUserTask extends AuthenticatedTask {
             GetUserRequest request = new GetUserRequest(this.alias);
 
             response = serverFacade.getUser(request, "/getuser");
-             response.getUser();
+            user = response.getUser();
+//            response.getUser();
             sendSuccessMessage();
 
         } catch (TweeterRemoteException te)
         {
 //            System.out.println(te.getMessage());
             sendFailedMessage(te.getMessage());
+            user = new User("");
         } catch (IOException e) {
 //            System.out.println(e.getMessage());
             sendFailedMessage(e.getMessage());
+            user = new User("");
         }
 
-        user = new User("");
+
 
     }
 
