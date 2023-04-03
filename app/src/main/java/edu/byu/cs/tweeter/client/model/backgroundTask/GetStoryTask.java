@@ -40,7 +40,7 @@ public class GetStoryTask extends PagedStatusTask {
                 lastStatus = new Status("", new User(""), Long.valueOf(1), new ArrayList<>(), new ArrayList<>());
             }
             ServerFacade serverFacade = new ServerFacade();
-            GetStoryRequest request = new GetStoryRequest(Cache.getInstance().getCurrUserAuthToken(), Cache.getInstance().getCurrUser().getAlias(), getLimit(), lastStatus);
+            GetStoryRequest request = new GetStoryRequest(Cache.getInstance().getCurrUserAuthToken(), getTargetUser().getAlias(), getLimit(), lastStatus);
 
 
             response = serverFacade.getStory(request, "/getstory");
