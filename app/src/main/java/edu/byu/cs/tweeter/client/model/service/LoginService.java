@@ -1,7 +1,5 @@
 package edu.byu.cs.tweeter.client.model.service;
 
-import android.widget.EditText;
-
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -35,10 +33,10 @@ public class LoginService {
         executor.execute(logoutTask);
     }
 
-    public void loginRequest(EditText alias, EditText password, LoginObserver observer) {
+    public void loginRequest(String alias, String password, LoginObserver observer) {
         // Send the login request.
-        LoginTask loginTask = new LoginTask(alias.getText().toString(),
-                password.getText().toString(),
+        LoginTask loginTask = new LoginTask(alias,
+                password,
                 new AuthenticateUserHandler(observer));
         executor.execute(loginTask);
     }

@@ -66,7 +66,7 @@ public class GetStoryTest {
 
 //        Mockito.doAnswer(answer).when(spyService).loadMoreItems(user, 4, null, mockObserver);
 
-        spyService.loadMoreItems(user, 4, null, observer);
+        spyService.getStory(user, 4, null, observer);
         awaitLatch();
 
 //        Mockito.verify(observer).handleSuccess(Mockito.anyList(), Mockito.anyBoolean(), Mockito.any());

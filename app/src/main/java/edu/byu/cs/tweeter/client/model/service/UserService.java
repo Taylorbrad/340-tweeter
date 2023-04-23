@@ -25,7 +25,7 @@ public class UserService {
         void handleSuccess(User user);
     }
 
-    public void loadMoreItems(User user, int pageSize, Status lastStatus, PagedObserver<Status> observer) {
+    public void getStory(User user, int pageSize, Status lastStatus, PagedObserver<Status> observer) {
         GetStoryTask getStoryTask = new GetStoryTask(Cache.getInstance().getCurrUserAuthToken(),
                 user, pageSize, lastStatus, new PagedHandler<Status>(observer));
         executor.execute(getStoryTask);

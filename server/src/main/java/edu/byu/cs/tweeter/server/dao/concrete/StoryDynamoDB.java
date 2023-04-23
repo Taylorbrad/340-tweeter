@@ -131,6 +131,7 @@ public class StoryDynamoDB implements StoryDAO {
                 .build());
 //
         List<String> mentions = inRequest.getMentions();
+
         if (mentions.size() == 0)
         {
             mentions.add("");

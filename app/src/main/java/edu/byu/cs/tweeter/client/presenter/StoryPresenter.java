@@ -13,6 +13,6 @@ public class StoryPresenter extends PagedPresenter<Status> {
 
     @Override
     public void loadItems(User user, Status lastStatus, PagedPresenter<Status>.GetItemsObserver observer) {
-        getUserService().loadMoreItems(user, PAGE_SIZE, lastStatus, observer);
+        getUserService().getStory(user, PAGE_SIZE, lastStatus, observer);
     }
 }

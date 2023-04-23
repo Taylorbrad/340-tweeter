@@ -36,7 +36,7 @@ public class LoginPresenter {
 
             view.displayLoggingIn();
 
-            loginService.loginRequest(alias, password, new LoginObserver());
+            loginService.loginRequest(alias.getText().toString(), password.getText().toString(), new LoginObserver());
 
         } catch (Exception e) {
             view.setErrorText(e);
